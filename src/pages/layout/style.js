@@ -11,17 +11,16 @@ min-height: 100%;
 position: absolute;
 background-color: white;
 `
-S.header = styled.div`
-  position: absolute;
+S.HeaderWrap = styled.header`
   display: flex;
   align-items: center;
-  min-width: 1050px;
+  justify-content: space-between;
+  max-width: 1050px;
+  min-width: 900px;
+  margin: auto;
   height: 65px;
-  left: 435px;
-  right: 435px;
-  top: 10px;
-
-`
+  position: relative;
+`;
 
 
 S.topbar=styled.div`
@@ -29,7 +28,7 @@ position: absolute;
 width: 100%;
 height: 40px;
 left: 0px;
-top: 75px;
+top: 65px;
 background: #5784E1;
 `
 
@@ -46,25 +45,31 @@ S.LogoWrap = styled.div`
     font-size: 50px;
     font-weight: bold;
     color: black;
+    margin-left: 12px;
   }
 `;
 
 S.SearchBox = styled.div`
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   width: 367px;
   height: 48px;
-  border: 2px solid #5784E1;
-  background-color: #5784E1;
+  margin: auto;
+  border: 2px solid #5784e1;
+  background-color: #5784e1;
   overflow: hidden;
-  margin-left: 77px;
-  p{
-  width: 48px;
-  height: 48px;
-  display: flex;
-  justify-content: center; 
-  align-items: center;   
-  font-size: 14px;        
-  background-color: #5784E1;  
+  justify-content: center;
+
+  p {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    background-color: #5784e1;
   }
 `;
 
@@ -75,6 +80,23 @@ S.SearchInput = styled.input`
   padding: 0 12px;
   font-size: 14px;
   outline: none;
+`;
+
+S.User = styled.div`
+  width: 64px;
+  height: 64px;
+  background-color: #D9D9D9;
+  border-radius: 50%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  svg {
+    width: 32px;
+    height: 32px;
+    color: red;
+  }
 `;
 export default S
 
