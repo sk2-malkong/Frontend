@@ -1,16 +1,14 @@
-import styled from 'styled-components'
+import styled from 'styled-components';
 
-const S = {}
-
-
+const S = {};
 
 S.Background = styled.div`
+  width: 100%;
+  min-height: 100%;
+  position: relative;
+  background-color: white;
+`;
 
-width: 100%;
-min-height: 100%;
-position: absolute;
-background-color: white;
-`
 S.HeaderWrap = styled.header`
   display: flex;
   align-items: center;
@@ -22,23 +20,21 @@ S.HeaderWrap = styled.header`
   position: relative;
 `;
 
-
-S.topbar=styled.div`
-position: absolute;
-width: 100%;
-height: 40px;
-left: 0px;
-top: 65px;
-background: #5784E1;
-`
+S.Topbar = styled.div`
+  width: 100%;
+  height: 40px;
+  background: #5784e1;
+  position: relative; 
+  z-index: 1000;
+`;
 
 S.LogoWrap = styled.div`
   display: flex;
   align-items: center;
 
   img {
-    width: 90px;
-    height: 90px;
+    width: 80px;
+    height: 80px;
   }
 
   p {
@@ -50,9 +46,6 @@ S.LogoWrap = styled.div`
 `;
 
 S.SearchBox = styled.div`
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
   display: flex;
   width: 367px;
   height: 48px;
@@ -70,6 +63,7 @@ S.SearchBox = styled.div`
     align-items: center;
     font-size: 14px;
     background-color: #5784e1;
+    color: white;
   }
 `;
 
@@ -83,11 +77,10 @@ S.SearchInput = styled.input`
 `;
 
 S.User = styled.div`
-  width: 64px;
-  height: 64px;
-  background-color: #D9D9D9;
+  width: 48px;
+  height: 48px;
+  background-color: #d9d9d9;
   border-radius: 50%;
-
   display: flex;
   justify-content: center;
   align-items: center;
@@ -98,8 +91,20 @@ S.User = styled.div`
     color: red;
   }
 `;
-export default S
 
+S.Main = styled.main`
+  width: 100%;
+  z-index: 10;
+  margin: 0 auto;
+  padding-bottom: 50px;
+  height: 100%;
+  min-height: 1080px;
+  overflow: hidden;
+  min-width: 1050px;
+  background-color: white;
 
+  & .slider {
+  }
+`;
 
-
+export default S;
