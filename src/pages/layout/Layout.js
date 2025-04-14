@@ -1,5 +1,5 @@
 import React from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import Footer from './footer/Footer';
 import S from '../layout/style';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -7,10 +7,10 @@ import { faUser } from '@fortawesome/free-solid-svg-icons';
 
 const Layout = () => {
   const location = useLocation();
+  const navigate = useNavigate(); // ✅ 라우팅 함수 추가
   const isIntroPage = location.pathname === '/';
 
-  // ✅ 나중엔 useAuth 등으로 대체 가능
-  const isLoggedIn = false;
+  const isLoggedIn = false; // 로그인 상태는 나중에 관리
 
   return (
     <div>
@@ -34,7 +34,9 @@ const Layout = () => {
                   <FontAwesomeIcon icon={faUser} />
                 </S.User>
               ) : (
-                <S.LoginButton>로그인</S.LoginButton>
+                <S.LoginButton onClick={() => navigate('/login')}>
+                  로그인
+                </S.LoginButton>
               )}
             </S.HeaderWrap>
             <S.Topbar />

@@ -4,6 +4,8 @@ import Index from '../pages/layout/index/Index';
 import MainContainer from '../pages/main/MainContainer';
 import IndexContainer from '../pages/layout/index/IndexContainer';
 import MyPageContainer from '../pages/mypage/MyPageContainer';
+import JoinContainer from '../pages/login/JoinContainer';
+import LoginContainer from '../pages/login/LoginContainer';
 const router = createBrowserRouter([
   {
     path: "/",
@@ -21,7 +23,15 @@ const router = createBrowserRouter([
         path : '/mypage',
         element : <MyPageContainer/>
       }
-    ]}
+    ]},
+    {
+      path : "/join",
+      element : <JoinContainer/>
+    },
+    {
+      path : "/login",
+      element : <LoginContainer/>
+    }
 ]);
 
 
