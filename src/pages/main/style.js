@@ -16,7 +16,7 @@ S.MainWrapper = styled.div`
 
 S.ContentLeft = styled.div`
   width: 616px;
-  height: 100%;
+  min-height: 1020px;
   display: flex;
   flex-direction: column;
 `;
@@ -137,6 +137,26 @@ display: flex;
 justify-content: center;
 
 `
+
+S.Pagination = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: auto;
+  gap: 8px;
+
+  button {
+    background: none;
+    border: none;
+    font-size: 16px;
+    color: #5A5A5A;
+    cursor: pointer;
+    width: 427px;
+    height: 50px;
+    &:hover{
+      color: red;
+    }
+  }
+`;
 
 
 

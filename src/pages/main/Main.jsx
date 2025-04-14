@@ -1,22 +1,40 @@
 import React from 'react';
 import S from './style';
+import { useState } from 'react';
 
 const Main = () => {
-    const isLoggedIn = false
-    const dummyPosts = Array(6).fill({
+  const isLoggedIn = false;
+
+  // 전체 게시물 목록
+  const dummyPosts = Array(23).fill({
     author: '동글이',
     date: '2025.04.11',
     title: '오늘은 뭐먹을까?',
     content: '오늘 아침,,, 너무 졸려………. 다들 아침에 알람 한번에 듣니…',
     views: 112,
   });
+
+  // 페이지네이션 상태
+  const [currentPage, setCurrentPage] = useState(1);
+  const postsPerPage = 8;
+  const totalPages = Math.ceil(dummyPosts.length / postsPerPage);
+
+  // 현재 페이지에 보여줄 데이터
+  const startIdx = (currentPage - 1) * postsPerPage;
+  const paginatedPosts = dummyPosts.slice(startIdx, startIdx + postsPerPage);
+
+  const handlePageClick = (page) => {
+    setCurrentPage(page);
+  };
+
   return (
     <div>
       <S.MainWrapper>
       <S.ContentLeft>
         <S.TotalCount>전체 게시글: {dummyPosts.length}</S.TotalCount>
+
         <S.PostListWrapper>
-        {dummyPosts.map((post, idx) => (
+          {paginatedPosts.map((post, idx) => (
             <S.PostCard key={idx}>
               <div className="post-header">
                 <div className="author-icon" />
@@ -31,6 +49,21 @@ const Main = () => {
             </S.PostCard>
           ))}
         </S.PostListWrapper>
+        <S.Pagination>
+          <button disabled={currentPage === 1} onClick={() => setCurrentPage(1)}>{'<<'}</button>
+          <button disabled={currentPage === 1} onClick={() => setCurrentPage(currentPage - 1)}>{'<'}</button>
+          {Array.from({ length: totalPages }, (_, i) => (
+            <button
+              key={i + 1}
+              onClick={() => handlePageClick(i + 1)}
+              style={{ fontWeight: currentPage === i + 1 ? 'bold' : 'normal', color: currentPage === i + 1 ? 'red' : 'black' }}
+            >
+              {i + 1}
+            </button>
+          ))}
+          <button disabled={currentPage === totalPages} onClick={() => setCurrentPage(currentPage + 1)}>{'>'}</button>
+          <button disabled={currentPage === totalPages} onClick={() => setCurrentPage(totalPages)}>{'>>'}</button>
+        </S.Pagination>
       </S.ContentLeft>
 
       {isLoggedIn && (
