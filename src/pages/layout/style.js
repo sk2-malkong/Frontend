@@ -107,4 +107,21 @@ S.Main = styled.main`
   }
 `;
 
+S.LoginButton = styled.button`
+  background-color: #5784E1;
+  width: 138px;
+  height: 40px;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 9999px;
+  font-size: 14px;
+  font-weight: bold;
+  border: 2px solid white;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #5784E1;
+  }
+`;
+
 export default S;
