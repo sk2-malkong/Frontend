@@ -1,6 +1,6 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
-const S = {};
+const S = {}
 
 S.LoginPageWrapper = styled.div`
   width: 100%;
@@ -8,8 +8,8 @@ S.LoginPageWrapper = styled.div`
   display: flex;
   justify-content: center;
   position: relative;
-`;
 
+`;
 S.LoginBox = styled.div`
   width: 560px;
   min-height: 100px;
@@ -32,9 +32,8 @@ S.LoginBox = styled.div`
     color: black;
   }
 `;
-
 S.Input = styled.input`
-  width: 100%;
+  min-width: 480px;
   padding: 12px 16px;
   font-size: 16px;
   border: 1px solid #ccc;
@@ -57,35 +56,6 @@ S.LoginButton = styled.button`
 
   &:hover {
     background-color: #5784E1;
-  }
-`;
-
-S.HelperLinks = styled.div`
-  font-size: 14px;
-  color: #797979;
-  margin-bottom: 20px;
-  cursor: pointer;
-  a {
-    color: #797979;
-    text-decoration: none;
-    &:hover {
-      text-decoration: underline;
-    }
-  }
-`;
-
-S.JoinSection = styled.div`
-  font-size: 14px;
-  color: #c2185b;
-  font-weight: bold;
-  margin-top: 10px;
-  cursor: pointer;
-  span{
-    color: #737373;
-  }
-
-  &:hover {
-    text-decoration: underline;
   }
 `;
 

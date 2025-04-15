@@ -7,10 +7,10 @@ import { faUser } from '@fortawesome/free-solid-svg-icons';
 
 const Layout = () => {
   const location = useLocation();
-  const navigate = useNavigate(); // ✅ 라우팅 함수 추가
+  const navigate = useNavigate();
   const isIntroPage = location.pathname === '/';
 
-  const isLoggedIn = false; // 로그인 상태는 나중에 관리
+  const isLoggedIn = false; // 임시 로그인 상태 (나중에 상태 관리로 변경 가능)
 
   return (
     <div>
@@ -28,11 +28,15 @@ const Layout = () => {
                 <p>검색</p>
               </S.SearchBox>
 
-              {/* 로그인 상태에 따라 표시 */}
+        
               {isLoggedIn ? (
-                <S.User>
-                  <FontAwesomeIcon icon={faUser} />
-                </S.User>
+                <S.LoginButton
+                  onClick={() => {
+                    alert('로그아웃 되었습니다.');
+                  }}
+                >
+                  로그아웃
+                </S.LoginButton>
               ) : (
                 <S.LoginButton onClick={() => navigate('/login')}>
                   로그인

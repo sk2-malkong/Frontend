@@ -38,10 +38,7 @@ S.JoinBox = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
-
-  button{
-    background-color: #5784E1;
-  }
+  margin: auto;
 
   h2{
     font-size: 30px;
