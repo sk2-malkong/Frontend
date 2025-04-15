@@ -13,7 +13,7 @@ const LoginContainer = () => {
         <S.Input type="password" placeholder="비밀번호" />
         <S.LoginButton>로그인</S.LoginButton>
         <S.HelperLinks>
-          <a href="#">아이디 찾기</a> | <a href="#">비밀번호 찾기</a>
+          <a onClick={() => navigate('/findid')}>아이디 찾기</a> | <a onClick={() => navigate('/findpassword')}>비밀번호 찾기</a>
         </S.HelperLinks>
         <S.JoinSection>
           <span onClick={() => navigate('/join')}>회원가입</span>
