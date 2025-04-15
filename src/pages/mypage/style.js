@@ -1,209 +1,480 @@
 import styled from "styled-components";
 
-const S = {};
+const S = {};  
 
-// 컨테이너 스타일
-S.Container = styled.div`
+// 전체 페이지 컨테이너
+S.DivWrapper = styled.div`
+  background-color: #ffffff;
   display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  font-family: 'Noto Sans KR', sans-serif;
-`;
-
-// 헤더 스타일
-S.Header = styled.header`
-  background-color: #4a7dff;
-  height: 60px;
-  display: flex;
-  align-items: center;
+  flex-direction: row;
   justify-content: center;
-  padding: 0 20px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  min-height: 100vh;
 `;
 
-S.Logo = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-`;
-
-S.LogoIcon = styled.img`
-  width: 24px;
-  height: 24px;
-`;
-
-S.LogoText = styled.h1`
-  color: #fff;
-  font-size: 24px;
-  font-weight: 700;
-  margin: 0;
-`;
-
-// 메인 콘텐츠 스타일
-S.MainContent = styled.main`
-  flex: 1;
-  max-width: 800px;
+// 메인 컨테이너
+S.MainDiv = styled.div`
+  background-color: #ffffff;
+  position: relative;
+  width: 100%;
+  max-width: 1000px;
+  min-height: 100vh;
+  padding: 1.25rem 1rem;
   margin: 0 auto;
-  padding: 40px 20px;
+  
+  @media (max-width: 768px) {
+    padding: 1rem 0.5rem;
+  }
+`;
+
+// 링크 영역
+S.Link = styled.div`
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  height: 12px;
+  width: 59px;
+  
+  @media (max-width: 768px) {
+    right: 0.5rem;
+  }
+`;
+
+// 상단 섹션 컨테이너 (프로필 + 뱃지)
+S.TopSection = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content:center;
+   gap: 2rem;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 1.5rem;
+  
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+  }
+`;
+
+// 프로필 프레임
+S.ProfileFrame = styled.div`
+  align-items: flex-start;
+  background-color: #ffffff;
+  border-radius: 5px;
+  box-shadow:
+    5px 5px 13px #e6e6e6e6, -5px -5px 10px #ffffffe6, 5px -5px 10px #e6e6e633, -5px 5px 10px #e6e6e633, inset -1px -1px 2px #e6e6e680, inset 1px 1px 2px #ffffff4c;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 0.75rem;
+  padding: 1rem;
+  width: 58%;
+  max-width: 500px;
+  align-self: center;
+  
+  @media (max-width: 992px) {
+    width: 55%;
+  }
+  
+  @media (max-width: 768px) {
+    width: 90%;
+    padding: 0.75rem;
+  }
 `;
 
-// 프로필 섹션 스타일
-S.ProfileSection = styled.section`
-  background-color: #fff;
-  border-radius: 12px;
-  padding: 24px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-`;
-
+// 프로필 헤더
 S.ProfileHeader = styled.div`
+  align-items: center;
+  align-self: stretch;
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-`;
-
-S.Title = styled.h2`
-  font-size: 18px;
-  font-weight: 600;
-  margin: 0;
-`;
-
-S.ProfileEditButton = styled.button`
-  background-color: #4a7dff;
-  color: white;
-  border: none;
-  border-radius: 20px;
-  padding: 8px 16px;
-  font-size: 14px;
-  cursor: pointer;
-  font-weight: 500;
-`;
-
-S.ProfileInfo = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 16px;
-`;
-
-S.ProfileImageWrapper = styled.div`
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  overflow: hidden;
-  background-color: #f0f0f0;
-`;
-
-S.ProfileImage = styled.div`
+  position: relative;
   width: 100%;
-  height: 100%;
-  background-color: #e0e0e0;
+  margin-bottom: 0.5rem;
+  
+  @media (max-width: 576px) {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
 `;
 
-S.UserInfoContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-`;
-
-S.UserName = styled.h3`
-  font-size: 16px;
-  font-weight: 600;
-  margin: 0;
-`;
-
-S.UserEmail = styled.p`
-  font-size: 14px;
-  color: #777;
-  margin: 0;
-`;
-
-// 통계 섹션 스타일
-S.StatsSection = styled.section`
-  display: flex;
-  justify-content: flex-end;
-  padding: 16px;
-`;
-
-S.StatsCircle = styled.div`
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  border: 2px solid #f5f5f5;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+// 내 정보 래퍼
+S.MyInfoWrapper = styled.div`
   align-items: center;
+  display: flex;
+  gap: 0.5rem;
   position: relative;
 `;
 
-S.StatsLabel = styled.p`
-  font-size: 14px;
-  color: #777;
-  margin: 0;
-  position: absolute;
-  top: 40px;
-`;
-
-S.StatsNumber = styled.span`
-  font-size: 42px;
-  font-weight: 700;
-  color: #000;
-`;
-
-S.StatsUnit = styled.span`
-  font-size: 16px;
-  color: #777;
-  margin-left: 4px;
-`;
-
-// 설정 섹션 스타일
-S.SettingsSection = styled.section`
-  background-color: #fff;
-  border-radius: 12px;
-  padding: 24px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-`;
-
-S.SettingsHeader = styled.h2`
-  font-size: 18px;
+// 내 정보 텍스트
+S.MyInfoText = styled.div`
+  color: #000000;
+  font-family: "Pretendard-SemiBold", Helvetica, sans-serif;
+  font-size: 1.25rem;
   font-weight: 600;
-  margin: 0 0 16px 0;
-`;
-
-S.SettingsList = styled.ul`
-  list-style: none;
-  padding: 0;
-  margin: 0;
-`;
-
-S.SettingsItem = styled.li`
-  padding: 12px 0;
-  border-bottom: 1px solid #f0f0f0;
-  font-size: 16px;
-  cursor: pointer;
+  line-height: 1.2;
+  position: relative;
+  white-space: nowrap;
   
-  &:last-child {
-    border-bottom: none;
+  @media (max-width: 768px) {
+    font-size: 1.1rem;
   }
+`;
+
+// 프로필 수정 버튼
+S.EditProfileButton = styled.div`
+  align-items: center;
+  background-color: #5784e1;
+  border-radius: 16px;
+  display: inline-flex;
+  gap: 0.5rem;
+  justify-content: center;
+  padding: 0.375rem 0.625rem;
+  position: relative;
+  cursor: pointer;
+  transition: background-color 0.3s;
   
   &:hover {
-    color: #4a7dff;
+    background-color: #4a75cf;
   }
 `;
 
-// 푸터 스타일
-S.Footer = styled.footer`
+// 프로필 수정 텍스트
+S.EditProfileText = styled.div`
+  color: #ffffff;
+  font-family: "Pretendard-Bold", Helvetica, sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: -0.25px;
+  line-height: normal;
+  position: relative;
   text-align: center;
-  padding: 16px;
-  color: #999;
-  font-size: 14px;
+  white-space: nowrap;
 `;
 
-S.FooterText = styled.p`
-  margin: 0;
+// 프레임 래퍼
+S.FrameWrapper = styled.div`
+  align-items: center;
+  display: flex;
+  gap: 1rem;
+  position: relative;
+  width: 100%;
+  
+  @media (max-width: 576px) {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+  }
+`;
+
+// 프로필 이미지 컨테이너
+S.ProfileImageContainer = styled.div`
+  width: 80px;
+  height: 80px;
+  flex-shrink: 0;
+  aspect-ratio: 1/1;
+  
+  @media (max-width: 768px) {
+    width: 70px;
+    height: 70px;
+  }
+  
+  @media (max-width: 576px) {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 0.5rem;
+  }
+`;
+
+// 프레임9 - 사용자 정보 영역
+S.Frame9 = styled.div`
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  position: relative;
+  width: 100%;
+  max-width: 250px;
+  
+  @media (max-width: 576px) {
+    max-width: 100%;
+    align-items: center;
+    text-align: center;
+  }
+`;
+
+// 사용자명 텍스트
+S.UsernameText = styled.div`
+  align-self: stretch;
+  color: #000000;
+  font-family: "Pretendard-SemiBold", Helvetica, sans-serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.2;
+  position: relative;
+  
+  @media (max-width: 768px) {
+    font-size: 1.1rem;
+  }
+`;
+
+// 이메일 텍스트
+S.EmailText = styled.div`
+  align-self: stretch;
+  color: #a6a6a6;
+  font-family: "Pretendard-SemiBold", Helvetica, sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.2;
+  position: relative;
+  word-break: break-word;
+  
+  @media (max-width: 768px) {
+    font-size: 0.8rem;
+  }
+`;
+
+// 뱃지 래퍼
+S.BadgeWrapper = styled.div`
+  position: relative;
+  width: 38%;
+  max-width: 200px;
+  aspect-ratio: 1/1;
+  align-self: center;
+  
+  @media (max-width: 992px) {
+    width: 40%;
+    max-width: 180px;
+  }
+  
+  @media (max-width: 768px) {
+    width: 60%;
+    max-width: 180px;
+  }
+  
+  @media (max-width: 576px) {
+    width: 70%;
+    max-width: 160px;
+  }
+`;
+
+// 뱃지 원형
+S.BadgeCircle = styled.div`
+  background-color: #ffffff;
+  border-radius: 50%;
+  box-shadow:
+    5px 5px 13px #e6e6e6e6, -5px -5px 10px #ffffffe6, 5px -5px 10px #e6e6e633, -5px 5px 10px #e6e6e633, inset -1px -1px 2px #e6e6e680, inset 1px 1px 2px #ffffff4c;
+  height: 100%;
+  width: 100%;
+  position: relative;
+`;
+
+// 뱃지 내용 영역
+S.BadgeContent = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  text-align: center;
+`;
+
+// 뱃지 제목
+S.BadgeTitle = styled.div`
+  color: #000000;
+  font-family: "Pretendard-SemiBold", Helvetica, sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: 0.375rem;
+  
+  @media (max-width: 992px) {
+    font-size: 0.9rem;
+  }
+  
+  @media (max-width: 576px) {
+    font-size: 0.8rem;
+  }
+`;
+
+// 뱃지 카운트
+S.BadgeCount = styled.div`
+  color: #000000;
+  font-family: "Pretendard-Bold", Helvetica, sans-serif;
+  font-size: 3.5rem;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 0.25rem;
+  
+  @media (max-width: 992px) {
+    font-size: 3rem;
+  }
+  
+  @media (max-width: 576px) {
+    font-size: 2.5rem;
+  }
+`;
+
+// 뱃지 단위
+S.BadgeUnit = styled.div`
+  color: #a6a6a6;
+  font-family: "Pretendard-SemiBold", Helvetica, sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  display: inline-block;
+  margin-left: 0.125rem;
+  
+  @media (max-width: 576px) {
+    font-size: 0.875rem;
+  }
+`;
+
+// 계정 프레임
+S.AccountFrame = styled.div`
+  align-items: flex-start;
+  background-color: #ffffff;
+  border-radius: 5px;
+  box-shadow:
+    inset -1px -1px 2px #dddddd80, inset 1px 1px 2px #ffffff4c, 5px 5px 13px #dddddde6, -5px -5px 10px #ffffffe6, 5px -5px 10px #dddddd33, -5px 5px 10px #dddddd33;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 733px;
+  padding: 1.25rem;
+  margin: 0 auto;
+  margin-bottom: 1.25rem;
+  
+  @media (max-width: 768px) {
+    width: 90%;
+    padding: 0.75rem;
+  }
+`;
+
+// 계정 제목
+S.AccountTitle = styled.div`
+  align-self: stretch;
+  color: #000000;
+  font-family: "Pretendard-SemiBold", Helvetica, sans-serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.50px;
+  line-height: normal;
+  margin-bottom: 1rem;
+  
+  @media (max-width: 768px) {
+    font-size: 1.1rem;
+    margin-bottom: 0.75rem;
+  }
+`;
+
+// 그룹 래퍼
+S.GroupWrapper = styled.div`
+  align-items: flex-start;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+`;
+
+// 그룹 컨테이너
+S.Group = styled.div`
+  position: relative;
+  width: 100%;
+  max-width: 250px;
+  padding-bottom: 2.5rem;
+  
+  @media (max-width: 768px) {
+    max-width: 100%;
+    padding-bottom: 2rem;
+  }
+`;
+
+// 프레임2 - 게시글 메뉴 
+S.Frame2 = styled.div`
+  align-items: center;
+  display: flex;
+  gap: 0.625rem;
+  padding: 0.625rem;
+  position: relative;
+  width: max-content;
+`;
+
+// 텍스트 스타일 - 메뉴 항목
+S.TextWrapper2 = styled.div`
+  color: #000000;
+  font-family: "Pretendard-Regular", Helvetica, sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  letter-spacing: -0.25px;
+  line-height: normal;
+  position: relative;
+  text-align: center;
+  width: fit-content;
+  
+  @media (max-width: 768px) {
+    font-size: 0.9rem;
+  }
+`;
+
+// 라인 구분선
+S.Line = styled.div`
+  height: 2px;
+  position: absolute;
+  left: 0.75rem;
+  top: 3rem;
+  width: 18px;
+  background-image: url('data:image/svg+xml;utf8,<svg width="18" height="2" viewBox="0 0 18 2" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 1H17" stroke="black" stroke-width="2" stroke-linecap="round"/></svg>');
+  background-repeat: no-repeat;
+`;
+
+// 프레임3 - 이용 제한 내역 메뉴
+S.Frame3 = styled.div`
+  align-items: center;
+  display: inline-flex;
+  gap: 0.625rem;
+  justify-content: center;
+  padding: 0.625rem;
+  position: absolute;
+  left: 0;
+  top: 3.3rem;
+`;
+
+// 로그아웃 버튼 프레임
+S.LogoutFrame = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 750px;
+  margin: 0 auto;
+  padding: 0.625rem 0;
+  
+  @media (max-width: 768px) {
+    margin-top: 0.5rem;
+    max-width: 500px;
+  }
+`;
+
+// 로그아웃 텍스트
+S.LogoutText = styled.div`
+  color: #888888;
+  font-family: "Pretendard-Bold", Helvetica, sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: -0.50px;
+  line-height: normal;
+  text-align: center;
+  text-decoration: underline;
+  white-space: nowrap;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  
+  &:hover {
+    color: #666666;
+  }
 `;
 
 export default S;

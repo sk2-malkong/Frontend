@@ -10,6 +10,7 @@ import PostCreateContainer from '../pages/postcreate/PostCreateContainer';
 import PostDetailContainer from '../pages/postdetail/PostDetailContainer';
 import FindIdContainer from '../pages/login/findid/FindIdContainer';
 import FindPasswordContainer from '../pages/login/findpassword/FindPasswordContainer';
+import ProfileFixContainer from '../pages/profileFix/ProfileFixContainer';
 
 const router = createBrowserRouter([
   {
@@ -27,7 +28,12 @@ const router = createBrowserRouter([
       {
         path : '/mypage',
         element : <MyPageContainer/>
-      },{
+      },
+      {
+        path : "/profilefix",
+        element : <ProfileFixContainer/>
+      },
+      {
         path : '/postcreate',
         element : <PostCreateContainer/>
       },
