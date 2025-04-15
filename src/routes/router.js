@@ -7,6 +7,8 @@ import MyPageContainer from '../pages/mypage/MyPageContainer';
 import JoinContainer from '../pages/login/JoinContainer';
 import LoginContainer from '../pages/login/LoginContainer';
 import PostCreateContainer from '../pages/postcreate/PostCreateContainer';
+import PostDetailContainer from '../pages/postdetail/PostDetailContainer';
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -26,6 +28,10 @@ const router = createBrowserRouter([
       },{
         path : '/postcreate',
         element : <PostCreateContainer/>
+      },
+      {
+        path : '/post/:id',
+        element : <PostDetailContainer/>
       }
     ]},
     {

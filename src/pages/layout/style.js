@@ -7,25 +7,33 @@ S.Background = styled.div`
   min-height: 100%;
   position: relative;
   background-color: white;
-`;
-
-S.HeaderWrap = styled.header`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  max-width: 1050px;
-  min-width: 900px;
-  margin: auto;
-  height: 65px;
-  position: relative;
+  overflow-x: hidden; 
 `;
 
 S.Topbar = styled.div`
   width: 100%;
   height: 40px;
   background: #5784e1;
-  position: relative; 
+  position: relative;
   z-index: 1000;
+`;
+
+S.HeaderWrap = styled.header`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1050px;
+  margin: auto;
+  height: 65px;
+  padding: 0 1rem;
+
+  @media (max-width: 900px) {
+    flex-direction: column;
+    align-items: flex-start;
+    height: auto;
+    gap: 0.5rem;
+  }
 `;
 
 S.LogoWrap = styled.div`
@@ -42,14 +50,18 @@ S.LogoWrap = styled.div`
     font-weight: bold;
     color: black;
     margin-left: 12px;
+
+    @media (max-width: 480px) {
+      font-size: 32px;
+    }
   }
 `;
 
 S.SearchBox = styled.div`
   display: flex;
-  width: 367px;
+  width: 100%;
+  max-width: 367px;
   height: 48px;
-  margin: auto;
   border: 2px solid #5784e1;
   background-color: #5784e1;
   overflow: hidden;
@@ -94,16 +106,13 @@ S.User = styled.div`
 
 S.Main = styled.main`
   width: 100%;
-  z-index: 10;
-  margin: 0 auto;
-  padding-bottom: 50px;
   height: 100%;
-  min-height: 1080px;
-  overflow: hidden;
-  min-width: 1050px;
+  padding-bottom: 3.125rem;
   background-color: white;
+  overflow: hidden;
 
-  & .slider {
+  @media (max-width: 1050px) {
+    padding: 0 1rem 3.125rem;
   }
 `;
 
@@ -120,7 +129,7 @@ S.LoginButton = styled.button`
   cursor: pointer;
 
   &:hover {
-    background-color: #5784E1;
+    background-color: #447acc;
   }
 `;
 

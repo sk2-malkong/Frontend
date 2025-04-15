@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import {
-  ScaledContainer, 
+  Wrapper,
   Container,
   ProfileContainer,
   ProfileImage,
@@ -28,6 +28,7 @@ const PostCreate = () => {
     const minutes = String(date.getMinutes()).padStart(2, "0");
     return `${month}/${day} ${hours}:${minutes}`;
   };
+
   const currentDate = getCurrentDate();
   const profileImageUrl = "https://via.placeholder.com/40";
 
@@ -45,7 +46,7 @@ const PostCreate = () => {
   const isActive = title.trim() !== "" && content.trim() !== "";
 
   return (
-    <ScaledContainer>
+    <Wrapper> {/* ✅ 화면 가운데 정렬을 맡음 */}
       <Container>
         <ProfileContainer>
           <ProfileImage src={profileImageUrl} alt="Profile" />
@@ -80,7 +81,7 @@ const PostCreate = () => {
           </SubmitButton>
         </ButtonContainer>
       </Container>
-    </ScaledContainer>
+    </Wrapper>
   );
 };
 
