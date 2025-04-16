@@ -15,9 +15,11 @@ const LoginContainer = () => {
     }
 
     try {
-      await auth.login(id, pw);
-      alert("로그인 성공!");
-      navigate('/main'); // 로그인 후 이동할 페이지
+      const res = await auth.login(id, pw); 
+      const username = res.userDto?.username || res.user?.username;
+
+      alert(`로그인 공`); 
+      navigate('/main');
     } catch (error) {
       alert(error.message || '로그인에 실패했습니다.');
     }
