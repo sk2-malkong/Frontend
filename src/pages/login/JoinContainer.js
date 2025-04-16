@@ -1,10 +1,9 @@
-
 import React, { useState } from 'react';
 import S from './joinstyle';
 import Checkbox from '../login/component/Checkbox';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import auth from '../api/auth'; // 수정됨!
+import auth from '../api/auth';
 
 const JoinContainer = () => {
   const [buttonColor, setButtonColor] = useState(false);
@@ -62,11 +61,10 @@ const JoinContainer = () => {
     const id = getValues("id");
     if (!id) return alert("아이디를 입력해주세요.");
     try {
-      const res = await fetch(`/api/auth/checkId?id=${id}`);
-      const data = await res.json();
-      setIdMessage(data.message || "사용 가능한 아이디입니다.");
+      const message = await auth.checkId(id);
+      setIdMessage(message);
     } catch (err) {
-      setIdMessage("이미 사용 중인 아이디입니다.");
+      setIdMessage(err.message);
     }
   };
 
@@ -74,11 +72,10 @@ const JoinContainer = () => {
     const username = getValues("username");
     if (!username) return alert("닉네임을 입력해주세요.");
     try {
-      const res = await fetch(`/api/auth/checkName?username=${username}`);
-      const data = await res.json();
-      setNameMessage(data.message || "사용 가능한 닉네임입니다.");
+      const message = await auth.checkName(username);
+      setNameMessage(message);
     } catch (err) {
-      setNameMessage("이미 사용 중인 닉네임입니다.");
+      setNameMessage(err.message);
     }
   };
 
@@ -91,7 +88,7 @@ const JoinContainer = () => {
         <S.JoinBox>
           <h2 style={{ textAlign: 'center' }}>회원가입</h2>
           <form onSubmit={handleSubmit(onSubmit)}>
-            {/* ID */}
+            {/* 아이디 */}
             <div className='idWrapper'>
               <S.Input type="text" placeholder="아이디" {...register("id", { required: true })} />
               <button type="button" onClick={checkIdDuplicate}>중복확인</button>
@@ -100,7 +97,7 @@ const JoinContainer = () => {
               <p style={{ fontSize: '12px', color: '#888' }}>영문 소문자 또는 영문+숫자 조합 6~12자리</p>
             </div>
 
-            {/* Username */}
+            {/* 닉네임 */}
             <div className='usernameWrapper'>
               <S.Input type="text" placeholder="닉네임" {...register("username", { required: true })} />
               <button type="button" onClick={checkNameDuplicate}>중복확인</button>
@@ -108,7 +105,7 @@ const JoinContainer = () => {
               {nameMessage && <p style={{ color: nameMessage.includes("가능") ? "green" : "red" }}>{nameMessage}</p>}
             </div>
 
-            {/* Password */}
+            {/* 비밀번호 */}
             <div className='passwordWrapper'>
               <S.Input type="password" placeholder="비밀번호"
                 {...register("pw", {
@@ -121,7 +118,7 @@ const JoinContainer = () => {
               </p>
             </div>
 
-            {/* Password Confirm */}
+            {/* 비밀번호 확인 */}
             <div className='passwordConfirmWrapper'>
               <S.Input type="password" placeholder="비밀번호 확인"
                 {...register("pwConfirm", { required: true })}
@@ -133,7 +130,7 @@ const JoinContainer = () => {
               )}
             </div>
 
-            {/* Email */}
+            {/* 이메일 */}
             <div className='emailWrapper'>
               <S.Input type="email" placeholder="이메일"
                 {...register("email", {
@@ -144,7 +141,7 @@ const JoinContainer = () => {
               <S.Notice>필수 입력 항목을 모두 포함하여 등록해주세요.</S.Notice>
             </div>
 
-            {/* 약관동의 체크박스 */}
+            {/* 체크박스 */}
             <Checkbox setButtonColor={setButtonColor} />
 
             <S.Button type="submit">가입하기</S.Button>

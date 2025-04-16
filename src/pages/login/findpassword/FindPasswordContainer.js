@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import S from '../findpassword/style';
 import { useForm } from 'react-hook-form';
+import auth from '../../api/auth'; 
 
 const FindPasswordContainer = () => {
   const [matchMessage, setMatchMessage] = useState('');
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[!@#])[\da-zA-Z!@#]{8,}$/;
+
   const {
     register,
     handleSubmit,
@@ -15,7 +17,6 @@ const FindPasswordContainer = () => {
   } = useForm();
 
   const password = watch("pw");
-  const confirmPassword = watch("pwConfirm");
 
   const handleConfirmPasswordChange = (e) => {
     const value = e.target.value;
@@ -33,7 +34,12 @@ const FindPasswordContainer = () => {
       return;
     }
 
-    alert("비밀번호 재설정 요청 전송 완료");
+    try {
+      await auth.resetPassword(data.id, data.email, data.pw);
+      alert("비밀번호가 성공적으로 재설정되었습니다.");
+    } catch (err) {
+      alert(err.message || "비밀번호 재설정에 실패했습니다.");
+    }
   };
 
   return (
@@ -47,7 +53,7 @@ const FindPasswordContainer = () => {
               placeholder="아이디"
               {...register("id", { required: '아이디를 입력해주세요.' })}
             />
-            <p style={{ marginTop: '4px' }}>{isSubmitted && errors.id && <span style={{ color: 'red' }}>{errors.id.message}</span>}</p>
+            {isSubmitted && errors.id && <p style={{ color: 'red' }}>{errors.id.message}</p>}
           </div>
 
           <div style={{ marginBottom: '25px' }}>
@@ -62,13 +68,13 @@ const FindPasswordContainer = () => {
                 }
               })}
             />
-            <p style={{ marginTop: '4px' }}>{isSubmitted && errors.email && <span style={{ color: 'red' }}>{errors.email.message}</span>}</p>
+            {isSubmitted && errors.email && <p style={{ color: 'red' }}>{errors.email.message}</p>}
           </div>
 
           <div>
             <S.Input
               type="password"
-              placeholder="비밀번호"
+              placeholder="새 비밀번호"
               {...register("pw", {
                 required: '비밀번호를 입력해주세요.',
                 pattern: {
@@ -77,9 +83,9 @@ const FindPasswordContainer = () => {
                 }
               })}
             />
-            <p style={{ marginTop: '4px' }}>{isSubmitted && errors.pw && <span style={{ color: 'red' }}>{errors.pw.message}</span>}</p>
-            <p style={{ fontSize: '12px', marginTop: '4px', }}>
-              영문, 숫자, 특수문자(!@#$%^&*) 조합 8~15자리
+            {isSubmitted && errors.pw && <p style={{ color: 'red' }}>{errors.pw.message}</p>}
+            <p style={{ fontSize: '12px', marginTop: '4px' }}>
+              영문, 숫자, 특수문자(!@#) 조합 8자리 이상
             </p>
           </div>
 
@@ -90,10 +96,10 @@ const FindPasswordContainer = () => {
               {...register("pwConfirm", { required: '비밀번호를 한 번 더 입력해주세요.' })}
               onChange={handleConfirmPasswordChange}
             />
-            <p style={{ marginTop: '4px' }}>{isSubmitted && errors.pwConfirm && <span style={{ color: 'red' }}>{errors.pwConfirm.message}</span>}</p>
-            <p style={{ marginTop: '4px' }}>{matchMessage && (
-              <span style={{ color: matchMessage.includes("✅") ? "green" : "red" }}>{matchMessage}</span>
-            )}</p>
+            {isSubmitted && errors.pwConfirm && <p style={{ color: 'red' }}>{errors.pwConfirm.message}</p>}
+            {matchMessage && (
+              <p style={{ color: matchMessage.includes("✅") ? "green" : "red" }}>{matchMessage}</p>
+            )}
           </div>
 
           <S.Button type="submit">비밀번호 재설정</S.Button>

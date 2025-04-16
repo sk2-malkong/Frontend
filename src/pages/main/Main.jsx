@@ -1,11 +1,20 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import S from './style';
-import { useState } from 'react';
 
 const Main = () => {
-  const isLoggedIn = false;
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [nickname, setNickname] = useState('');
 
-  // 전체 게시물 목록
+  useEffect(() => {
+    const token = localStorage.getItem('accessToken');
+    const savedNickname = localStorage.getItem('nickname'); 
+
+    if (token) {
+      setIsLoggedIn(true);
+      setNickname(savedNickname || '사용자');
+    }
+  }, []);
+
   const dummyPosts = Array(23).fill({
     author: '동글이',
     date: '2025.04.11',
@@ -14,12 +23,10 @@ const Main = () => {
     views: 112,
   });
 
-  // 페이지네이션 상태
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 8;
   const totalPages = Math.ceil(dummyPosts.length / postsPerPage);
 
-  // 현재 페이지에 보여줄 데이터
   const startIdx = (currentPage - 1) * postsPerPage;
   const paginatedPosts = dummyPosts.slice(startIdx, startIdx + postsPerPage);
 
@@ -30,53 +37,57 @@ const Main = () => {
   return (
     <div>
       <S.MainWrapper>
-      <S.ContentLeft>
-        <S.TotalCount>전체 게시글: {dummyPosts.length}</S.TotalCount>
+        <S.ContentLeft>
+          <S.TotalCount>전체 게시글: {dummyPosts.length}</S.TotalCount>
 
-        <S.PostListWrapper>
-          {paginatedPosts.map((post, idx) => (
-            <S.PostCard key={idx}>
-              <div className="post-header">
-                <div className="author-icon" />
-                <span>{post.author}</span>
-                <div className="divider" />
-                <span>{post.date}</span>
-                <div className="divider" />
-                <span>👁 {post.views}</span>
-              </div>
-              <h3 className="title">{post.title}</h3>
-              <p className="content">{post.content}</p>
-            </S.PostCard>
-          ))}
-        </S.PostListWrapper>
-        <S.Pagination>
-          <button disabled={currentPage === 1} onClick={() => setCurrentPage(1)}>{'<<'}</button>
-          <button disabled={currentPage === 1} onClick={() => setCurrentPage(currentPage - 1)}>{'<'}</button>
-          {Array.from({ length: totalPages }, (_, i) => (
-            <button
-              key={i + 1}
-              onClick={() => handlePageClick(i + 1)}
-              style={{ fontWeight: currentPage === i + 1 ? 'bold' : 'normal', color: currentPage === i + 1 ? 'red' : 'black' }}
-            >
-              {i + 1}
-            </button>
-          ))}
-          <button disabled={currentPage === totalPages} onClick={() => setCurrentPage(currentPage + 1)}>{'>'}</button>
-          <button disabled={currentPage === totalPages} onClick={() => setCurrentPage(totalPages)}>{'>>'}</button>
-        </S.Pagination>
-      </S.ContentLeft>
+          <S.PostListWrapper>
+            {paginatedPosts.map((post, idx) => (
+              <S.PostCard key={idx}>
+                <div className="post-header">
+                  <div className="author-icon" />
+                  <span>{post.author}</span>
+                  <div className="divider" />
+                  <span>{post.date}</span>
+                  <div className="divider" />
+                  <span>👁 {post.views}</span>
+                </div>
+                <h3 className="title">{post.title}</h3>
+                <p className="content">{post.content}</p>
+              </S.PostCard>
+            ))}
+          </S.PostListWrapper>
 
-      {isLoggedIn && (
-        <S.SidebarRight>
-          <S.UserAvatar />
-          <S.Nickname>닉네임</S.Nickname>
-          <div>
-            <S.ActionButton>글쓰기</S.ActionButton>
-            <S.ActionButton>마이페이지</S.ActionButton>
-          </div>
-        </S.SidebarRight>
-      )}
-    </S.MainWrapper>
+          <S.Pagination>
+            <button disabled={currentPage === 1} onClick={() => setCurrentPage(1)}>{'<<'}</button>
+            <button disabled={currentPage === 1} onClick={() => setCurrentPage(currentPage - 1)}>{'<'}</button>
+            {Array.from({ length: totalPages }, (_, i) => (
+              <button
+                key={i + 1}
+                onClick={() => handlePageClick(i + 1)}
+                style={{
+                  fontWeight: currentPage === i + 1 ? 'bold' : 'normal',
+                  color: currentPage === i + 1 ? 'red' : 'black',
+                }}
+              >
+                {i + 1}
+              </button>
+            ))}
+            <button disabled={currentPage === totalPages} onClick={() => setCurrentPage(currentPage + 1)}>{'>'}</button>
+            <button disabled={currentPage === totalPages} onClick={() => setCurrentPage(totalPages)}>{'>>'}</button>
+          </S.Pagination>
+        </S.ContentLeft>
+
+        {isLoggedIn && (
+          <S.SidebarRight>
+            <S.UserAvatar />
+            <S.Nickname>{nickname}</S.Nickname>
+            <div>
+              <S.ActionButton>글쓰기</S.ActionButton>
+              <S.ActionButton>마이페이지</S.ActionButton>
+            </div>
+          </S.SidebarRight>
+        )}
+      </S.MainWrapper>
     </div>
   );
 };

@@ -2,15 +2,20 @@ import React from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import Footer from './footer/Footer';
 import S from '../layout/style';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser } from '@fortawesome/free-solid-svg-icons';
 
 const Layout = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const isIntroPage = location.pathname === '/';
+  const isLoggedIn = !!localStorage.getItem('accessToken'); // 로그인 여부 확인
 
-  const isLoggedIn = false; // 임시 로그인 상태 (나중에 상태 관리로 변경 가능)
+  const handleLogout = () => {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('email');
+    alert('로그아웃 되었습니다.');
+    navigate('/login');
+  };
 
   return (
     <div>
@@ -28,15 +33,8 @@ const Layout = () => {
                 <p>검색</p>
               </S.SearchBox>
 
-        
               {isLoggedIn ? (
-                <S.LoginButton
-                  onClick={() => {
-                    alert('로그아웃 되었습니다.');
-                  }}
-                >
-                  로그아웃
-                </S.LoginButton>
+                <S.LoginButton onClick={handleLogout}>로그아웃</S.LoginButton>
               ) : (
                 <S.LoginButton onClick={() => navigate('/login')}>
                   로그인
