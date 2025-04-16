@@ -28,12 +28,12 @@ S.HeaderWrap = styled.header`
   height: 65px;
   padding: 0 1rem;
 
-  @media (max-width: 900px) {
+  /* @media (max-width: 900px) {
     flex-direction: column;
     align-items: flex-start;
     height: auto;
     gap: 0.5rem;
-  }
+  } */
 `;
 
 S.LogoWrap = styled.div`
@@ -52,7 +52,7 @@ S.LogoWrap = styled.div`
     margin-left: 12px;
 
     @media (max-width: 480px) {
-      font-size: 32px;
+      /* font-size: 32px; */
     }
   }
 `;
