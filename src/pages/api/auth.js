@@ -35,6 +35,7 @@ const login = async (id, pw) => {
     if (accessToken) localStorage.setItem('accessToken', accessToken);
     if (refreshToken) localStorage.setItem('refreshToken', refreshToken);
     if (userInfo.email) localStorage.setItem('email', userInfo.email);
+    if (userInfo.username) localStorage.setItem('username', userInfo.username);
 
     console.log('로그인 성공:', response.data);
     return response.data;
