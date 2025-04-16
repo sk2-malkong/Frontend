@@ -4,7 +4,7 @@ export const Container = styled.div`
   display: flex;
   justify-content: center;
   padding: 40px 16px;
-  background-color: #f9f9f9;
+  background-color: #ffffff; /* 전체 배경 흰색으로 */
 `;
 
 export const Card = styled.div`
@@ -14,7 +14,7 @@ export const Card = styled.div`
   border: 1px solid #e0e0e0;
   border-radius: 12px;
   padding: 24px;
-  color: #000; /* 전체 텍스트 색상 지정 */
+  color: #000;
 `;
 
 export const Header = styled.div`
@@ -78,11 +78,11 @@ export const Divider = styled.hr`
   margin: 24px 0;
 `;
 
-/* ✅ 댓글 컴포넌트 스타일도 여기 포함시킬 수 있어 */
+/* ✅ 댓글 컴포넌트 스타일 */
 export const Comment = styled.div`
   padding: 12px 0;
   border-bottom: 1px solid #f0f0f0;
-  color: #000; /* 댓글 전체 글자색 */
+  color: #000;
 
   .info {
     font-size: 0.8rem;

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import {
   Wrapper,
   Container,
-  ProfileContainer,
+  Profile,
   ProfileImage,
   UserInfo,
   Nickname,
@@ -10,8 +10,8 @@ import {
   ContentBox,
   ContentBody,
   TitleInput,
-  ContentInput,
-  ButtonContainer,
+  TextArea,
+  ButtonRow,
   BackButton,
   SubmitButton,
 } from "./style";
@@ -46,15 +46,15 @@ const PostCreate = () => {
   const isActive = title.trim() !== "" && content.trim() !== "";
 
   return (
-    <Wrapper> {/* ✅ 화면 가운데 정렬을 맡음 */}
+    <Wrapper>
       <Container>
-        <ProfileContainer>
+        <Profile>
           <ProfileImage src={profileImageUrl} alt="Profile" />
           <UserInfo>
             <Nickname>동글이</Nickname>
             <DateText>{currentDate}</DateText>
           </UserInfo>
-        </ProfileContainer>
+        </Profile>
 
         <ContentBox>
           <ContentBody>
@@ -65,7 +65,7 @@ const PostCreate = () => {
               onChange={(e) => setTitle(e.target.value)}
               required
             />
-            <ContentInput
+            <TextArea
               placeholder="글을 작성해 주세요..."
               value={content}
               onChange={(e) => setContent(e.target.value)}
@@ -74,12 +74,12 @@ const PostCreate = () => {
           </ContentBody>
         </ContentBox>
 
-        <ButtonContainer>
+        <ButtonRow>
           <BackButton onClick={handleBack}>이전 화면으로</BackButton>
           <SubmitButton type="submit" active={isActive} onClick={handleSubmit}>
             작성 완료
           </SubmitButton>
-        </ButtonContainer>
+        </ButtonRow>
       </Container>
     </Wrapper>
   );
