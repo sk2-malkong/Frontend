@@ -1,25 +1,26 @@
 import React, { useState } from 'react';
 import S from '../findid/style';
 import { useForm } from 'react-hook-form';
+import auth from '../../api/auth';
 
 const FindIdContainer = () => {
-  const [notFound, setNotFound] = useState(false);
+  const [resultMessage, setResultMessage] = useState('');
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitted },
+    reset
   } = useForm();
 
   const onSubmit = async (data) => {
-    setNotFound(false);
-
-    // 실제로는 서버에 이메일 조회 요청을 보내야 합니다
-    // 여기선 임시로 email이 test@example.com만 존재한다고 가정
-    if (data.email !== 'test@example.com') {
-      setNotFound(true);
-    } else {
-      alert('해당 이메일로 가입된 아이디가 존재합니다!');
+    setResultMessage('');
+    try {
+      const res = await auth.findId(data.email); // 실제 서버 요청
+      setResultMessage(res); // ex: "회원님의 아이디는 testuser입니다."
+    } catch (err) {
+      setResultMessage('❌ 해당 이메일로 가입된 계정을 찾을 수 없습니다.');
     }
   };
 
@@ -42,10 +43,11 @@ const FindIdContainer = () => {
           {isSubmitted && errors.email && (
             <p style={{ color: 'red' }}>{errors.email.message}</p>
           )}
-          {isSubmitted && !errors.email && notFound && (
-            <p style={{ color: 'red' }}>이메일이 존재하지 않습니다.</p>
+          {isSubmitted && resultMessage && (
+            <p style={{ color: resultMessage.startsWith('❌') ? 'red' : 'green' }}>
+              {resultMessage}
+            </p>
           )}
-
           <S.LoginButton type="submit">아이디 찾기</S.LoginButton>
         </form>
       </S.LoginBox>
