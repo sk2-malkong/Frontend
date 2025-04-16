@@ -7,7 +7,7 @@ const Main = () => {
 
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
-    const savedNickname = localStorage.getItem('nickname'); 
+    const savedNickname = localStorage.getItem('username'); 
 
     if (token) {
       setIsLoggedIn(true);

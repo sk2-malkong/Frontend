@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import S from '../findpassword/style';
 import { useForm } from 'react-hook-form';
-import auth from '../../api/auth'; 
+import auth from '../../api/auth';
+import { useNavigate } from 'react-router-dom';
 
 const FindPasswordContainer = () => {
   const [matchMessage, setMatchMessage] = useState('');
+  const navigate = useNavigate(); 
+
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[!@#])[\da-zA-Z!@#]{8,}$/;
 
@@ -37,6 +40,7 @@ const FindPasswordContainer = () => {
     try {
       await auth.resetPassword(data.id, data.email, data.pw);
       alert("비밀번호가 성공적으로 재설정되었습니다.");
+      navigate('/login'); 
     } catch (err) {
       alert(err.message || "비밀번호 재설정에 실패했습니다.");
     }
