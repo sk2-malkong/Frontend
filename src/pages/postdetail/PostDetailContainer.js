@@ -8,7 +8,7 @@ const PostDetailContainer = () => {
   const dummyPost = {
     id,
     author: '동글이',
-    date: '2025-04-11',
+    date: '04/11 09:34',
     title: '취업 준비 막막하다',
     content: '하는건 없는데\n스트레스만 만땅이다',
     views: 112,

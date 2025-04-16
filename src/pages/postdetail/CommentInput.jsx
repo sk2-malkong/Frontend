@@ -1,55 +1,77 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
+import SubmitIcon from './Inputbutton.svg';
 
 const CommentInput = () => {
+  const [comment, setComment] = useState('');
+
+  const handleSubmit = () => {
+    if (!comment.trim()) return;
+    console.log('댓글 등록:', comment); // 나중에 API 연결
+    setComment('');
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleSubmit();
+    }
+  };
+
   return (
     <Wrapper>
-      <Input placeholder="댓글을 입력하세요." />
-      <Button>등록</Button>
+      <Input
+        placeholder="댓글을 입력하세요."
+        value={comment}
+        onChange={(e) => setComment(e.target.value)}
+        onKeyDown={handleKeyDown}
+      />
+      <IconButton onClick={handleSubmit} />
     </Wrapper>
   );
 };
 
 export default CommentInput;
 
-// 전체 입력창을 감싸는 박스
+// 댓글과 붙이고 카드 안 양옆 여백도 무시
 const Wrapper = styled.div`
+  width: calc(100% + 3.375rem); /* 1.875rem + 1.5rem */
+  margin-left: -1.875rem;
+  margin-right: -1.5rem;
+  padding: 0.25rem 0 0.25rem 0;
+  background-color: #dedede;
   display: flex;
-  padding: 10px;
-  background-color: #f0f0f0;  
-  border-radius: 8px;
-  margin-top: 20px;
+  align-items: center;
+  gap: 0.5rem;
+  border-bottom-left-radius: 0.625rem;
+  border-bottom-right-radius: 0.625rem;
+  border-top: 1px solid #f0f0f0;
+
+  @media (max-width: 768px) {
+    width: calc(100% + 2rem);
+    margin: 0 -1rem;
+    padding: 0.75rem 1rem;
+  }
 `;
 
-// 입력 필드
 const Input = styled.input`
   flex: 1;
-  padding: 10px 14px;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.9375rem;
+  background-color: #dedede;
   border: none;
-  border-radius: 6px;
-  outline: none;
-  font-size: 1rem;
   color: #000;
-  background-color: #f0f0f0;  
-  
+  outline: none;
+
   &::placeholder {
-    color: #aaa;
+    color: #797979;
   }
 `;
 
-// 등록 버튼
-const Button = styled.button`
-  padding: 10px 16px;
+const IconButton = styled.button`
+  width: 1.75rem;   
+  height: 1.75rem;  
+  background: url(${SubmitIcon}) no-repeat center center / contain;
   border: none;
-  background: #2f80ed;
-  color: #fff;
-  font-weight: bold;
-  border-radius: 6px;
   cursor: pointer;
-  font-size: 1rem;
-  margin-left: 8px;
-
-  &:hover {
-    background: #1f6fe0;
-  }
+  padding: 0;
 `;

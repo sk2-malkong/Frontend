@@ -16,6 +16,9 @@ import {
   SubmitButton,
 } from "./style";
 
+// 프로필 이미지
+import profileImageUrl from './profile.svg';
+
 const PostCreate = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -30,7 +33,6 @@ const PostCreate = () => {
   };
 
   const currentDate = getCurrentDate();
-  const profileImageUrl = "https://via.placeholder.com/40";
 
   const handleBack = () => {
     console.log("이전 화면으로 이동");
