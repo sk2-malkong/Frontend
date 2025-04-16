@@ -1,10 +1,10 @@
-// src/pages/join/JoinContainer.js
+
 import React, { useState } from 'react';
 import S from './joinstyle';
 import Checkbox from '../login/component/Checkbox';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import signup from '../api/auth'; 
+import auth from '../api/auth'; // 수정됨!
 
 const JoinContainer = () => {
   const [buttonColor, setButtonColor] = useState(false);
@@ -39,7 +39,7 @@ const JoinContainer = () => {
     const { id, username, email, pw } = data;
 
     try {
-      await signup(id, username, email, pw);
+      await auth.signup(id, username, email, pw);
       alert('회원가입이 완료되었습니다.');
       navigate('/login');
     } catch (error) {
@@ -91,31 +91,29 @@ const JoinContainer = () => {
         <S.JoinBox>
           <h2 style={{ textAlign: 'center' }}>회원가입</h2>
           <form onSubmit={handleSubmit(onSubmit)}>
+            {/* ID */}
             <div className='idWrapper'>
-              <S.Input type="text" placeholder="아이디"
-                {...register("id", { required: true })} />
+              <S.Input type="text" placeholder="아이디" {...register("id", { required: true })} />
               <button type="button" onClick={checkIdDuplicate}>중복확인</button>
               {isSubmitted && errors.id && <p style={{ color: 'red' }}>아이디를 입력해주세요.</p>}
               {idMessage && <p style={{ color: idMessage.includes("가능") ? "green" : "red" }}>{idMessage}</p>}
-              <p style={{ fontSize: '12px', color: '#888' }}>영문 소문자 또는 영문 소문자+숫자 조합 6~12자리</p>
+              <p style={{ fontSize: '12px', color: '#888' }}>영문 소문자 또는 영문+숫자 조합 6~12자리</p>
             </div>
 
+            {/* Username */}
             <div className='usernameWrapper'>
-              <S.Input type="text" placeholder="닉네임"
-                {...register("username", { required: true })} />
+              <S.Input type="text" placeholder="닉네임" {...register("username", { required: true })} />
               <button type="button" onClick={checkNameDuplicate}>중복확인</button>
               {isSubmitted && errors.username && <p style={{ color: 'red' }}>닉네임을 입력해주세요.</p>}
               {nameMessage && <p style={{ color: nameMessage.includes("가능") ? "green" : "red" }}>{nameMessage}</p>}
             </div>
 
+            {/* Password */}
             <div className='passwordWrapper'>
               <S.Input type="password" placeholder="비밀번호"
                 {...register("pw", {
                   required: true,
-                  pattern: {
-                    value: passwordRegex,
-                    message: '조건이 맞지 않습니다'
-                  }
+                  pattern: { value: passwordRegex, message: '조건이 맞지 않습니다' }
                 })} />
               {isSubmitted && errors.pw && <p style={{ color: 'red' }}>{errors.pw.message}</p>}
               <p style={{ fontSize: '12px', color: isSubmitted && errors.pw ? 'red' : '#888' }}>
@@ -123,33 +121,32 @@ const JoinContainer = () => {
               </p>
             </div>
 
+            {/* Password Confirm */}
             <div className='passwordConfirmWrapper'>
-              <S.Input
-                type="password"
-                placeholder="비밀번호 확인"
+              <S.Input type="password" placeholder="비밀번호 확인"
                 {...register("pwConfirm", { required: true })}
                 onChange={handleConfirmPasswordChange}
               />
-              {isSubmitted && errors.pwConfirm && <p style={{ color: 'red' }}>{errors.pwConfirm.message}</p>}
+              {isSubmitted && errors.pwConfirm && <p style={{ color: 'red' }}>비밀번호 확인을 입력해주세요.</p>}
               {matchMessage && (
                 <p style={{ color: matchMessage.includes("✅") ? "green" : "red" }}>{matchMessage}</p>
               )}
             </div>
 
+            {/* Email */}
             <div className='emailWrapper'>
               <S.Input type="email" placeholder="이메일"
                 {...register("email", {
                   required: true,
-                  pattern: {
-                    value: emailRegex,
-                    message: '올바른 이메일 형식을 입력해주세요.'
-                  }
+                  pattern: { value: emailRegex, message: '올바른 이메일 형식을 입력해주세요.' }
                 })} />
               {isSubmitted && errors.email && <p style={{ color: 'red' }}>{errors.email.message}</p>}
               <S.Notice>필수 입력 항목을 모두 포함하여 등록해주세요.</S.Notice>
             </div>
 
+            {/* 약관동의 체크박스 */}
             <Checkbox setButtonColor={setButtonColor} />
+
             <S.Button type="submit">가입하기</S.Button>
           </form>
         </S.JoinBox>
