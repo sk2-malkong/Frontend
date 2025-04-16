@@ -1,9 +1,10 @@
+// src/pages/join/JoinContainer.js
 import React, { useState } from 'react';
 import S from './joinstyle';
 import Checkbox from '../login/component/Checkbox';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import signup from '../api/auth'; 
 
 const JoinContainer = () => {
   const [buttonColor, setButtonColor] = useState(false);
@@ -24,8 +25,6 @@ const JoinContainer = () => {
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[!@#])[\da-zA-Z!@#]{8,}$/;
 
-  const password = watch("pw");
-
   const onSubmit = async (data) => {
     if (!buttonColor) {
       alert("약관에 동의해야 회원가입이 가능합니다.");
@@ -40,22 +39,11 @@ const JoinContainer = () => {
     const { id, username, email, pw } = data;
 
     try {
-      const res = await axios.post('http://localhost:3306/api/auth/signup', {
-        id,
-        username,
-        email,
-        pw,
-      });
-
-      if (res.status === 200) {
-        alert('회원가입이 완료되었습니다.');
-        navigate('/login');
-      } else {
-        alert(res.data.message || '회원가입에 실패했습니다.');
-      }
+      await signup(id, username, email, pw);
+      alert('회원가입이 완료되었습니다.');
+      navigate('/login');
     } catch (error) {
-      console.error("회원가입 요청 실패:", error);
-      alert("서버 오류가 발생했습니다.");
+      alert(error.message || '회원가입 도중 오류가 발생했습니다.');
     }
   };
 
@@ -74,8 +62,9 @@ const JoinContainer = () => {
     const id = getValues("id");
     if (!id) return alert("아이디를 입력해주세요.");
     try {
-      const res = await axios.get(`http://localhost:3306/api/auth/checkId?id=${id}`);
-      setIdMessage(res.data.message || "사용 가능한 아이디입니다.");
+      const res = await fetch(`/api/auth/checkId?id=${id}`);
+      const data = await res.json();
+      setIdMessage(data.message || "사용 가능한 아이디입니다.");
     } catch (err) {
       setIdMessage("이미 사용 중인 아이디입니다.");
     }
@@ -85,8 +74,9 @@ const JoinContainer = () => {
     const username = getValues("username");
     if (!username) return alert("닉네임을 입력해주세요.");
     try {
-      const res = await axios.get(`http://localhost:3306/api/auth/checkName?username=${username}`);
-      setNameMessage(res.data.message || "사용 가능한 닉네임입니다.");
+      const res = await fetch(`/api/auth/checkName?username=${username}`);
+      const data = await res.json();
+      setNameMessage(data.message || "사용 가능한 닉네임입니다.");
     } catch (err) {
       setNameMessage("이미 사용 중인 닉네임입니다.");
     }
@@ -129,7 +119,7 @@ const JoinContainer = () => {
                 })} />
               {isSubmitted && errors.pw && <p style={{ color: 'red' }}>{errors.pw.message}</p>}
               <p style={{ fontSize: '12px', color: isSubmitted && errors.pw ? 'red' : '#888' }}>
-                영문, 숫자, 특수문자(!@#$%^&*) 조합 8~15자리
+                영문, 숫자, 특수문자(!@#) 조합 8자리 이상
               </p>
             </div>
 
