@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Container,
   InnerWrapper,
@@ -21,6 +22,29 @@ import CommentInput from './CommentInput';
 import profileImg from './profile.svg';
 
 const PostDetail = ({ post, comments }) => {
+  const navigate = useNavigate();
+  const [commentList, setCommentList] = useState(comments);
+
+  // 🔹 댓글 추가
+  const handleAddComment = (newComment) => {
+    setCommentList((prev) => [...prev, newComment]);
+  };
+
+  // 🔹 수정 페이지로 이동
+  const handleEdit = () => {
+    navigate(`/edit/${post.id}`);
+  };
+
+  // 🔹 삭제 확인
+  const handleDelete = () => {
+    const confirmed = window.confirm('글을 삭제하시겠습니까?');
+    if (confirmed) {
+      console.log('삭제됨:', post.id);
+      // 실제 삭제 처리 후 목록으로 이동 예시:
+      // navigate('/board');
+    }
+  };
+
   return (
     <Container>
       <InnerWrapper>
@@ -36,9 +60,9 @@ const PostDetail = ({ post, comments }) => {
             </AuthorInfo>
 
             <ControlButtons>
-              <span>수정</span>
+              <span onClick={handleEdit}>수정</span>
               <span className="divider">|</span>
-              <span>삭제</span>
+              <span onClick={handleDelete}>삭제</span>
             </ControlButtons>
           </Header>
 
@@ -49,11 +73,13 @@ const PostDetail = ({ post, comments }) => {
 
           <Divider />
 
-          {/* 댓글 목록 */}
-          <CommentList comments={comments} />
+          {/* 🔹 댓글 목록 */}
+          <CommentList comments={commentList} />
 
-          {/* 댓글 입력창 - 여백 없이 바로 아래에 붙게! */}
-          <CommentInput />
+
+
+          {/* 🔹 댓글 입력창 */}
+          <CommentInput onSubmit={handleAddComment} />
         </Card>
       </InnerWrapper>
     </Container>

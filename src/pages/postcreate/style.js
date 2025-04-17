@@ -1,38 +1,42 @@
 import styled from "styled-components";
 
+const baseFont = `
+  font-family: 'Pretendard', sans-serif;
+`;
+
+// 페이지 전체 Wrapper (PostDetail의 Container 대응)
 export const Wrapper = styled.div`
+  ${baseFont}
   width: 100%;
   display: flex;
   justify-content: center;
-  padding-top: 2rem;
+  padding: 2.5rem 1rem;
   background-color: #fff;
-  overflow-x: hidden;
 `;
 
+// 내부 콘텐츠 Wrapper (PostDetail의 InnerWrapper 대응)
 export const Container = styled.div`
   width: 100%;
-  max-width: 780px;
-  padding: 0 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  font-family: "Pretendard", sans-serif;
+  max-width: 45.625rem; /* 730px */
+  margin: 0 auto;
+  ${baseFont}
 
   @media (max-width: 768px) {
-    gap: 20px;
-    padding: 0 0.75rem;
+    padding: 0 1rem;
   }
 `;
 
+// 프로필
 export const Profile = styled.div`
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
 `;
 
 export const ProfileImage = styled.img`
-  width: 40px;
-  height: 40px;
+  width: 3rem;
+  height: 3rem;
   border-radius: 50%;
   object-fit: cover;
 `;
@@ -46,22 +50,26 @@ export const Nickname = styled.span`
   font-size: 1.25rem;
   font-weight: 500;
   color: #000;
+  ${baseFont}
 `;
 
 export const DateText = styled.span`
   font-size: 1rem;
   color: #aaa;
+  ${baseFont}
 `;
 
+// 글쓰기 박스 (PostDetail의 Card 대응)
 export const ContentBox = styled.div`
   width: 100%;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  background-color: #fff;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 0.625rem;
   display: flex;
   flex-direction: column;
   height: 460px;
   overflow-y: auto;
+  margin-bottom: 1.875rem;
 
   @media (max-width: 768px) {
     height: 400px;
@@ -72,11 +80,11 @@ export const ContentBody = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  padding: 16px;
+  gap: 1rem;
+  padding: 1.875rem 1.5rem 1.875rem 1.875rem;
 
   @media (max-width: 768px) {
-    padding: 12px;
+    padding: 1rem;
   }
 `;
 
@@ -85,9 +93,10 @@ export const TitleInput = styled.input`
   font-weight: 600;
   border: none;
   border-bottom: 1px solid #ddd;
-  padding: 8px 4px;
+  padding: 0.5rem 0.25rem;
   outline: none;
   color: #000;
+  ${baseFont}
 
   &::placeholder {
     color: #aaa;
@@ -98,18 +107,21 @@ export const TextArea = styled.textarea`
   flex: 1;
   width: 100%;
   border: none;
-  padding: 8px 4px;
+  padding: 0.5rem 0.25rem;
   resize: none;
   outline: none;
   font-size: 1rem;
+  font-weight: 100;
   line-height: 1.75;
   color: #000;
+  ${baseFont}
 
   &::placeholder {
     color: #bbb;
   }
 `;
 
+// 버튼 영역
 export const ButtonRow = styled.div`
   width: 100%;
   display: flex;
