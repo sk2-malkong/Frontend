@@ -11,6 +11,7 @@ import PostDetailContainer from '../pages/postdetail/PostDetailContainer';
 import FindIdContainer from '../pages/login/findid/FindIdContainer';
 import FindPasswordContainer from '../pages/login/findpassword/FindPasswordContainer';
 import ProfileFixContainer from '../pages/profileFix/ProfileFixContainer';
+import LimitationLogContainer from '../pages/limitationlog/LimitationLogContainer';
 import Search from '../pages/search/Search';
 
 const router = createBrowserRouter([
@@ -34,6 +35,11 @@ const router = createBrowserRouter([
         path : "/profilefix",
         element : <ProfileFixContainer/>
       },
+      {
+        path : '/limitlog',
+        element : <LimitationLogContainer/>
+      },
+
       {
         path : '/postcreate',
         element : <PostCreateContainer/>
