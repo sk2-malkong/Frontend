@@ -13,6 +13,7 @@ import FindPasswordContainer from '../pages/login/findpassword/FindPasswordConta
 import ProfileFixContainer from '../pages/profileFix/ProfileFixContainer';
 import LimitationLogContainer from '../pages/limitationlog/LimitationLogContainer';
 import Search from '../pages/search/Search';
+import PostEditContainer from '../pages/postcreate/PostEditContainer'; 
 
 const router = createBrowserRouter([
   {
@@ -47,6 +48,10 @@ const router = createBrowserRouter([
       {
         path : '/post/:id',
         element : <PostDetailContainer/>
+      },
+      {
+        path: '/edit/:id',
+        element: <PostEditContainer />
       },
       {
         path : '/search',
