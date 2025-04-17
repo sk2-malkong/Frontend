@@ -21,7 +21,7 @@ const Layout = () => {
 
   const handleSearch = () => {
     if (keyword.trim()) {
-      navigate(`/main?keyword=${encodeURIComponent(keyword.trim())}`);
+      navigate(`/search?keyword=${encodeURIComponent(keyword.trim())}`);
     }
   };
 
