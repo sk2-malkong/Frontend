@@ -5,9 +5,8 @@ import postApi from '../api/postlist';
 
 const Search = () => {
   const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-  const keyword = queryParams.get('keyword');
 
+  const [keyword, setKeyword] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [nickname, setNickname] = useState('');
   const [posts, setPosts] = useState([]);
@@ -17,6 +16,16 @@ const Search = () => {
 
   const totalPages = Math.ceil(totalCount / postsPerPage);
 
+  //URL 쿼리 변화 감지해서 keyword 상태 변경
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const newKeyword = queryParams.get("keyword") || '';
+    setKeyword(newKeyword);
+    setCurrentPage(1);
+    console.log('🔁 keyword set from URL:', newKeyword);
+  }, [location.search]);
+
+  // 로그인 여부 확인
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
     const savedNickname = localStorage.getItem('username');
@@ -26,20 +35,43 @@ const Search = () => {
     }
   }, []);
 
+  // 검색 API 호출
   useEffect(() => {
     const fetchSearchedPosts = async () => {
-      if (!keyword) return;
+      if (!keyword || currentPage < 1) return;
+
       try {
-        const data = await postApi.search(keyword, currentPage);
+        console.log('[검색 요청]', {
+          keyword,
+          currentPage,
+          backendPage: currentPage - 1,
+        });
+
+        const data = await postApi.search(keyword, currentPage - 1);
+        console.log('[응답 데이터]', data);
+        console.log('[게시글 목록]', data.content);
+        console.log('[총 게시글 수]', data.totalElements);
+
         setPosts(data.content);
         setTotalCount(data.totalElements);
       } catch (err) {
-        console.error('검색 실패:', err.message);
+        console.error('[검색 실패]', err.message);
+        console.error('[에러 정보]', err);
       }
     };
 
     fetchSearchedPosts();
   }, [keyword, currentPage]);
+
+  // 페이지 이동 + 스크롤 최상단 처리
+  const goToPage = (page) => {
+    if (page === currentPage) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   return (
     <S.MainWrapper>
@@ -72,12 +104,13 @@ const Search = () => {
 
         {posts.length > 0 && (
           <S.Pagination>
-            <button disabled={currentPage === 1} onClick={() => setCurrentPage(1)}>{'<<'}</button>
-            <button disabled={currentPage === 1} onClick={() => setCurrentPage(prev => prev - 1)}>{'<'}</button>
+            <button onClick={() => goToPage(1)}>{'<<'}</button>
+            <button onClick={() => goToPage(Math.max(currentPage - 1, 1))}>{'<'}</button>
+
             {Array.from({ length: totalPages }, (_, i) => (
               <button
                 key={i + 1}
-                onClick={() => setCurrentPage(i + 1)}
+                onClick={() => goToPage(i + 1)}
                 style={{
                   fontWeight: currentPage === i + 1 ? 'bold' : 'normal',
                   color: currentPage === i + 1 ? 'red' : 'black',
@@ -86,8 +119,9 @@ const Search = () => {
                 {i + 1}
               </button>
             ))}
-            <button disabled={currentPage === totalPages} onClick={() => setCurrentPage(prev => prev + 1)}>{'>'}</button>
-            <button disabled={currentPage === totalPages} onClick={() => setCurrentPage(totalPages)}>{'>>'}</button>
+
+            <button onClick={() => goToPage(Math.min(currentPage + 1, totalPages))}>{'>'}</button>
+            <button onClick={() => goToPage(totalPages)}>{'>>'}</button>
           </S.Pagination>
         )}
       </S.ContentLeft>
