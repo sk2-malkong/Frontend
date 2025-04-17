@@ -11,6 +11,7 @@ import PostDetailContainer from '../pages/postdetail/PostDetailContainer';
 import FindIdContainer from '../pages/login/findid/FindIdContainer';
 import FindPasswordContainer from '../pages/login/findpassword/FindPasswordContainer';
 import ProfileFixContainer from '../pages/profileFix/ProfileFixContainer';
+import Search from '../pages/search/Search';
 
 const router = createBrowserRouter([
   {
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
       {
         path : '/post/:id',
         element : <PostDetailContainer/>
+      },
+      {
+        path : '/search',
+        element : <Search/>
       }
     ]},
     {
