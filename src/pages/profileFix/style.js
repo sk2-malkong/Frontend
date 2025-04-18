@@ -2,7 +2,11 @@ import styled from "styled-components";
 
 const S = {};
 
-// 전체 페이지 랩퍼
+/**
+ * 전체 페이지 랩퍼
+ * 프로필 수정 페이지의 최상위 컨테이너로, 전체 화면을 차지하며 내부 요소들을 중앙 정렬합니다.
+ */
+
 S.PageWrapper = styled.div`
     background-color: #ffffff;
     display: flex;
@@ -13,7 +17,10 @@ S.PageWrapper = styled.div`
     min-height: 100vh;
 `;
 
-// 프레임 랩퍼 (전체 컨테이너)
+/**
+ * 프레임 랩퍼 (전체 컨테이너)
+ * 실제 콘텐츠를 담는 중간 레벨 컨테이너로, 패딩 공간을 제공합니다.
+ */
 S.FrameWrapper = styled.div`
     background-color: #ffffff;
     width: 100%;
@@ -23,7 +30,11 @@ S.FrameWrapper = styled.div`
     padding: 2rem;
 `;
 
-// 프로필 수정 카드 메인 컨테이너
+/**
+ * 프로필 수정 카드 메인 컨테이너
+ * 실제 프로필 수정 UI 요소들을 포함하는 카드 형태의 컴포넌트입니다.
+ * 네오모피즘 디자인 스타일을 적용한 그림자 효과가 특징입니다.
+ */
 S.ProfileCard = styled.div`
     background-color: #ffffff;
     border-radius: 1.25rem;
@@ -38,7 +49,10 @@ S.ProfileCard = styled.div`
     margin: 3.25rem auto;
 `;
 
-// 헤더 영역 ('프로필 수정' 텍스트가 있는 상단 영역)
+/**
+ * 헤더 영역
+ * '프로필 수정' 텍스트가 포함된 상단 제목 영역입니다.
+ */
 S.HeaderArea = styled.div`
     align-items: center;
     display: flex;
@@ -51,7 +65,10 @@ S.HeaderArea = styled.div`
     width: 100%;
 `;
 
-// 헤더 텍스트 ('프로필 수정')
+/**
+ * 헤더 텍스트
+ * '프로필 수정' 제목 텍스트의 스타일을 정의합니다.
+ */
 S.HeaderText = styled.div`
     color: #000000;
     font-family: "Pretendard-SemiBold", Helvetica;
@@ -65,7 +82,11 @@ S.HeaderText = styled.div`
     width: fit-content;
 `;
 
-// 아이콘 래퍼 (프로필 수정 아이콘을 위한 컨테이너)
+/**
+ * 아이콘 래퍼
+ * 프로필 수정 아이콘을 위한 컨테이너입니다.
+ * 참고: 현재 컴포넌트에서 사용되지 않고 있습니다.
+ */
 S.IconWrapper = styled.div`
     display: flex;
     justify-content: center;
@@ -81,7 +102,10 @@ S.IconWrapper = styled.div`
     }
 `;
 
-// 닉네임 입력 필드
+/**
+ * 닉네임 입력 필드
+ * 사용자 닉네임을 입력받는 둥근 입력 필드 컨테이너입니다.
+ */
 S.NicknameField = styled.div`
     align-items: center;
     background-color: #f8f8f8;
@@ -99,7 +123,11 @@ S.NicknameField = styled.div`
     max-width: 25rem;
 `;
 
-// 입력 가이드 텍스트 ('2-10자 이내')
+/**
+ * 입력 가이드 텍스트
+ * 닉네임 입력 필드 위에 표시되는 '2-10자 이내' 안내 텍스트입니다.
+ * 참고: 현재 컴포넌트에서 사용되지 않고 있습니다.
+ */
 S.GuideText = styled.div`
     color: #aaaaaa;
     font-family: "Pretendard-Medium", Helvetica;
@@ -114,7 +142,10 @@ S.GuideText = styled.div`
     align-self: flex-start;
 `;
 
-// 닉네임 입력 박스
+/**
+ * 닉네임 입력 박스
+ * 실제 텍스트를 입력받는 input 요소입니다.
+ */
 S.InputBox = styled.input`
     width: 100%;
     border: none;
@@ -129,13 +160,16 @@ S.InputBox = styled.input`
     }
 `;
 
-// 수정 완료 버튼
+/**
+ * 수정 완료 버튼
+ * 프로필 수정 내용을 저장하는 파란색 버튼입니다.
+ */
 S.SubmitButton = styled.div`
     align-items: center;
     background-color: #5784e1;
     border-radius: 1.625rem;
     display: flex;
-    gap: 0.875rem;
+    gap:5rem; // 0.875rem
     height: 3rem;
     justify-content: center;
     left: 50%;
@@ -147,7 +181,10 @@ S.SubmitButton = styled.div`
     max-width: 25rem;
 `;
 
-// 버튼 텍스트 ('수정 완료')
+/**
+ * 버튼 텍스트
+ * '수정 완료' 버튼 내부 텍스트의 스타일을 정의합니다.
+ */
 S.ButtonText = styled.div`
     color: #ffffff;
     font-family: "Pretendard-Bold", Helvetica;
@@ -161,7 +198,11 @@ S.ButtonText = styled.div`
     width: fit-content;
 `;
 
-// 프로필 이미지 영역
+/**
+ * 프로필 이미지 영역
+ * 사용자 프로필 이미지를 표시하고 클릭 시 이미지 업로드가 가능한 원형 영역입니다.
+ * 호버 시 시각적 피드백을 제공합니다.
+ */
 S.ProfileImageArea = styled.div`
     height: 7.5rem;
     width: 7.5rem;
@@ -189,7 +230,12 @@ S.ProfileImageArea = styled.div`
     }
 `;
 
-// 카메라 아이콘 래퍼 (프로필 사진 변경 아이콘)
+/**
+ * 카메라 아이콘 래퍼
+ * 프로필 이미지 우측 하단에 표시되는 카메라 아이콘을 위한 컨테이너입니다.
+ * 참고: 현재 컴포넌트에서 사용되지 않고 있으나, 이미지 수정 기능을 시각적으로
+ * 명확히 하기 위해 구현하는 것이 권장됩니다.
+ */
 S.CameraIconWrapper = styled.div`
     background-color: #ffffff;
     border: 0.03125rem solid;
@@ -210,7 +256,10 @@ S.CameraIconWrapper = styled.div`
     }
 `;
 
-// 회원 탈퇴 영역
+/**
+ * 회원 탈퇴 영역
+ * 화면 하단에 위치한 회원 탈퇴 링크를 위한 컨테이너입니다.
+ */
 S.WithdrawalArea = styled.div`
     align-items: center;
     display: inline-flex;
@@ -223,7 +272,11 @@ S.WithdrawalArea = styled.div`
     top: 24.4375rem;
 `;
 
-// 회원 탈퇴 텍스트
+/**
+ * 회원 탈퇴 텍스트
+ * '회원 탈퇴' 링크 텍스트의 스타일을 정의합니다.
+ * 회색 색상과 밑줄로 표시되어 있습니다.
+ */
 S.WithdrawalText = styled.div`
     color: #888888;
     font-family: "Pretendard-Bold", Helvetica;
