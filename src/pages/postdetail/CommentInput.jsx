@@ -1,35 +1,61 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
-import SubmitIcon from './Inputbutton.svg';
+import {
+  CommentInputWrapper,
+  CommentInput as Input,
+  IconButton,
+} from './style';
 
-const CommentInput = ({ onSubmit }) => {
+
+/**
+ * 댓글 입력창 컴포넌트
+ * - 텍스트 입력 및 등록 버튼으로 댓글 작성
+ * - 'Enter' 키 또는 버튼 클릭 시 제출
+ * - 제한(disabled) 상태일 경우 입력/제출 비활성화
+ */
+const CommentInput = ({ onSubmit, disabled }) => {
   const [comment, setComment] = useState('');
 
+  /**
+   * 댓글 제출 처리 함수
+   * - 입력값이 비어있거나 제한 상태일 경우 무시
+   * - onSubmit prop을 통해 부모(PostDetail)로 댓글 전달
+   */
   const handleSubmit = () => {
+    if (disabled) return;
+
     const trimmed = comment.trim();
     if (!trimmed) return;
 
     const newComment = {
-      username: 'username_3',
+      username: 'username_3', // 실제 로그인 사용자 정보로 대체 예정
       date: getCurrentDate(),
       text: trimmed,
-      profile: null, // 필요 시 이미지 추가
+      profile: null, // 필요 시 사용자 프로필 이미지 연결
     };
 
     if (onSubmit) {
-      onSubmit(newComment); // 🔹 부모(PostDetail)에게 댓글 전달
+      onSubmit(newComment);
     }
 
     setComment('');
   };
 
+
+  
+  /**
+   * 엔터 키 입력 시 제출 동작 처리
+   */
   const handleKeyDown = (e) => {
+    if (disabled) return;
     if (e.key === 'Enter') {
-      e.preventDefault(); // 🔸 기본 form 제출 막기
+      e.preventDefault();
       handleSubmit();
     }
   };
 
+  /**
+   * 현재 시간 포맷 생성 (MM/DD HH:mm 형식)
+   */
   const getCurrentDate = () => {
     const date = new Date();
     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -40,71 +66,19 @@ const CommentInput = ({ onSubmit }) => {
   };
 
   return (
-    <Wrapper>
+    <CommentInputWrapper>
       <Input
-        placeholder="댓글을 입력하세요."
+        placeholder={disabled ? '댓글 입력이 제한되었습니다.' : '댓글을 입력하세요.'}
         value={comment}
-        onChange={(e) => setComment(e.target.value)}
+        onChange={(e) => {
+          if (!disabled) setComment(e.target.value);
+        }}
         onKeyDown={handleKeyDown}
+        disabled={disabled}
       />
-      <IconButton onClick={handleSubmit} />
-    </Wrapper>
+      <IconButton onClick={handleSubmit} disabled={disabled} />
+    </CommentInputWrapper>
   );
 };
 
 export default CommentInput;
-
-// 🔧 스타일은 그대로 유지
-const Wrapper = styled.div`
-  width: calc(100% + 3.375rem);
-  margin-left: -1.875rem;
-  margin-right: -1.5rem;
-  background-color: #F0F0F0;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  border-bottom-left-radius: 0.625rem;
-  border-bottom-right-radius: 0.625rem;
-  border-top: 1px solid #f0f0f0;
-
-  @media (max-width: 768px) {
-    width: calc(100% + 2rem);
-    margin: 0 -1rem;
-    padding: 0.75rem 1rem;
-  }
-`;
-
-const Input = styled.input`
-  flex: 1;
-  padding: 0.5rem 0.75rem;
-  font-size: 0.9375rem;
-  background-color: #F0F0F0;
-  border: none;
-  color: #000;
-  outline: none;
-
-  &::placeholder {
-    color: #797979;
-  }
-`;
-
-const IconButton = styled.button`
-  width: 2.5rem;
-  height: 2.5rem;
-  background-color: #ffffff;
-  background-image: url(${SubmitIcon});
-  background-repeat: no-repeat;
-  background-position: center;
-  border-bottom-right-radius: 0.625rem;
-  background-size: 1.2rem 1.2rem;
-  border: none;
-  cursor: pointer;
-
-  
-
-  @media (max-width: 768px) {
-    width: 2.25rem;
-    height: 2.25rem;
-  }
-`;
-

@@ -1,10 +1,15 @@
 import styled from "styled-components";
 
+// 공통 폰트 설정
 const baseFont = `
   font-family: 'Pretendard', sans-serif;
 `;
 
-// 페이지 전체 Wrapper (PostDetail의 Container 대응)
+//
+// ✅ 레이아웃 구조
+//
+
+// 페이지 전체 Wrapper (바깥 영역)
 export const Wrapper = styled.div`
   ${baseFont}
   width: 100%;
@@ -14,7 +19,7 @@ export const Wrapper = styled.div`
   background-color: #fff;
 `;
 
-// 내부 콘텐츠 Wrapper (PostDetail의 InnerWrapper 대응)
+// 콘텐츠 최대 너비 제한
 export const Container = styled.div`
   width: 100%;
   max-width: 45.625rem; /* 730px */
@@ -26,7 +31,10 @@ export const Container = styled.div`
   }
 `;
 
-// 프로필
+//
+// ✅ 프로필 영역
+//
+
 export const Profile = styled.div`
   display: flex;
   align-items: center;
@@ -59,7 +67,10 @@ export const DateText = styled.span`
   ${baseFont}
 `;
 
-// 글쓰기 박스 (PostDetail의 Card 대응)
+//
+// ✅ 글쓰기 박스 (제목 + 본문 입력 영역)
+//
+
 export const ContentBox = styled.div`
   width: 100%;
   background: #fff;
@@ -88,6 +99,7 @@ export const ContentBody = styled.div`
   }
 `;
 
+// 제목 입력창
 export const TitleInput = styled.input`
   font-size: 1.5rem;
   font-weight: 600;
@@ -103,6 +115,7 @@ export const TitleInput = styled.input`
   }
 `;
 
+// 본문 입력창 (textarea)
 export const TextArea = styled.textarea`
   flex: 1;
   width: 100%;
@@ -121,7 +134,10 @@ export const TextArea = styled.textarea`
   }
 `;
 
-// 버튼 영역
+//
+// ✅ 버튼 영역
+//
+
 export const ButtonRow = styled.div`
   width: 100%;
   display: flex;
@@ -133,6 +149,7 @@ export const ButtonRow = styled.div`
   }
 `;
 
+// 이전 화면으로 버튼
 export const BackButton = styled.button`
   width: 180px;
   height: 55px;
@@ -153,6 +170,7 @@ export const BackButton = styled.button`
   }
 `;
 
+// 작성 완료 버튼
 export const SubmitButton = styled.button`
   width: 180px;
   height: 55px;
