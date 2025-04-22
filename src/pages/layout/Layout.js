@@ -38,7 +38,7 @@ const Layout = () => {
         {!isIntroPage && (
           <>
             <S.HeaderWrap>
-              <S.LogoWrap onClick={() => navigate('/main')}>
+              <S.LogoWrap onClick={() => {navigate('/main');  window.location.reload(); }}>
                 <img src="/logo/logo2.png" alt="logo" />
                 <p >Purgo</p>
               </S.LogoWrap>
