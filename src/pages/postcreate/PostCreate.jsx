@@ -1,34 +1,45 @@
 import React from "react";
 import PostForm from "./PostForm";
+import axios from "axios";
+import { useNavigate } from "react-router-dom"; // ✅ 추가
 
-/**
- * 게시글 작성 페이지
- * - PostForm 컴포넌트를 통해 새 글을 작성
- * - 작성 완료 시 handleSubmit, 취소 시 handleCancel 실행
- */
 const PostCreate = () => {
-    /**
-   * 글 작성 완료 핸들러
-   * - PostForm에서 제출된 data를 처리
-   * - API 연동 후 실제 저장 로직 추가
-   */
-  const handleSubmit = (data) => {
-    console.log("새 글 등록됨:", data);
-    // API 연결 예정
-    // 예: axios.post('/api/posts', data)
+  const navigate = useNavigate(); // ✅ 추가
+
+  const handleSubmit = async (data) => {
+    try {
+      const token = localStorage.getItem("accessToken");
+
+      const response = await axios.post(
+        "http://localhost:8080/api/post/create",
+        {
+          title: data.title,
+          content: data.content,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      console.log("✅ 게시글 등록 성공:", response.data);
+
+      // ✅ 등록 성공 시 해당 글의 상세 페이지로 이동
+      const postId = response.data.id;
+      navigate(`/post/${postId}`);
+    } catch (error) {
+      console.error("❌ 게시글 등록 실패:", error.response?.data || error.message);
+      alert("게시글 작성 중 오류가 발생했습니다.");
+    }
   };
 
-  /**
-   * 작성 취소 핸들러
-   * - 이전 화면으로 돌아가기
-   * - useNavigate() 이용해 뒤로 가기 구현 예정
-   */
   const handleCancel = () => {
     console.log("이전 화면으로");
-    // 예: navigate(-1) 등
+    navigate(-1);
   };
 
-  // 공통 폼 컴포넌트에 props 전달
   return <PostForm onSubmit={handleSubmit} onCancel={handleCancel} />;
 };
 
