@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import S from './loginstyle';
 import { useNavigate } from 'react-router-dom';
-import auth from '../api/auth'; 
+import auth from '../api/auth'; // 로그인 api 모듈 import
 
 const LoginContainer = () => {
   const [id, setId] = useState('');
@@ -15,14 +15,21 @@ const LoginContainer = () => {
     }
 
     try {
-      const res = await auth.login(id, pw); 
-      const username = res.userDto?.username || res.user?.username;
+      const res = await auth.login(id, pw); // 로그인 요청
+      const username = res.AuthDto?.username || res.user?.username;
+
+      // 로그인 성공 시 필요한 정보 localStorage에 저장
+      if (res.accessToken) {
+        localStorage.setItem('accessToken', res.accessToken);
+      }
       if (username) {
         localStorage.setItem('username', username);
       }
+      localStorage.setItem('id', id); // id 저장
+      localStorage.setItem('pw', pw); // pw 저장
 
       alert("로그인 성공");
-      navigate('/main');
+      navigate('/main'); // 메인 페이지로 이동
     } catch (error) {
       alert(error.message || '로그인에 실패했습니다.');
     }
@@ -30,8 +37,8 @@ const LoginContainer = () => {
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
-      e.preventDefault(); // 폼 기본 제출 막기
-      handleLogin();      // 바로 로그인 시도
+      e.preventDefault();
+      handleLogin();
     }
   };
 
@@ -44,14 +51,14 @@ const LoginContainer = () => {
           placeholder="아이디"
           value={id}
           onChange={(e) => setId(e.target.value)}
-          onKeyDown={handleKeyDown} // ✅ 추가
+          onKeyDown={handleKeyDown}
         />
         <S.Input
           type="password"
           placeholder="비밀번호"
           value={pw}
           onChange={(e) => setPw(e.target.value)}
-          onKeyDown={handleKeyDown} // ✅ 추가
+          onKeyDown={handleKeyDown}
         />
         <S.LoginButton onClick={handleLogin}>로그인</S.LoginButton>
 

@@ -1,12 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import S from './style';
 import postApi from '../api/postlist';
+import auth from '../api/auth';
 
 const Main = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const keyword = queryParams.get('keyword'); 
+  const keyword = queryParams.get('keyword');
+
+  const navigate = useNavigate();
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [nickname, setNickname] = useState('');
@@ -18,13 +21,22 @@ const Main = () => {
   const totalPages = Math.ceil(totalCount / postsPerPage);
 
   useEffect(() => {
-    const token = localStorage.getItem('accessToken');
-    const savedNickname = localStorage.getItem('username');
-    if (token) {
-      setIsLoggedIn(true);
-      setNickname(savedNickname || '사용자');
-    }
+    const fetchProfile = async () => {
+      try {
+        const token = localStorage.getItem('accessToken');
+        if (token) {
+          setIsLoggedIn(true);
+          const userData = await auth.profile();  
+          console.log('프로필 데이터:', userData);
+          setNickname(userData.username);
+        }
+      } catch (error) {
+        console.error('프로필 조회 실패:', error.message);
+      }
+    };
+    fetchProfile();
   }, []);
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -102,8 +114,8 @@ const Main = () => {
             <S.UserAvatar />
             <S.Nickname>{nickname}</S.Nickname>
             <div>
-              <S.ActionButton>글쓰기</S.ActionButton>
-              <S.ActionButton>마이페이지</S.ActionButton>
+              <S.ActionButton onClick={() => navigate('/write')}>글쓰기</S.ActionButton>
+              <S.ActionButton onClick={() => navigate('/mypage')}>마이페이지</S.ActionButton>
             </div>
           </S.SidebarRight>
         )}
@@ -111,5 +123,4 @@ const Main = () => {
     </div>
   );
 };
-
-export default Main;
+export default Main

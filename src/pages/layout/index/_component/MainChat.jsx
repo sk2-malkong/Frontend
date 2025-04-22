@@ -33,16 +33,16 @@ const MainChat = () => {
   const chatEndRef2 = useRef(null);
 
   const [messages1, setMessages1] = useState([
-    { send: 'user', text: '팀 모집은 누구나 가능한가요?' },
-    { send: 'bot', text: '등급이 export인 사용자만 가능합니다.' },
-    { send: 'bot', text: '초보자부터 고급자까지, 팀원과 함께 성장할 기회를 얻어가세요!' },
+    { send: 'user', text: '어디야' },
+    { send: 'bot', text: '나 지금 집 앞이야' },
+    { send: 'bot', text: '미안~~' },
   ]);
 
   const [messages2, setMessages2] = useState([
-    { send: 'user', text: '이번 주말 홍대에서 공연하는데 같이 할 아티스트 구해요! 🎸🎤' },
-    { send: 'bot', text: '저 관심 있어요! 어떤 장르 하시나요? 🎶' },
-    { send: 'user', text: '보컬 참여 가능할까요? 커버곡도 하시나요? 🎤' },
-    { send: 'bot', text: '네! 보컬 환영이에요!' },
+    { send: 'user', text: '너가 냉장고에 있는 내 아이스크림 먹었냐?' },
+    { send: 'bot', text: '너꺼 겁나 맛있더라' },
+    { send: 'user', text: '하....' },
+    { send: 'bot', text: '메롱~' },
   ]);
 
   const [inputValue1, setInputValue1] = useState('');
@@ -84,7 +84,7 @@ const MainChat = () => {
 
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1, duration: 1 }}>
           <S.Description>
-            입력한 채팅을 AI가 즉시 분석하여, 부적절한 표현은 자동으로 순화된 단어로 교체합니다.<br />
+            작성한 게시판의 글을 AI가 즉시 분석하여, 부적절한 표현은 자동으로 순화된 단어로 교체합니다.<br />
             건강하고 따뜻한 소통 문화를 함께 만들어가요!
           </S.Description>
         </motion.div>
@@ -97,7 +97,7 @@ const MainChat = () => {
 
         {/* 채팅 안내 문구 */}
         <S.ChatNotice>
-          ✨ 아래 채팅창에 입력하면 AI가 부적절한 표현을 실시간으로 순화해줍니다!
+          ✨ 실시간 채팅도 AI가 즉시 분석가능!
         </S.ChatNotice>
 
         {/* 💬 Main Chat 영역 */}
