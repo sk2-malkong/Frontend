@@ -118,6 +118,11 @@ S.InfoBlock1 = styled.div`
   flex: 1;
   min-width: 320px;
   min-height: 400px;
+  position: relative;
+  display: flex;           
+  flex-direction: column;  
+  align-items: center;      
+  justify-content: center;   
   background: white;
   padding: 30px;
   border-radius: 20px;
@@ -126,12 +131,14 @@ S.InfoBlock1 = styled.div`
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
 `;
 
+
 S.InfoBlock2 = styled(S.InfoBlock1)``;
 
 S.InfoTitle = styled.h2`
   font-size: 24px;
   font-weight: bold;
   margin-bottom: 10px;
+  color: black;
 `;
 
 S.InfoText = styled.p`
