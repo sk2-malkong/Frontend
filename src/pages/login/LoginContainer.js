@@ -17,11 +17,21 @@ const LoginContainer = () => {
     try {
       const res = await auth.login(id, pw); 
       const username = res.userDto?.username || res.user?.username;
+      if (username) {
+        localStorage.setItem('username', username);
+      }
 
-      alert(`로그인 공`); 
+      alert("로그인 성공");
       navigate('/main');
     } catch (error) {
       alert(error.message || '로그인에 실패했습니다.');
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault(); // 폼 기본 제출 막기
+      handleLogin();      // 바로 로그인 시도
     }
   };
 
@@ -34,12 +44,14 @@ const LoginContainer = () => {
           placeholder="아이디"
           value={id}
           onChange={(e) => setId(e.target.value)}
+          onKeyDown={handleKeyDown} // ✅ 추가
         />
         <S.Input
           type="password"
           placeholder="비밀번호"
           value={pw}
           onChange={(e) => setPw(e.target.value)}
+          onKeyDown={handleKeyDown} // ✅ 추가
         />
         <S.LoginButton onClick={handleLogin}>로그인</S.LoginButton>
 

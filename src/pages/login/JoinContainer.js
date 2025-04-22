@@ -10,6 +10,8 @@ const JoinContainer = () => {
   const [matchMessage, setMatchMessage] = useState('');
   const [idMessage, setIdMessage] = useState('');
   const [nameMessage, setNameMessage] = useState('');
+  const [idChecked, setIdChecked] = useState(false);     // 중복 확인 체크
+  const [nameChecked, setNameChecked] = useState(false); // 중복 확인 체크
   const navigate = useNavigate();
 
   const {
@@ -27,6 +29,16 @@ const JoinContainer = () => {
   const onSubmit = async (data) => {
     if (!buttonColor) {
       alert("약관에 동의해야 회원가입이 가능합니다.");
+      return;
+    }
+
+    if (!idChecked) {
+      alert("아이디 중복확인을 해주세요.");
+      return;
+    }
+
+    if (!nameChecked) {
+      alert("닉네임 중복확인을 해주세요.");
       return;
     }
 
@@ -63,8 +75,10 @@ const JoinContainer = () => {
     try {
       const message = await auth.checkId(id);
       setIdMessage(message);
+      setIdChecked(true);  // 중복확인 성공하면 true
     } catch (err) {
       setIdMessage(err.message);
+      setIdChecked(false);
     }
   };
 
@@ -74,8 +88,10 @@ const JoinContainer = () => {
     try {
       const message = await auth.checkName(username);
       setNameMessage(message);
+      setNameChecked(true);  // 중복확인 성공하면 true
     } catch (err) {
       setNameMessage(err.message);
+      setNameChecked(false);
     }
   };
 
@@ -90,17 +106,20 @@ const JoinContainer = () => {
           <form onSubmit={handleSubmit(onSubmit)}>
             {/* 아이디 */}
             <div className='idWrapper'>
-              <S.Input type="text" placeholder="아이디" {...register("id", { required: true })} />
-              <button type="button" onClick={checkIdDuplicate}>중복확인</button>
+              <div className="inputWithButton">
+                <input type="text" placeholder="아이디" {...register("id", { required: true })} />
+                <button type="button" onClick={checkIdDuplicate}>중복확인</button>
+              </div>
               {isSubmitted && errors.id && <p style={{ color: 'red' }}>아이디를 입력해주세요.</p>}
               {idMessage && <p style={{ color: idMessage.includes("가능") ? "green" : "red" }}>{idMessage}</p>}
-              <p style={{ fontSize: '12px', color: '#888' }}>영문 소문자 또는 영문+숫자 조합 6~12자리</p>
             </div>
 
             {/* 닉네임 */}
             <div className='usernameWrapper'>
-              <S.Input type="text" placeholder="닉네임" {...register("username", { required: true })} />
-              <button type="button" onClick={checkNameDuplicate}>중복확인</button>
+              <div className="inputWithButton">
+                <input type="text" placeholder="닉네임" {...register("username", { required: true })} />
+                <button type="button" onClick={checkNameDuplicate}>중복확인</button>
+              </div>
               {isSubmitted && errors.username && <p style={{ color: 'red' }}>닉네임을 입력해주세요.</p>}
               {nameMessage && <p style={{ color: nameMessage.includes("가능") ? "green" : "red" }}>{nameMessage}</p>}
             </div>
@@ -113,9 +132,6 @@ const JoinContainer = () => {
                   pattern: { value: passwordRegex, message: '조건이 맞지 않습니다' }
                 })} />
               {isSubmitted && errors.pw && <p style={{ color: 'red' }}>{errors.pw.message}</p>}
-              <p style={{ fontSize: '12px', color: isSubmitted && errors.pw ? 'red' : '#888' }}>
-                영문, 숫자, 특수문자(!@#) 조합 8자리 이상
-              </p>
             </div>
 
             {/* 비밀번호 확인 */}
@@ -138,10 +154,8 @@ const JoinContainer = () => {
                   pattern: { value: emailRegex, message: '올바른 이메일 형식을 입력해주세요.' }
                 })} />
               {isSubmitted && errors.email && <p style={{ color: 'red' }}>{errors.email.message}</p>}
-              <S.Notice>필수 입력 항목을 모두 포함하여 등록해주세요.</S.Notice>
             </div>
 
-            {/* 체크박스 */}
             <Checkbox setButtonColor={setButtonColor} />
 
             <S.Button type="submit">가입하기</S.Button>

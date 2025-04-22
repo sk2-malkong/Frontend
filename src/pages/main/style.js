@@ -54,7 +54,7 @@ S.Nickname = styled.p`
 `;
 
 S.ActionButton = styled.button`
-  background-color: #6274f3;
+  background-color: #5784E1;
   color: white;
   width: 125px;
   height: 40px;

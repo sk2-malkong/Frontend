@@ -31,6 +31,14 @@ S.LoginBox = styled.div`
     font-weight: bold;
     color: black;
   }
+
+  h3{
+    color: black;
+
+     strong{
+      color: red;
+    }
+  }
 `;
 S.Input = styled.input`
   min-width: 480px;
@@ -43,7 +51,7 @@ S.Input = styled.input`
 `;
 
 S.LoginButton = styled.button`
-  width: 100%;
+  width: 160px;
   padding: 14px;
   background-color: #797979;
   color: white;

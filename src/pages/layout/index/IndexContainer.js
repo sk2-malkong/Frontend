@@ -1,11 +1,10 @@
 import React from 'react';
-import Index from './Index';
+import MainChat from './_component/MainChat';
 
 const IndexContainer = () => {
-
   return (
     <div>
-      <Index/>
+      <MainChat/>
     </div>
   );
 };

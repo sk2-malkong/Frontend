@@ -5,7 +5,7 @@ const S = {};
 S.Wrapper = styled.div`
   min-height: 100vh;
   width: 100%;
-  background: linear-gradient(to bottom right, #000000, #1f1f1f, #000000);
+  background: linear-gradient(to bottom right, #5784e1, #5784e1, #5784e1);
   color: white;
   display: flex;
   flex-direction: column;
