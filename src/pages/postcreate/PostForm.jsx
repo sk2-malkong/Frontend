@@ -16,58 +16,81 @@ import {
   RestrictionMessageBox,
 } from "./style";
 import profileImageUrl from "./profile.svg";
-import { currentUser } from "./userInfo"; // 사용자 정보 직접 사용
+import auth from '../api/auth';
+import { useNavigate } from "react-router-dom";
 
-/**
- * 글 작성/수정 폼 컴포넌트
- */
 const PostForm = ({
   initialTitle = "",
   initialContent = "",
   onSubmit,
   onCancel,
 }) => {
+  const navigate = useNavigate();
+
   const [title, setTitle] = useState(initialTitle);
   const [content, setContent] = useState(initialContent);
+  const [loading, setLoading] = useState(false);
+  const [nickname, setNickname] = useState('');
+  const [isLoggedIn,setIsLoggedIn] = useState(false)
+  const [profanityCount, setProfanityCount] = useState(0);
+
+  // 🔹 프로필 정보 가져오기
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const token = localStorage.getItem('accessToken');
+        if (token) {
+          setIsLoggedIn(true);
+          const userData = await auth.profile();  
+          console.log('프로필 데이터:', userData);
+          setNickname(userData.username);
+        }
+      } catch (error) {
+        console.error('프로필 조회 실패:', error.message);
+      }
+    };
+    fetchProfile();
+  }, []);
 
   useEffect(() => {
     setTitle(initialTitle);
     setContent(initialContent);
   }, [initialTitle, initialContent]);
 
-  // 🔹 제한 조건: 욕설 5, 10, 15회마다 제한
   const isRestricted =
-    currentUser.profanityCount > 0 &&
-    currentUser.profanityCount % 5 === 0;
-
-  const restrictionMessage = "욕설 5회 사용하여 기능이 제한됩니다.";
+    profanityCount > 0 && profanityCount % 5 === 0;
+  const restrictionMessage = "⚠️ 욕설 5회 사용으로 작성 제한되었습니다.";
 
   const isActive = title.trim() !== "" && content.trim() !== "";
-  const canSubmit = isActive && !isRestricted;
+  const canSubmit = isActive && !isRestricted && !loading;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (canSubmit && onSubmit) {
-      onSubmit({ title: title.trim(), content: content.trim() });
+      try {
+        setLoading(true);
+        await onSubmit({ title: title.trim(), content: content.trim() });
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
   return (
     <Wrapper>
       <Container>
-        {/* 제한 메시지 */}
         {isRestricted && (
           <RestrictionMessageBox>
-            ⚠ {restrictionMessage}
+            {restrictionMessage}
           </RestrictionMessageBox>
         )}
 
         <form onSubmit={handleSubmit}>
           {/* 작성자 정보 */}
           <Profile>
-            <ProfileImage src={profileImageUrl} alt="Profile" />
+            <ProfileImage src={profileImageUrl} alt="프로필" />
             <UserInfo>
-              <Nickname>{currentUser.nickname}</Nickname>
+              <Nickname>{nickname}</Nickname>
             </UserInfo>
           </Profile>
 
@@ -96,7 +119,11 @@ const PostForm = ({
               이전 화면으로
             </BackButton>
             <SubmitButton type="submit" active={canSubmit}>
-              {isRestricted ? "작성 제한됨" : "작성 완료"}
+              {loading
+                ? "작성 중..."
+                : isRestricted
+                ? "작성 제한됨"
+                : "작성 완료"}
             </SubmitButton>
           </ButtonRow>
         </form>
