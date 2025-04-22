@@ -38,8 +38,8 @@ const PostDetail = ({ post, comments }) => {
       badWordCount: 4, // 여기를 바꾸면 제한 여부 테스트 가능
     };
     
-    // 제한 여부 판단 (욕설 5회 이상이면 true)
-    const isBlocked = user.badWordCount >= 5;
+    // 제한 여부 판단 (욕설 5회 사용마다 true)
+    const isBlocked = user.badWordCount > 0 && user.badWordCount % 5 === 0;
 
   // 댓글 추가 - 새로운 댓글을 기존 배열에 추가
   const handleAddComment = (newComment) => {
