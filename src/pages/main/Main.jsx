@@ -12,7 +12,7 @@ const Main = () => {
   const [nickname, setNickname] = useState('');
   const [posts, setPosts] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(0);
   const postsPerPage = 8;
 
   const totalPages = Math.ceil(totalCount / postsPerPage);

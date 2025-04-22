@@ -40,6 +40,8 @@ S.LogoWrap = styled.div`
   display: flex;
   align-items: center;
 
+  cursor: pointer;
+
   img {
     width: 80px;
     height: 80px;
@@ -107,7 +109,6 @@ S.User = styled.div`
 S.Main = styled.main`
   width: 100%;
   height: 100%;
-  padding-bottom: 3.125rem;
   background-color: white;
   overflow: hidden;
 

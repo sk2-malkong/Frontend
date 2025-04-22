@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 12312312312312; // EC2나 원격 백엔드 서버 주소
+const API_BASE_URL = "http://localhost:8080/api"; // EC2나 원격 백엔드 서버 주소
 
 const api = axios.create({
     baseURL: API_BASE_URL,

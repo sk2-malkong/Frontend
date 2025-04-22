@@ -16,7 +16,7 @@ const Layout = () => {
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('email');
     alert('로그아웃 되었습니다.');
-    navigate('/login');
+    window.location.reload(); 
   };
 
   const handleSearch = () => {
@@ -38,9 +38,9 @@ const Layout = () => {
         {!isIntroPage && (
           <>
             <S.HeaderWrap>
-              <S.LogoWrap>
+              <S.LogoWrap onClick={() => navigate('/main')}>
                 <img src="/logo/logo2.png" alt="logo" />
-                <p>Purgo</p>
+                <p >Purgo</p>
               </S.LogoWrap>
 
               <S.SearchBox>
