@@ -151,8 +151,8 @@ export const ButtonRow = styled.div`
 
 // 이전 화면으로 버튼
 export const BackButton = styled.button`
-  width: 180px;
-  height: 55px;
+  width: 140px;
+  height: 50px;
   background-color: #797979;
   color: #fff;
   font-size: 1rem;
@@ -172,8 +172,8 @@ export const BackButton = styled.button`
 
 // 작성 완료 버튼
 export const SubmitButton = styled.button`
-  width: 180px;
-  height: 55px;
+  width: 140px;
+  height: 50px;
   background-color: ${(props) => (props.active ? "#5784E1" : "#797979")};
   color: #fff;
   font-size: 1rem;
@@ -189,4 +189,17 @@ export const SubmitButton = styled.button`
   @media (max-width: 768px) {
     width: 100%;
   }
+`;
+
+// 🔹 이용 제한 경고 문구
+export const RestrictionMessageBox = styled.div`
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background-color: #FFF0F0;
+  color: #F91F15;
+  border: 1px solid #f8cfcf;
+  border-radius: 0.625rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  margin-bottom: 1.25rem;
 `;
