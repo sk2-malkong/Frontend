@@ -1,10 +1,10 @@
 import React from "react";
 import PostForm from "./PostForm";
 import axios from "axios";
-import { useNavigate } from "react-router-dom"; // ✅ 추가
+import { useNavigate } from "react-router-dom";
 
 const PostCreate = () => {
-  const navigate = useNavigate(); // ✅ 추가
+  const navigate = useNavigate();
 
   const handleSubmit = async (data) => {
     try {
@@ -26,8 +26,8 @@ const PostCreate = () => {
 
       console.log("✅ 게시글 등록 성공:", response.data);
 
-      // ✅ 등록 성공 시 해당 글의 상세 페이지로 이동
-      const postId = response.data.id;
+      // ✅ 등록 성공 시 상세 페이지로 이동 (postId 사용)
+      const postId = response.data.postId;
       navigate(`/post/${postId}`);
     } catch (error) {
       console.error("❌ 게시글 등록 실패:", error.response?.data || error.message);
