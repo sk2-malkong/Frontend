@@ -4,19 +4,21 @@ import userApi from '../api/userApi';
 
 const MyPage = () => {
   const [userProfile, setUserProfile] = useState(null);
+  const [penaltyCount, setPenaltyCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   // 데이터 로딩 함수
   useEffect(() => {
-    const fetchProfile = async () => {
+    const fetchData = async () => {
       try {
-        console.log('프로필 데이터 요청 시작...');
+        console.log('데이터 요청 시작...');
 
+        // 프로필 데이터 먼저 요청
         const profileData = await userApi.getProfile();
         console.log('API에서 받아온 프로필 데이터:', profileData);
 
-        // 데이터를 받았으면 상태 업데이트
+        // 프로필 데이터 업데이트
         setUserProfile({
           username: profileData.username,
           email: profileData.email,
@@ -27,19 +29,31 @@ const MyPage = () => {
         localStorage.setItem('username', profileData.username || '');
         localStorage.setItem('email', profileData.email || '');
 
+        try {
+          // 비속어 횟수 요청 - 직접 숫자값으로 반환된다고 가정
+          const count = await userApi.getPenaltyCount();
+          console.log('API에서 받아온 비속어 횟수:', count);
+
+          // 숫자값이 직접 반환되므로 바로 상태 업데이트
+          setPenaltyCount(count);
+        } catch (penaltyErr) {
+          console.error('비속어 횟수 로딩 실패:', penaltyErr);
+          // 비속어 카운트 오류가 있어도 전체 화면은 계속 로드
+        }
+
         setLoading(false);
       } catch (err) {
-        console.error('프로필 로딩 중 오류:', err);
-        setError('프로필을 불러오는데 실패했습니다: ' + err.message);
+        console.error('프로필 데이터 로딩 중 오류:', err);
+        setError('데이터를 불러오는데 실패했습니다: ' + err.message);
         setLoading(false);
       }
     };
 
-    fetchProfile();
+    fetchData();
   }, []);
 
   // 디버깅용 콘솔 로그
-  console.log('현재 컴포넌트 상태:', { loading, error, userProfile });
+  console.log('현재 컴포넌트 상태:', { loading, error, userProfile, penaltyCount });
 
   if (loading) {
     return <div>로딩 중...</div>;
@@ -95,7 +109,7 @@ const MyPage = () => {
               <S.BadgeCircle>
                 <S.BadgeContent>
                   <S.BadgeTitle>비속어 사용 횟수</S.BadgeTitle>
-                  <S.BadgeCount>105</S.BadgeCount>
+                  <S.BadgeCount>{penaltyCount}</S.BadgeCount>
                   <S.BadgeUnit>회</S.BadgeUnit>
                 </S.BadgeContent>
               </S.BadgeCircle>
