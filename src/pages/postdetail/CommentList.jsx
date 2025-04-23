@@ -1,31 +1,51 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import { Comment } from './style';
 import defaultProfile from './profile.svg';
 
-/**
- * 댓글 리스트 컴포넌트
- * - 전달받은 comments 배열을 순회하며 각 댓글을 렌더링
- * - 각 댓글에는 프로필 이미지, 작성자 이름, 작성 시간, 댓글 내용이 포함됨
- */
-const CommentList = ({ comments }) => {
+const CommentList = ({ postId, refreshTrigger }) => {
+  const [comments, setComments] = useState([]);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchComments = async () => {
+      try {
+        const res = await axios.get(`http://localhost:8080/api/comment/${postId}`);
+
+        console.log('✅ 댓글 API 응답:', res.data); 
+
+        const mapped = res.data.map((c) => ({
+          username: c.username,
+          date: new Date(c.createdAt).toLocaleString('ko-KR'),
+          content: c.content,
+          profile: null,
+        }));
+        setComments(mapped);
+      } catch (err) {
+        console.error('❌ 댓글 조회 실패:', err);
+        setError('댓글을 불러오는 데 실패했습니다.');
+      }
+    };
+
+    if (postId) {
+      fetchComments();
+    }
+  }, [postId, refreshTrigger]);
+
+  if (error) return <div>{error}</div>;
+
   return (
     <div>
       {comments.map((c, index) => (
         <Comment key={index}>
           <div className="top">
-            <img
-              className="profile"
-              src={c.profile || defaultProfile}
-              alt="profile"
-            />
+            <img className="profile" src={c.profile || defaultProfile} alt="profile" />
             <div className="info">
               <span className="username">{c.username}</span>
               <span className="date">{c.date}</span>
             </div>
           </div>
-
-          {/* 댓글 내용 */}
-          <div className="text">{c.text}</div>
+          <div className="text">{c.content}</div>
         </Comment>
       ))}
     </div>

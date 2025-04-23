@@ -67,7 +67,11 @@ const Main = () => {
           <S.PostListWrapper>
             {posts.length > 0 ? (
               posts.map((post) => (
-                <S.PostCard key={post.postId}>
+                <S.PostCard
+                  key={post.postId}
+                  onClick={() => navigate(`/post/${post.postId}`)} // ✅ 클릭 시 이동
+                  style={{ cursor: 'pointer' }} // UX 개선
+                >
                   <div className="post-header">
                     <div className="author-icon" />
                     <span>{post.username}</span>
@@ -114,7 +118,7 @@ const Main = () => {
             <S.UserAvatar />
             <S.Nickname>{nickname}</S.Nickname>
             <div>
-              <S.ActionButton onClick={() => navigate('/write')}>글쓰기</S.ActionButton>
+              <S.ActionButton onClick={() => navigate('/postcreate')}>글쓰기</S.ActionButton>
               <S.ActionButton onClick={() => navigate('/mypage')}>마이페이지</S.ActionButton>
             </div>
           </S.SidebarRight>
@@ -123,4 +127,5 @@ const Main = () => {
     </div>
   );
 };
-export default Main
+
+export default Main;
