@@ -31,10 +31,9 @@ const PostForm = ({
   const [content, setContent] = useState(initialContent);
   const [loading, setLoading] = useState(false);
   const [nickname, setNickname] = useState('');
-  const [isLoggedIn,setIsLoggedIn] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [profanityCount, setProfanityCount] = useState(0);
 
-  // 🔹 프로필 정보 가져오기
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -57,19 +56,23 @@ const PostForm = ({
     setContent(initialContent);
   }, [initialTitle, initialContent]);
 
-  const isRestricted =
-    profanityCount > 0 && profanityCount % 5 === 0;
+  const isRestricted = profanityCount > 0 && profanityCount % 5 === 0;
   const restrictionMessage = "⚠️ 욕설 5회 사용으로 작성 제한되었습니다.";
 
-  const isActive = title.trim() !== "" && content.trim() !== "";
-  const canSubmit = isActive && !isRestricted && !loading;
+  const trimmedTitle = title.trim();
+  const trimmedContent = content.trim();
+
+  const isActive = trimmedTitle !== "" && trimmedContent !== "";
+  const isUnchanged = trimmedTitle === initialTitle.trim() && trimmedContent === initialContent.trim();
+
+  const canSubmit = isActive && !isRestricted && !loading && !isUnchanged;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (canSubmit && onSubmit) {
       try {
         setLoading(true);
-        await onSubmit({ title: title.trim(), content: content.trim() });
+        await onSubmit({ title: trimmedTitle, content: trimmedContent });
       } finally {
         setLoading(false);
       }
@@ -86,7 +89,6 @@ const PostForm = ({
         )}
 
         <form onSubmit={handleSubmit}>
-          {/* 작성자 정보 */}
           <Profile>
             <ProfileImage src={profileImageUrl} alt="프로필" />
             <UserInfo>
@@ -94,7 +96,6 @@ const PostForm = ({
             </UserInfo>
           </Profile>
 
-          {/* 입력 영역 */}
           <ContentBox>
             <ContentBody>
               <TitleInput
@@ -113,12 +114,11 @@ const PostForm = ({
             </ContentBody>
           </ContentBox>
 
-          {/* 버튼 영역 */}
           <ButtonRow>
             <BackButton type="button" onClick={onCancel}>
               이전 화면으로
             </BackButton>
-            <SubmitButton type="submit" active={canSubmit}>
+            <SubmitButton type="submit" active={canSubmit} disabled={!canSubmit}>
               {loading
                 ? "작성 중..."
                 : isRestricted
