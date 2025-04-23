@@ -21,8 +21,29 @@ const getProfile = async () => {
     }
 };
 
+// 사용자 비속어 사용 횟수 가져오기
+const getPenaltyCount = async () => {
+    try {
+        console.log('비속어 사용 횟수 요청 시작');
+
+        const response = await api.get('/user/penaltyCount', {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+            }
+        });
+
+        console.log('비속어 사용 횟수 응답:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('비속어 사용 횟수 가져오기 실패:', error);
+        console.error('에러 응답:', error.response);
+        throw error.response?.data || new Error('비속어 사용 횟수를 가져오는데 실패했습니다.');
+    }
+};
+
 const userApi = {
-    getProfile
+    getProfile,
+    getPenaltyCount
 };
 
 export default userApi;
