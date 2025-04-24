@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import PostForm from '../postcreate/PostForm';
+import PostEdit from './PostEdit';
 import auth from '../api/auth';
 
 const PostEditContainer = () => {
   const { id } = useParams();
-
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [isAuthor, setIsAuthor] = useState(true); // 기본은 true (권한 없으면 false로 변경)
+  const [isAuthor, setIsAuthor] = useState(true);
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -21,19 +20,14 @@ const PostEditContainer = () => {
           },
         };
 
-        const response = await axios.get(`http://localhost:8080/api/post/${id}`, config);
+        const response = await axios.get(`http://localhost:8080/api/post/${id}?increaseView=false`, config);
         const data = response.data;
 
         const profile = await auth.profile();
-
-        // 작성자와 비교
         const isAuthorMatch = profile.username === data.username;
         setIsAuthor(isAuthorMatch);
 
-        setPost({
-          title: data.title,
-          content: data.content,
-        });
+        setPost({ title: data.title, content: data.content });
       } catch (error) {
         console.error('❌ 게시글 불러오기 실패:', error);
         alert('게시글 정보를 불러오는 데 실패했습니다.');
@@ -46,7 +40,7 @@ const PostEditContainer = () => {
   }, [id]);
 
   const handleSubmit = async (updatedPost) => {
-    if (!isAuthor) return; // 🔒 비작성자는 아예 처리 안 함
+    if (!isAuthor) return;
 
     try {
       const token = localStorage.getItem('accessToken');
@@ -58,10 +52,7 @@ const PostEditContainer = () => {
 
       const response = await axios.put(
         `http://localhost:8080/api/post/update/${id}`,
-        {
-          title: updatedPost.title,
-          content: updatedPost.content,
-        },
+        updatedPost,
         config
       );
 
@@ -78,15 +69,13 @@ const PostEditContainer = () => {
   };
 
   if (loading) return <div>로딩 중...</div>;
-  if (!post) return <div>존재하지 않는 게시물입니다.</div>;
 
   return (
-    <PostForm
-      initialTitle={post.title}
-      initialContent={post.content}
+    <PostEdit
+      post={post}
       onSubmit={handleSubmit}
       onCancel={handleCancel}
-      isBlocked={!isAuthor} // ✅ 작성자 아닐 때 폼에서 막을 수 있게 prop 전달
+      isAuthor={isAuthor}
     />
   );
 };
