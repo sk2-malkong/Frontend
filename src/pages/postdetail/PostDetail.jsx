@@ -1,23 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import {
-  Container,
-  InnerWrapper,
-  SectionTitle,
-  Card,
-  Header,
-  AuthorInfo,
-  Profile,
-  Nickname,
-  DateText,
-  Title,
-  Content,
-  Meta,
-  Divider,
-  ControlButtons,
-  RestrictionNotice,
-} from './style';
+import S from './style'; 
 
 import CommentList from './CommentList';
 import CommentInput from './CommentInput';
@@ -25,22 +9,32 @@ import profileImg from './profile.svg';
 import auth from '../api/auth';
 
 /**
- * 게시글 상세 페이지
- * - 게시글 정보 렌더링
- * - 댓글 작성 및 목록
- * - 본인 글일 경우 수정/삭제 버튼 제공
+ * 게시글 상세 페이지 컴포넌트
+ *
+ * 기능 요약:
+ * - 게시글 상세 내용 렌더링
+ * - 본인 글일 경우 '수정/삭제' 버튼 노출
+ * - 댓글 목록 렌더링
+ * - 댓글 작성 및 수정 가능
  */
 const PostDetail = ({ post }) => {
   const navigate = useNavigate();
+
+  // 댓글 새로고침을 위한 상태 트리거
   const [refreshTrigger, setRefreshTrigger] = useState(0);
+  
+  // 현재 로그인한 사용자 정보
   const [currentUser, setCurrentUser] = useState(null);
+  
+  // 현재 수정 중인 댓글 정보
   const [editingComment, setEditingComment] = useState(null); // 수정 모드 상태
 
+  // 사용자 프로필 가져오기
   useEffect(() => {
     const fetchProfile = async () => {
       try {
         const profile = await auth.profile();
-        setCurrentUser(profile.username);
+        setCurrentUser(profile);
       } catch (error) {
         console.error('프로필 조회 실패:', error.message);
       }
@@ -48,16 +42,21 @@ const PostDetail = ({ post }) => {
     fetchProfile();
   }, []);
 
-  const isAuthor = currentUser === post.author;
+  // 게시글 작성자와 현재 사용자 비교
+  const isAuthor = currentUser?.username === post.author;
+  const isRestricted = currentUser?.badWordCount >= 5;
 
+  // 댓글 작성 완료 시 리스트 새로고침 트리거
   const handleAddComment = () => {
     setRefreshTrigger((prev) => prev + 1);
   };
 
+  // 게시글 수정 페이지로 이동
   const handleEdit = () => {
     navigate(`/edit/${post.id}`);
   };
 
+  // 게시글 삭제 요청 처리
   const handleDelete = async () => {
     const confirmed = window.confirm('글을 삭제하시겠습니까?');
     if (!confirmed) return;
@@ -80,55 +79,56 @@ const PostDetail = ({ post }) => {
   };
 
   return (
-    <Container>
-      <InnerWrapper>
-        <SectionTitle>자유게시판</SectionTitle>
-        <Card>
-          <Header>
-            <AuthorInfo>
-              <Profile src={profileImg} alt="profile" />
+    <S.Container>
+      <S.InnerWrapper>
+        <S.SectionTitle>자유게시판</S.SectionTitle>
+        <S.Card>
+          <S.Header>
+            <S.AuthorInfo>
+              <S.Profile src={profileImg} alt="profile" />
               <div>
-                <Nickname>{post.author}</Nickname>
-                <DateText>{post.date}</DateText>
+                <S.Nickname>{post.author}</S.Nickname>
+                <S.DateText>{post.date}</S.DateText>
               </div>
-            </AuthorInfo>
+            </S.AuthorInfo>
 
             {isAuthor && (
-              <ControlButtons>
+              <S.ControlButtons>
                 <span onClick={handleEdit}>수정</span>
                 <span className="divider">|</span>
                 <span onClick={handleDelete}>삭제</span>
-              </ControlButtons>
+              </S.ControlButtons>
             )}
-          </Header>
+          </S.Header>
 
-          <Title>{post.title}</Title>
-          <Content>{post.content}</Content>
-          <Meta>👁 {post.views}</Meta>
+          <S.Title>{post.title}</S.Title>
+          <S.Content>{post.content}</S.Content>
+          <S.Meta>👁 {post.views}</S.Meta>
 
-          <Divider />
+          <S.Divider />
 
           <CommentList
             postId={post.id}
             refreshTrigger={refreshTrigger}
-            currentUser={currentUser}
+            currentUser={currentUser?.username}
+            isRestricted={isRestricted}
             onEditComment={setEditingComment}
           />
 
-          {currentUser && currentUser.badWordCount >= 5 && (
-            <RestrictionNotice>욕설 5회 사용으로 댓글 작성이 제한됩니다.</RestrictionNotice>
+          {isRestricted && (
+            <S.RestrictionNotice>욕설 5회 사용으로 댓글 작성이 제한됩니다.</S.RestrictionNotice>
           )}
 
           <CommentInput
             onSubmit={handleAddComment}
-            disabled={currentUser && currentUser.badWordCount >= 5}
+            disabled={currentUser?.badWordCount >= 5}
             postId={post.id}
             editingComment={editingComment}
             clearEdit={() => setEditingComment(null)}
           />
-        </Card>
-      </InnerWrapper>
-    </Container>
+        </S.Card>
+      </S.InnerWrapper>
+    </S.Container>
   );
 };
 

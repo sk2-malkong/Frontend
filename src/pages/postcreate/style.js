@@ -1,16 +1,18 @@
 import styled from "styled-components";
 
+const S = {};
+
 // 공통 폰트 설정
 const baseFont = `
   font-family: 'Pretendard', sans-serif;
 `;
 
 //
-// ✅ 레이아웃 구조
+// 레이아웃 구조
 //
 
 // 페이지 전체 Wrapper (바깥 영역)
-export const Wrapper = styled.div`
+S.Wrapper = styled.div`
   ${baseFont}
   width: 100%;
   display: flex;
@@ -20,7 +22,7 @@ export const Wrapper = styled.div`
 `;
 
 // 콘텐츠 최대 너비 제한
-export const Container = styled.div`
+S.Container = styled.div`
   width: 100%;
   max-width: 45.625rem; /* 730px */
   margin: 0 auto;
@@ -32,46 +34,46 @@ export const Container = styled.div`
 `;
 
 //
-// ✅ 프로필 영역
+// 프로필 영역
 //
 
-export const Profile = styled.div`
+S.Profile = styled.div`
   display: flex;
   align-items: center;
   gap: 0.75rem;
   margin-bottom: 1.25rem;
 `;
 
-export const ProfileImage = styled.img`
+S.ProfileImage = styled.img`
   width: 3rem;
   height: 3rem;
   border-radius: 50%;
   object-fit: cover;
 `;
 
-export const UserInfo = styled.div`
+S.UserInfo = styled.div`
   display: flex;
   flex-direction: column;
 `;
 
-export const Nickname = styled.span`
+S.Nickname = styled.span`
   font-size: 1.25rem;
   font-weight: 500;
   color: #000;
   ${baseFont}
 `;
 
-export const DateText = styled.span`
+S.DateText = styled.span`
   font-size: 1rem;
   color: #aaa;
   ${baseFont}
 `;
 
 //
-// ✅ 글쓰기 박스 (제목 + 본문 입력 영역)
+// 글쓰기 박스 (제목 + 본문 입력 영역)
 //
 
-export const ContentBox = styled.div`
+S.ContentBox = styled.div`
   width: 100%;
   background: #fff;
   border: 1px solid #e0e0e0;
@@ -87,7 +89,7 @@ export const ContentBox = styled.div`
   }
 `;
 
-export const ContentBody = styled.div`
+S.ContentBody = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -100,7 +102,7 @@ export const ContentBody = styled.div`
 `;
 
 // 제목 입력창
-export const TitleInput = styled.input`
+S.TitleInput = styled.input`
   font-size: 1.5rem;
   font-weight: 600;
   border: none;
@@ -116,7 +118,7 @@ export const TitleInput = styled.input`
 `;
 
 // 본문 입력창 (textarea)
-export const TextArea = styled.textarea`
+S.TextArea = styled.textarea`
   flex: 1;
   width: 100%;
   border: none;
@@ -135,10 +137,10 @@ export const TextArea = styled.textarea`
 `;
 
 //
-// ✅ 버튼 영역
+// 버튼 영역
 //
 
-export const ButtonRow = styled.div`
+S.ButtonRow = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-between;
@@ -150,7 +152,7 @@ export const ButtonRow = styled.div`
 `;
 
 // 이전 화면으로 버튼
-export const BackButton = styled.button`
+S.BackButton = styled.button`
   width: 140px;
   height: 50px;
   background-color: #797979;
@@ -171,7 +173,7 @@ export const BackButton = styled.button`
 `;
 
 // 작성 완료 버튼
-export const SubmitButton = styled.button`
+S.SubmitButton = styled.button`
   width: 140px;
   height: 50px;
   background-color: ${(props) => (props.active ? "#5784E1" : "#797979")};
@@ -191,8 +193,8 @@ export const SubmitButton = styled.button`
   }
 `;
 
-// 🔹 이용 제한 경고 문구
-export const RestrictionMessageBox = styled.div`
+// 이용 제한 경고 문구
+S.RestrictionMessageBox = styled.div`
   width: 100%;
   padding: 0.75rem 1rem;
   background-color: #FFF0F0;
@@ -203,3 +205,5 @@ export const RestrictionMessageBox = styled.div`
   font-weight: 500;
   margin-bottom: 1.25rem;
 `;
+
+export default S;

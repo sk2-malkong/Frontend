@@ -2,11 +2,15 @@ import styled from 'styled-components';
 import AlertIcon from './danger.svg';
 import SubmitIcon from './Inputbutton.svg';
 
+const S = {};
+
 const baseFont = `
   font-family: 'Pretendard', sans-serif;
 `;
 
-export const Container = styled.div`
+// 레이아웃(페이지 구조)
+
+S.Container = styled.div`
   ${baseFont}
   display: flex;
   justify-content: center;
@@ -14,7 +18,7 @@ export const Container = styled.div`
   background-color: #ffffff;
 `;
 
-export const InnerWrapper = styled.div`
+S.InnerWrapper = styled.div`
   width: 100%;
   max-width: 45.625rem;
   margin: 0 auto;
@@ -26,7 +30,7 @@ export const InnerWrapper = styled.div`
   }
 `;
 
-export const Card = styled.div`
+S.Card = styled.div`
   width: 100%;
   background: #fff;
   border: 1px solid #e0e0e0;
@@ -40,7 +44,9 @@ export const Card = styled.div`
   }
 `;
 
-export const SectionTitle = styled.h2`
+// 제목 / 작성자 정보 / 헤더
+
+S.SectionTitle = styled.h2`
   font-size: 1.5rem;
   font-weight: 700;
   color: #000;
@@ -53,19 +59,19 @@ export const SectionTitle = styled.h2`
   }
 `;
 
-export const Header = styled.div`
+S.Header = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 1rem;
 `;
 
-export const AuthorInfo = styled.div`
+S.AuthorInfo = styled.div`
   display: flex;
   align-items: center;
 `;
 
-export const Profile = styled.img`
+S.Profile = styled.img`
   width: 3rem;
   height: 3rem;
   border-radius: 50%;
@@ -73,21 +79,21 @@ export const Profile = styled.img`
   object-fit: cover;
 `;
 
-export const Nickname = styled.div`
+S.Nickname = styled.div`
   font-size: 1rem;
   font-weight: 500;
   color: #000;
   ${baseFont}
 `;
 
-export const DateText = styled.div`
+S.DateText = styled.div`
   font-size: 0.75rem;
   font-weight: 500;
   color: #A6A6A6;
   ${baseFont}
 `;
 
-export const Title = styled.h1`
+S.Title = styled.h1`
   font-size: 1.75rem;
   font-weight: 600;
   color: #000;
@@ -95,7 +101,7 @@ export const Title = styled.h1`
   ${baseFont}
 `;
 
-export const Content = styled.p`
+S.Content = styled.p`
   white-space: pre-wrap;
   line-height: 1.6;
   font-size: 1rem;
@@ -105,7 +111,7 @@ export const Content = styled.p`
   ${baseFont}
 `;
 
-export const Meta = styled.div`
+S.Meta = styled.div`
   display: flex;
   justify-content: space-between;
   font-size: 0.75rem;
@@ -129,7 +135,7 @@ export const Meta = styled.div`
   }
 `;
 
-export const ControlButtons = styled.div`
+S.ControlButtons = styled.div`
   display: flex;
   gap: 0.5rem;
   font-size: 0.9375rem;
@@ -151,7 +157,7 @@ export const ControlButtons = styled.div`
   }
 `;
 
-export const CommentControlButtons = styled.div`
+S.CommentControlButtons = styled.div`
   display: flex;
   gap: 0.25rem;
   margin-left: auto;
@@ -175,13 +181,15 @@ export const CommentControlButtons = styled.div`
   }
 `;
 
-export const Divider = styled.hr`
+S.Divider = styled.hr`
   border: none;
   border-top: 1px solid #eee;
   margin: 1.5rem 0 0 0;
 `;
 
-export const Comment = styled.div`
+// 댓글
+
+S.Comment = styled.div`
   padding: 16px 0;
   border-bottom: 1px solid #f0f0f0;
   color: #000;
@@ -225,8 +233,9 @@ export const Comment = styled.div`
   }
 `;
 
-// ✅ 인라인 댓글 수정창
-export const CommentEditTextarea = styled.textarea`
+// 댓글 수정 및 버튼
+
+S.CommentEditTextarea = styled.textarea`
   width: 100%;
   min-height: 60px;
   font-size: 0.95rem;
@@ -245,8 +254,7 @@ export const CommentEditTextarea = styled.textarea`
   }
 `;
 
-// ✅ 저장 / 취소 버튼
-export const EditButtonGroup = styled.div`
+S.EditButtonGroup = styled.div`
   display: flex;
   justify-content: flex-end;
   gap: 0.5rem;
@@ -269,7 +277,9 @@ export const EditButtonGroup = styled.div`
   }
 `;
 
-export const CommentInputWrapper = styled.div`
+// 댓글 입력창
+
+S.CommentInputWrapper = styled.div`
   width: calc(100% + 3.375rem);
   margin-left: -1.875rem;
   margin-right: -1.5rem;
@@ -291,7 +301,7 @@ export const CommentInputWrapper = styled.div`
   }
 `;
 
-export const CommentInput = styled.input`
+S.CommentInput = styled.input`
   flex: 1;
   padding: 0 0.75rem;
   font-size: 0.9375rem;
@@ -311,7 +321,7 @@ export const CommentInput = styled.input`
   }
 `;
 
-export const IconButton = styled.button`
+S.IconButton = styled.button`
   width: 2.5rem;
   height: 2.5rem;
   background-color: #ffffff;
@@ -335,7 +345,10 @@ export const IconButton = styled.button`
   }
 `;
 
-export const RestrictionNotice = styled.div`
+
+// 욕설 제한 안내 메시지
+
+S.RestrictionNotice = styled.div`
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -356,3 +369,5 @@ export const RestrictionNotice = styled.div`
     background-position: center;
   }
 `;
+
+export default S;
