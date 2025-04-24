@@ -2,16 +2,10 @@ import styled from 'styled-components';
 import AlertIcon from './danger.svg';
 import SubmitIcon from './Inputbutton.svg';
 
-// 공통 폰트 설정
 const baseFont = `
   font-family: 'Pretendard', sans-serif;
 `;
 
-//
-// ✅ 페이지 전체 구조
-//
-
-// 전체 컨테이너 (페이지 전체를 감싸는 wrapper)
 export const Container = styled.div`
   ${baseFont}
   display: flex;
@@ -20,10 +14,9 @@ export const Container = styled.div`
   background-color: #ffffff;
 `;
 
-// 내부 콘텐츠 래퍼 (카드 중앙 정렬용)
 export const InnerWrapper = styled.div`
   width: 100%;
-  max-width: 45.625rem; /* 730px */
+  max-width: 45.625rem;
   margin: 0 auto;
   ${baseFont}
 
@@ -33,7 +26,6 @@ export const InnerWrapper = styled.div`
   }
 `;
 
-// 글 전체 카드 박스
 export const Card = styled.div`
   width: 100%;
   background: #fff;
@@ -48,7 +40,6 @@ export const Card = styled.div`
   }
 `;
 
-// '자유게시판' 제목 영역
 export const SectionTitle = styled.h2`
   font-size: 1.5rem;
   font-weight: 700;
@@ -61,10 +52,6 @@ export const SectionTitle = styled.h2`
     margin-bottom: 0.3125rem;
   }
 `;
-
-//
-// ✅ 글 헤더 (작성자, 날짜, 버튼)
-//
 
 export const Header = styled.div`
   display: flex;
@@ -100,10 +87,6 @@ export const DateText = styled.div`
   ${baseFont}
 `;
 
-//
-// ✅ 본문 영역
-//
-
 export const Title = styled.h1`
   font-size: 1.75rem;
   font-weight: 600;
@@ -121,10 +104,6 @@ export const Content = styled.p`
   margin-bottom: 1.5rem;
   ${baseFont}
 `;
-
-//
-// ✅ 조회수 및 버튼
-//
 
 export const Meta = styled.div`
   display: flex;
@@ -150,7 +129,6 @@ export const Meta = styled.div`
   }
 `;
 
-// 수정 / 삭제 버튼 영역
 export const ControlButtons = styled.div`
   display: flex;
   gap: 0.5rem;
@@ -173,16 +151,35 @@ export const ControlButtons = styled.div`
   }
 `;
 
-// 구분선 (댓글 영역과 본문 사이)
+export const CommentControlButtons = styled.div`
+  display: flex;
+  gap: 0.25rem;
+  margin-left: auto;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: #A6A6A6;
+  cursor: pointer;
+
+  span {
+    color: #A6A6A6;
+    padding: 0 4px;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  .divider {
+    color: #A6A6A6;
+    padding: 0 2px;
+  }
+`;
+
 export const Divider = styled.hr`
   border: none;
   border-top: 1px solid #eee;
   margin: 1.5rem 0 0 0;
 `;
-
-//
-// ✅ 댓글 목록 스타일
-//
 
 export const Comment = styled.div`
   padding: 16px 0;
@@ -206,14 +203,13 @@ export const Comment = styled.div`
 
   .info {
     display: flex;
-    font-size: 0.8rem;
     flex-direction: column;
+    font-size: 0.8rem;
     color: #888;
 
     .username {
       font-weight: 600;
       color: #000;
-      margin-right: 8px;
     }
 
     .date {
@@ -229,9 +225,49 @@ export const Comment = styled.div`
   }
 `;
 
-//
-// ✅ 댓글 입력창 영역
-//
+// ✅ 인라인 댓글 수정창
+export const CommentEditTextarea = styled.textarea`
+  width: 100%;
+  min-height: 60px;
+  font-size: 0.95rem;
+  padding: 8px;
+  margin-top: 6px;
+  border: 1px solid #ccc;
+  border-radius: 0.375rem;
+  resize: vertical;
+  font-family: 'Pretendard', sans-serif;
+  color: #000 !important;
+  background-color: #fff !important;
+
+  &:focus {
+    outline: none;
+    border-color: #999;
+  }
+`;
+
+// ✅ 저장 / 취소 버튼
+export const EditButtonGroup = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 4px;
+
+  button {
+    font-size: 0.8125rem;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 0.375rem;
+    background: #eeeeee;
+    color: #333;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease;
+
+    &:hover {
+      background: #cccccc;
+    }
+  }
+`;
 
 export const CommentInputWrapper = styled.div`
   width: calc(100% + 3.375rem);
@@ -250,12 +286,11 @@ export const CommentInputWrapper = styled.div`
   @media (max-width: 768px) {
     width: calc(100% + 2rem);
     margin: 0 -1rem;
-    padding: 0; 
+    padding: 0;
     height: 2.5rem;
   }
 `;
 
-// 인풋 필드
 export const CommentInput = styled.input`
   flex: 1;
   padding: 0 0.75rem;
@@ -276,7 +311,6 @@ export const CommentInput = styled.input`
   }
 `;
 
-// 등록 버튼 (아이콘 버튼)
 export const IconButton = styled.button`
   width: 2.5rem;
   height: 2.5rem;
@@ -300,10 +334,6 @@ export const IconButton = styled.button`
     height: 2.5rem;
   }
 `;
-
-//
-// ✅ 욕설 제한 안내 문구
-//
 
 export const RestrictionNotice = styled.div`
   display: flex;

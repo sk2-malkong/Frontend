@@ -24,10 +24,17 @@ import CommentInput from './CommentInput';
 import profileImg from './profile.svg';
 import auth from '../api/auth';
 
+/**
+ * 게시글 상세 페이지
+ * - 게시글 정보 렌더링
+ * - 댓글 작성 및 목록
+ * - 본인 글일 경우 수정/삭제 버튼 제공
+ */
 const PostDetail = ({ post }) => {
   const navigate = useNavigate();
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [currentUser, setCurrentUser] = useState(null);
+  const [editingComment, setEditingComment] = useState(null); // 수정 모드 상태
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -101,7 +108,12 @@ const PostDetail = ({ post }) => {
 
           <Divider />
 
-          <CommentList postId={post.id} refreshTrigger={refreshTrigger} />
+          <CommentList
+            postId={post.id}
+            refreshTrigger={refreshTrigger}
+            currentUser={currentUser}
+            onEditComment={setEditingComment}
+          />
 
           {currentUser && currentUser.badWordCount >= 5 && (
             <RestrictionNotice>욕설 5회 사용으로 댓글 작성이 제한됩니다.</RestrictionNotice>
@@ -111,6 +123,8 @@ const PostDetail = ({ post }) => {
             onSubmit={handleAddComment}
             disabled={currentUser && currentUser.badWordCount >= 5}
             postId={post.id}
+            editingComment={editingComment}
+            clearEdit={() => setEditingComment(null)}
           />
         </Card>
       </InnerWrapper>
