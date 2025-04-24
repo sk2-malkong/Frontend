@@ -1,17 +1,15 @@
-import React from 'react';
-import PostCreate from './PostCreate';
+import React from "react";
+import PostCreate from "./PostCreate";
 
 /**
- * 게시글 작성 컨테이너
- * - PostCreate 컴포넌트를 감싸는 상위 구조
- * - 추후 레이아웃, 인증 체크, 전역 상태 연결 등을 위해 분리해둠
+ * PostCreateContainer
+ * - 게시글 작성 화면의 컨테이너 컴포넌트
+ * - 역할: PostCreate 컴포넌트를 감싸는 껍데기
+ * - 주로 라우터 연결 또는 레이아웃 통일 목적
+ * - 실제 로직은 PostCreate.jsx에서 처리됨
  */
 const PostCreateContainer = () => {
-  return (
-    <div>
-      <PostCreate/>
-    </div>
-  );
+  return <PostCreate />;
 };
 
 export default PostCreateContainer;
