@@ -5148,6 +5148,7 @@ fresh@0.5.2:
     multer "^1.4.5-lts.1"
     react "^18.3.1"
     react-countup "^6.5.3"
+    react-curved-text "^3.0.1"
     react-datepicker "^7.6.0"
     react-daum-postcode "^3.2.0"
     react-dom "^18.3.1"
