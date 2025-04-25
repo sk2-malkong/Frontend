@@ -43,7 +43,8 @@ const PostDetail = ({ post }) => {
 
   // 게시글 작성자와 현재 사용자 비교
   const isAuthor = currentUser?.username === post.author;
-  const isRestricted = currentUser?.badWordCount >= 5;
+  const isRestricted = currentUser?.badWordCount > 0 && currentUser?.badWordCount % 5 === 0;
+
 
   // 댓글 작성 완료 시 리스트 새로고침 트리거
   const handleAddComment = () => {
