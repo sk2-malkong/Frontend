@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import S from "./style";
 import userApi from '../api/userApi';
+import { useNavigate } from 'react-router-dom'; // useNavigate 훅 임포트
 
 const MyPage = () => {
   const [userProfile, setUserProfile] = useState(null);
   const [penaltyCount, setPenaltyCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate(); // useNavigate 훅 초기화
 
   // 데이터 로딩 함수
   useEffect(() => {
@@ -55,6 +57,11 @@ const MyPage = () => {
   // 디버깅용 콘솔 로그
   console.log('현재 컴포넌트 상태:', { loading, error, userProfile, penaltyCount });
 
+  // 프로필 수정 페이지로 이동하는 핸들러 함수
+  const handleEditProfile = () => {
+    navigate('/profilefix'); // 프로필 수정 페이지로 이동
+  };
+
   if (loading) {
     return <div>로딩 중...</div>;
   }
@@ -78,7 +85,7 @@ const MyPage = () => {
                 <S.MyInfoWrapper>
                   <S.MyInfoText>내 정보</S.MyInfoText>
                 </S.MyInfoWrapper>
-                <S.EditProfileButton>
+                <S.EditProfileButton onClick={handleEditProfile}> {/* 클릭 이벤트 핸들러 추가 */}
                   <S.EditProfileText>프로필 수정</S.EditProfileText>
                 </S.EditProfileButton>
               </S.ProfileHeader>
@@ -131,9 +138,9 @@ const MyPage = () => {
             </S.GroupWrapper>
           </S.AccountFrame>
 
-          <S.LogoutFrame>
-            <S.LogoutText>로그아웃</S.LogoutText>
-          </S.LogoutFrame>
+          {/*<S.LogoutFrame>*/}
+          {/*  <S.LogoutText>로그아웃</S.LogoutText>*/}
+          {/*</S.LogoutFrame>*/}
         </S.MainDiv>
       </S.DivWrapper>
   );
