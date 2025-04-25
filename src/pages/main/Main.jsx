@@ -8,14 +8,13 @@ const Main = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const keyword = queryParams.get('keyword');
-
   const navigate = useNavigate();
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [nickname, setNickname] = useState('');
   const [posts, setPosts] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
-  const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(0); 
   const postsPerPage = 8;
 
   const totalPages = Math.ceil(totalCount / postsPerPage);
@@ -26,8 +25,7 @@ const Main = () => {
         const token = localStorage.getItem('accessToken');
         if (token) {
           setIsLoggedIn(true);
-          const userData = await auth.profile();  
-          console.log('프로필 데이터:', userData);
+          const userData = await auth.profile();
           setNickname(userData.username);
         }
       } catch (error) {
@@ -37,24 +35,18 @@ const Main = () => {
     fetchProfile();
   }, []);
 
-
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (keyword) {
-          const data = await postApi.search(keyword, currentPage);
-          setPosts(data.content);
-          setTotalCount(data.totalElements);
-        } else {
-          const data = await postApi.postlist(currentPage);
-          setPosts(data.content);
-          setTotalCount(data.totalElements);
-        }
+        const data = keyword
+          ? await postApi.search(keyword, currentPage)
+          : await postApi.postlist(currentPage);
+        setPosts(data.content);
+        setTotalCount(data.totalElements);
       } catch (error) {
         console.error('게시글 불러오기 실패:', error.message);
       }
     };
-
     fetchData();
   }, [keyword, currentPage]);
 
@@ -69,8 +61,8 @@ const Main = () => {
               posts.map((post) => (
                 <S.PostCard
                   key={post.postId}
-                  onClick={() => navigate(`/post/${post.postId}`)} // ✅ 클릭 시 이동
-                  style={{ cursor: 'pointer' }} // UX 개선
+                  onClick={() => navigate(`/post/${post.postId}`)}
+                  style={{ cursor: 'pointer' }}
                 >
                   <div className="post-header">
                     <div className="author-icon" />
@@ -93,22 +85,38 @@ const Main = () => {
 
           {posts.length > 0 && (
             <S.Pagination>
-              <button disabled={currentPage === 1} onClick={() => setCurrentPage(1)}>{'<<'}</button>
-              <button disabled={currentPage === 1} onClick={() => setCurrentPage(prev => prev - 1)}>{'<'}</button>
+              <button disabled={currentPage === 0} onClick={() => setCurrentPage(0)}>
+                {'<<'}
+              </button>
+              <button disabled={currentPage === 0} onClick={() => setCurrentPage((prev) => Math.max(0, prev - 1))}>
+                {'<'}
+              </button>
+
               {Array.from({ length: totalPages }, (_, i) => (
                 <button
-                  key={i + 1}
-                  onClick={() => setCurrentPage(i + 1)}
+                  key={i}
+                  onClick={() => setCurrentPage(i)}
                   style={{
-                    fontWeight: currentPage === i + 1 ? 'bold' : 'normal',
-                    color: currentPage === i + 1 ? 'red' : 'black',
+                    fontWeight: currentPage === i ? 'bold' : 'normal',
+                    color: currentPage === i ? 'red' : 'black',
                   }}
                 >
                   {i + 1}
                 </button>
               ))}
-              <button disabled={currentPage === totalPages} onClick={() => setCurrentPage(prev => prev + 1)}>{'>'}</button>
-              <button disabled={currentPage === totalPages} onClick={() => setCurrentPage(totalPages)}>{'>>'}</button>
+
+              <button
+                disabled={currentPage === totalPages - 1}
+                onClick={() => setCurrentPage((prev) => Math.min(totalPages - 1, prev + 1))}
+              >
+                {'>'}
+              </button>
+              <button
+                disabled={currentPage === totalPages - 1}
+                onClick={() => setCurrentPage(totalPages - 1)}
+              >
+                {'>>'}
+              </button>
             </S.Pagination>
           )}
         </S.ContentLeft>
