@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import S from './style';
+import { createComment, updateComment } from '../api/comment';
 
 /**
  * 댓글 입력창 컴포넌트
@@ -39,33 +39,19 @@ const CommentInput = ({ onSubmit, disabled, postId, editingComment, clearEdit })
     }
 
     try {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-
       if (editingComment) {
         // 댓글 수정
-        await axios.put(
-          `http://localhost:8080/api/comment/${editingComment.commentId}`,
-          { content: trimmed },
-          config
-        );
+        await updateComment(editingComment.commentId, trimmed);
         alert('댓글이 수정되었습니다.');
-        if (clearEdit) clearEdit(); // 수정 모드 종료
+        if (clearEdit) clearEdit();
       } else {
         // 새 댓글 작성
-        await axios.post(
-          `http://localhost:8080/api/comment/${postId}`,
-          { content: trimmed },
-          config
-        );
+        await createComment(postId, trimmed);
         console.log('✅ 댓글 등록 성공');
       }
 
-      setComment(''); // 입력창 초기화
-      if (onSubmit) onSubmit(); // 외부에 상태 변경 알림
+      setComment('');
+      if (onSubmit) onSubmit();
     } catch (error) {
       console.error('❌ 댓글 처리 실패:', error);
       alert('댓글 처리에 실패했습니다.');
