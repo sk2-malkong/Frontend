@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import S from './style'; 
-
 import CommentList from './CommentList';
 import CommentInput from './CommentInput';
 import profileImg from './profile.svg';
 import auth from '../api/auth';
+import { deletePost } from '../api/postdetail';
 
 /**
  * 게시글 상세 페이지 컴포넌트
@@ -62,14 +61,7 @@ const PostDetail = ({ post }) => {
     if (!confirmed) return;
 
     try {
-      const token = localStorage.getItem('accessToken');
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-
-      await axios.delete(`http://localhost:8080/api/post/delete/${post.id}`, config);
+      await deletePost(post.id); 
       alert('게시글이 삭제되었습니다.');
       navigate('/main');
     } catch (error) {

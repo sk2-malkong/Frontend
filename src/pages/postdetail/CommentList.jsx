@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import S from './style';
 import defaultProfile from './profile.svg';
+import { fetchComments, deleteComment, updateComment } from '../api/comment';
 
 /**
  * 댓글 리스트 컴포넌트
@@ -23,15 +23,15 @@ const CommentList = ({ postId, refreshTrigger, currentUser }) => {
    * - postId 또는 refreshTrigger가 바뀔 때마다 호출됨
    */
   useEffect(() => {
-    const fetchComments = async () => {
+    const loadComments = async () => {
       try {
-        const res = await axios.get(`http://localhost:8080/api/comment/${postId}`);
-        const mapped = res.data.map((c) => ({
+        const data = await fetchComments(postId);
+        const mapped = data.map((c) => ({
           commentId: c.commentId,
           username: c.username,
           date: new Date(c.createdAt).toLocaleString('ko-KR'),
           content: c.content,
-          profile: null, // 프로필 이미지가 있다면 교체 가능
+          profile: null,
         }));
         setComments(mapped);
       } catch (err) {
@@ -40,9 +40,7 @@ const CommentList = ({ postId, refreshTrigger, currentUser }) => {
       }
     };
 
-    if (postId) {
-      fetchComments();
-    }
+    if (postId) loadComments();
   }, [postId, refreshTrigger]);
 
   /**
@@ -53,10 +51,7 @@ const CommentList = ({ postId, refreshTrigger, currentUser }) => {
     if (!window.confirm('댓글을 삭제하시겠습니까?')) return;
 
     try {
-      const token = localStorage.getItem('accessToken');
-      await axios.delete(`http://localhost:8080/api/comment/${commentId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await deleteComment(commentId);
       alert('댓글이 삭제되었습니다.');
       setComments((prev) => prev.filter((c) => c.commentId !== commentId));
     } catch (err) {
@@ -67,14 +62,8 @@ const CommentList = ({ postId, refreshTrigger, currentUser }) => {
 
   // 수정 모드 진입
   const startEditing = (comment) => {
-    // 이용 제한 조건
-    if (isRestricted) {
-      alert('욕설 5회 이상 사용으로 댓글 수정이 제한됩니다.');
-      return;
-    }
     setEditingId(comment.commentId);
     setEditingContent(comment.content);
-    if (onEditComment) onEditComment(comment);
   };
 
   // 수정 모드 취소
@@ -83,7 +72,6 @@ const CommentList = ({ postId, refreshTrigger, currentUser }) => {
     setEditingContent('');
   };
 
-  
   // 댓글 수정 완료
   const saveEditing = async () => {
     if (!editingContent.trim()) {
@@ -92,14 +80,7 @@ const CommentList = ({ postId, refreshTrigger, currentUser }) => {
     }
 
     try {
-      const token = localStorage.getItem('accessToken');
-      await axios.put(
-        `http://localhost:8080/api/comment/${editingId}`,
-        { content: editingContent },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      await updateComment(editingId, editingContent); 
 
       // 수정된 내용으로 로컬 상태 업데이트
       setComments((prev) =>

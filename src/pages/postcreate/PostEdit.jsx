@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import PostFormContainer from "./PostFormContainer";
 import auth from "../api/auth";
 import axios from "axios";
+import { updatePost } from "../api/postedit";
 
 /**
  * PostEdit
@@ -54,22 +55,12 @@ const PostEdit = () => {
 
   /**
    * 게시글 수정 요청
-   * - PUT /api/post/update/{id}
-   * - 성공 시: 해당 게시글 상세 페이지로 이동
+   * - API: PUT /api/post/update/{id}
    */
   const handleSubmit = async (updatedPost) => {
     try {
-      const token = localStorage.getItem("accessToken");
-      const config = { headers: { Authorization: `Bearer ${token}` } };
-
-      await axios.put(
-        `http://localhost:8080/api/post/update/${id}`,
-        updatedPost,
-        config
-      );
-
-      // 수정 완료 후 상세 페이지 이동
-      window.location.href = `/post/${id}`;
+      await updatePost(id, updatedPost);
+      window.location.href = `/post/${id}`; // 수정 성공 후 해당 페이지로 이동
     } catch (error) {
       alert("게시글 수정에 실패했습니다.");
     }
