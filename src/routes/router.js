@@ -14,6 +14,7 @@ import ProfileFixContainer from '../pages/profileFix/ProfileFixContainer';
 import LimitationLogContainer from '../pages/limitationlog/LimitationLogContainer';
 import Search from '../pages/search/Search';
 import PostEditContainer from '../pages/postcreate/PostEditContainer'; 
+import TreeContainer from '../pages/treetest/TreeContainer';
 
 const router = createBrowserRouter([
   {
@@ -73,6 +74,10 @@ const router = createBrowserRouter([
     {
       path : "/findpassword",
       element : <FindPasswordContainer/>
+    },
+    {
+      path: "/tree",
+      element : <TreeContainer/>
     }
 ]);
 

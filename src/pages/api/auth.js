@@ -16,7 +16,6 @@ const signup = async (id, username, email, pw) => {
 // 로그인
 const login = async (id, pw) => {
   try {
-    console.log('로그인 요청:', { id, pw });
     const response = await api.post('/auth/login', { id, pw }, {
       headers: { 'Content-Type': 'application/json' },
     });
@@ -29,12 +28,39 @@ const login = async (id, pw) => {
     if (refreshToken) localStorage.setItem('refreshToken', refreshToken);
     if (userInfo.email) localStorage.setItem('email', userInfo.email);
     if (userInfo.username) localStorage.setItem('username', userInfo.username);
-
-    console.log('로그인 성공:', response.data);
     return response.data;
   } catch (error) {
     console.error('로그인 실패:', error.response?.data || error.message);
     throw new Error(error.response?.data?.message || '로그인에 실패했습니다.');
+  }
+};
+const refreshAccessToken = async () => {
+  try {
+    const refreshToken = localStorage.getItem('refreshToken');
+    if (!refreshToken) {
+      throw new Error('저장된 RefreshToken이 없습니다.');
+    }
+    console.log('🔄 [재발급 요청] RefreshToken:', refreshToken);
+
+    const response = await api.post('/auth/refresh', {
+      refreshToken: refreshToken 
+    });
+
+    const newAccessToken = response.headers['access-token']?.replace('Bearer ', '');
+    const newRefreshToken = response.headers['refresh-token'];
+
+    if (newAccessToken) {
+      localStorage.setItem('accessToken', newAccessToken);
+    }
+    if (newRefreshToken) {
+      localStorage.setItem('refreshToken', newRefreshToken);
+    }
+
+    console.log('🔁 AccessToken 재발급 완료');
+    return newAccessToken;
+  } catch (error) {
+    console.error('❌ AccessToken 재발급 실패:', error.response?.data || error.message);
+    throw new Error(error.response?.data?.message || 'AccessToken 재발급에 실패했습니다.');
   }
 };
 
@@ -137,4 +163,5 @@ export default {
   checkId,
   checkName,
   profile,
+  refreshAccessToken
 };

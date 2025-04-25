@@ -8,6 +8,8 @@
     "@fortawesome/free-regular-svg-icons": "^6.7.2",
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
     "@fortawesome/react-fontawesome": "^0.2.2",
+    "@react-three/drei": "^10.0.7",
+    "@react-three/fiber": "^9.1.2",
     "@redux-devtools/extension": "^3.3.0",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^13.0.0",
@@ -18,7 +20,7 @@
     "bad-words": "^4.0.0",
     "date-fns": "^4.1.0",
     "emailjs-com": "^3.2.0",
-    "framer-motion": "^12.7.4",
+    "framer-motion": "^12.9.1",
     "front": "file:",
     "global": "^4.4.0",
     "gsap": "^3.12.7",
@@ -39,6 +41,7 @@
     "style-components": "^0.1.0",
     "styled-components": "^6.1.17",
     "styled-reset": "^4.5.2",
+    "typewriter-effect": "^2.21.0",
     "web-vitals": "^2.1.0"
   },
   "scripts": {

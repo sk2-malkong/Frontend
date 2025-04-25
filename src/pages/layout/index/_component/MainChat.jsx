@@ -63,9 +63,17 @@ const MainChat = () => {
     }
   };
 
+  // 🔑 엔터 키 입력 처리
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleSendMessage();
+    }
+  };
+
   return (
     <S.Wrapper>
-        <S.HeroOverlay />
+      <S.HeroOverlay />
       <S.MainWrapper>
         <S.Title>AI 욕설 필터링 플랫폼</S.Title>
         <S.Description>
@@ -74,7 +82,12 @@ const MainChat = () => {
         </S.Description>
 
         <S.ButtonWrap>
-          <S.Button onClick={() => navigate('/main')}>서비스 체험하기</S.Button>
+          <S.Button onClick={() => {
+            navigate('/main');
+            window.scrollTo(0, 0); // 🔥 페이지 최상단 이동
+          }}>
+            서비스 체험하기
+          </S.Button>
         </S.ButtonWrap>
 
         <S.ChatNotice>
@@ -82,7 +95,6 @@ const MainChat = () => {
           AI가 순화된 단어로 교체해줍니다!
         </S.ChatNotice>
 
-        {/* 채팅 박스 */}
         <S.SectionWrapper1 data-aos="fade-up">
           <S.ChatArea>
             {messages1.map((msg, idx) => (
@@ -94,11 +106,13 @@ const MainChat = () => {
               />
             ))}
           </S.ChatArea>
+
           <S.InputWrapper>
             <S.Input
               type="text"
               value={inputValue1}
               onChange={(e) => setInputValue1(e.target.value)}
+              onKeyDown={handleKeyPress} // 👈 엔터로 전송
               placeholder="메시지를 입력하세요"
             />
             <S.SendButton onClick={handleSendMessage}>
