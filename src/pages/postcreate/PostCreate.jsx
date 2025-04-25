@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import PostFormContainer from "./PostFormContainer";
 import auth from "../api/auth";
-import axios from "axios";
+import { createPost } from "../api/postcreate";
 
 /**
  * 게시글 작성 페이지
@@ -43,19 +43,8 @@ const PostCreate = () => {
    */
   const handleSubmit = async ({ title, content }) => {
     try {
-      const token = localStorage.getItem("accessToken");
-      const response = await axios.post(
-        "http://localhost:8080/api/post/create",
-        { title, content },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      // 게시글 작성 성공 시, 해당 게시글 상세 페이지로 이동
-      navigate(`/post/${response.data.postId}`);
+      const response = await createPost({ title, content });
+      navigate(`/post/${response.postId}`); // 성공 후 해당 게시글 상세 페이지로 이동
     } catch (error) {
       alert("게시글 작성 중 오류가 발생했습니다.");
     }

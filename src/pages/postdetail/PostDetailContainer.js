@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
 import PostDetail from './PostDetail';
+import { fetchPostDetail } from '../api/postdetail'; 
+import { fetchComments } from '../api/comment';      
 
 /**
  * PostDetailContainer
@@ -24,8 +25,7 @@ const PostDetailContainer = () => {
     const fetchPostAndComments = async () => {
       try {
         // 게시글 상세 데이터 가져오기
-        const postRes = await axios.get(`http://localhost:8080/api/post/${id}`);
-        const data = postRes.data;
+        const data = await fetchPostDetail(id); 
 
         const mappedPost = {
           id: data.postId,
@@ -50,13 +50,13 @@ const PostDetailContainer = () => {
       }
 
       try {
-        // 댓글 목록 가져오기 (인증 없이 조회 가능)
-        const commentRes = await axios.get(`http://localhost:8080/api/comment/${id}`);
-        const mappedComments = commentRes.data.map((c) => ({
+        // 댓글 목록 가져오기
+        const commentData = await fetchComments(id); 
+        const mappedComments = commentData.map((c) => ({
           username: c.username,
           date: new Date(c.createdAt).toLocaleString('ko-KR'),
           text: c.text,
-          profile: null, // 프로필 이미지가 있으면 설정 가능
+          profile: null,
         }));
 
         if (isMounted) {
