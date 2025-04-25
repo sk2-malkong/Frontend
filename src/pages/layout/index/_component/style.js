@@ -130,6 +130,7 @@ S.Input = styled.input`
   font-size: 15px;
   padding: 10px;
   outline: none;
+  color: black;
 `;
 
 S.SendButton = styled.button`
