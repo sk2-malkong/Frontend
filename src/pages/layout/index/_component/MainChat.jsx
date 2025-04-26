@@ -48,7 +48,7 @@ const filterWithAnimation = (text, setMessages) => {
 const MainChat = () => {
   const navigate = useNavigate();
   const [messages1, setMessages1] = useState([
-    { send: 'bot', text: 'AI 욕설 필터링 테스트를 시작해보세요!' },
+    { send: 'bot', text: 'AI 욕설 순화 테스트를 시작해보세요!' },
   ]);
   const [inputValue1, setInputValue1] = useState('');
 
@@ -75,7 +75,7 @@ const MainChat = () => {
     <S.Wrapper>
       <S.HeroOverlay />
       <S.MainWrapper>
-        <S.Title>AI 욕설 필터링 플랫폼</S.Title>
+        <S.Title>AI 욕설 순화 플랫폼</S.Title>
         <S.Description>
           채팅과 게시판에서 욕설을 감지하고 <strong>순화된 언어</strong>로 자동 교체합니다.<br />
           누구나 편안한 대화를 나눌 수 있는 공간을 만들어보세요.
