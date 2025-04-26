@@ -1,67 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import S from "./style";
-import userApi from '../api/userApi';
-import { useNavigate } from 'react-router-dom'; // useNavigate 훅 임포트
 
-const MyPage = () => {
-  const [userProfile, setUserProfile] = useState(null);
-  const [penaltyCount, setPenaltyCount] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const navigate = useNavigate(); // useNavigate 훅 초기화
-
-  // 데이터 로딩 함수
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        console.log('데이터 요청 시작...');
-
-        // 프로필 데이터 먼저 요청
-        const profileData = await userApi.getProfile();
-        console.log('API에서 받아온 프로필 데이터:', profileData);
-
-        // 프로필 데이터 업데이트
-        setUserProfile({
-          username: profileData.username,
-          email: profileData.email,
-          profileImage: profileData.profileImage
-        });
-
-        // 받은 데이터를 로컬 스토리지에도 저장
-        localStorage.setItem('username', profileData.username || '');
-        localStorage.setItem('email', profileData.email || '');
-
-        try {
-          // 비속어 횟수 요청 - 직접 숫자값으로 반환된다고 가정
-          const count = await userApi.getPenaltyCount();
-          console.log('API에서 받아온 비속어 횟수:', count);
-
-          // 숫자값이 직접 반환되므로 바로 상태 업데이트
-          setPenaltyCount(count);
-        } catch (penaltyErr) {
-          console.error('비속어 횟수 로딩 실패:', penaltyErr);
-          // 비속어 카운트 오류가 있어도 전체 화면은 계속 로드
-        }
-
-        setLoading(false);
-      } catch (err) {
-        console.error('프로필 데이터 로딩 중 오류:', err);
-        setError('데이터를 불러오는데 실패했습니다: ' + err.message);
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  // 디버깅용 콘솔 로그
-  console.log('현재 컴포넌트 상태:', { loading, error, userProfile, penaltyCount });
-
-  // 프로필 수정 페이지로 이동하는 핸들러 함수
-  const handleEditProfile = () => {
-    navigate('/profilefix'); // 프로필 수정 페이지로 이동
-  };
-
+const MyPage = ({ loading, error, userProfile, penaltyCount, onEditProfile }) => {
   if (loading) {
     return <div>로딩 중...</div>;
   }
@@ -85,7 +25,7 @@ const MyPage = () => {
                 <S.MyInfoWrapper>
                   <S.MyInfoText>내 정보</S.MyInfoText>
                 </S.MyInfoWrapper>
-                <S.EditProfileButton onClick={handleEditProfile}> {/* 클릭 이벤트 핸들러 추가 */}
+                <S.EditProfileButton onClick={onEditProfile}>
                   <S.EditProfileText>프로필 수정</S.EditProfileText>
                 </S.EditProfileButton>
               </S.ProfileHeader>
