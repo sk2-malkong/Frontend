@@ -1,6 +1,5 @@
 import { createBrowserRouter } from 'react-router-dom'
 import Layout from '../pages/layout/Layout';
-import Index from '../pages/layout/index/Index';
 import MainContainer from '../pages/main/MainContainer';
 import IndexContainer from '../pages/layout/index/IndexContainer';
 import MyPageContainer from '../pages/mypage/MyPageContainer';
@@ -14,7 +13,6 @@ import ProfileFixContainer from '../pages/profileFix/ProfileFixContainer';
 import LimitationLogContainer from '../pages/limitationlog/LimitationLogContainer';
 import Search from '../pages/search/Search';
 import PostEditContainer from '../pages/postcreate/PostEditContainer'; 
-import TreeContainer from '../pages/treetest/TreeContainer';
 
 const router = createBrowserRouter([
   {
@@ -74,10 +72,6 @@ const router = createBrowserRouter([
     {
       path : "/findpassword",
       element : <FindPasswordContainer/>
-    },
-    {
-      path: "/tree",
-      element : <TreeContainer/>
     }
 ]);
 

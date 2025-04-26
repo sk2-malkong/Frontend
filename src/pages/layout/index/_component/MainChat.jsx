@@ -48,7 +48,7 @@ const filterWithAnimation = (text, setMessages) => {
 const MainChat = () => {
   const navigate = useNavigate();
   const [messages1, setMessages1] = useState([
-    { send: 'bot', text: 'AI 욕설 순화 테스트를 시작해보세요!' },
+    { send: 'bot', text: 'AI 욕설 필터링 테스트를 시작해보세요!' },
   ]);
   const [inputValue1, setInputValue1] = useState('');
 
@@ -63,31 +63,18 @@ const MainChat = () => {
     }
   };
 
-  // 🔑 엔터 키 입력 처리
-  const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      handleSendMessage();
-    }
-  };
-
   return (
     <S.Wrapper>
-      <S.HeroOverlay />
+        <S.HeroOverlay />
       <S.MainWrapper>
-        <S.Title>AI 욕설 순화 플랫폼</S.Title>
+        <S.Title>AI 욕설 필터링 플랫폼</S.Title>
         <S.Description>
           채팅과 게시판에서 욕설을 감지하고 <strong>순화된 언어</strong>로 자동 교체합니다.<br />
           누구나 편안한 대화를 나눌 수 있는 공간을 만들어보세요.
         </S.Description>
 
         <S.ButtonWrap>
-          <S.Button onClick={() => {
-            navigate('/main');
-            window.scrollTo(0, 0); // 🔥 페이지 최상단 이동
-          }}>
-            서비스 체험하기
-          </S.Button>
+          <S.Button onClick={() => navigate('/main')}>서비스 체험하기</S.Button>
         </S.ButtonWrap>
 
         <S.ChatNotice>
@@ -95,6 +82,7 @@ const MainChat = () => {
           AI가 순화된 단어로 교체해줍니다!
         </S.ChatNotice>
 
+        {/* 채팅 박스 */}
         <S.SectionWrapper1 data-aos="fade-up">
           <S.ChatArea>
             {messages1.map((msg, idx) => (
@@ -106,13 +94,11 @@ const MainChat = () => {
               />
             ))}
           </S.ChatArea>
-
           <S.InputWrapper>
             <S.Input
               type="text"
               value={inputValue1}
               onChange={(e) => setInputValue1(e.target.value)}
-              onKeyDown={handleKeyPress} // 👈 엔터로 전송
               placeholder="메시지를 입력하세요"
             />
             <S.SendButton onClick={handleSendMessage}>
