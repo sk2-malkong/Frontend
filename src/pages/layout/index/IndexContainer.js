@@ -1,11 +1,15 @@
 import React from 'react';
 import MainChat from './_component/MainChat';
+import { GlobalStyle } from './_component/style';
 
 const IndexContainer = () => {
   return (
-    <div>
-      <MainChat/>
-    </div>
+    <>
+    <GlobalStyle/>
+      <div>
+        <MainChat/>
+      </div>
+    </>
   );
 };
 
