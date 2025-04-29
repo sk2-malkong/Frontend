@@ -2,15 +2,19 @@ import styled from 'styled-components';
 import AlertIcon from './danger.svg';
 import SubmitIcon from './Inputbutton.svg';
 
-const S = {};
+// ============================
+// 🧱 기본 설정
+// ============================
 
 const baseFont = `
   font-family: 'Pretendard', sans-serif;
 `;
 
-// 레이아웃(페이지 구조)
+// ============================
+// 🧱 페이지 전체 레이아웃
+// ============================
 
-S.Container = styled.div`
+export const Container = styled.div`
   ${baseFont}
   display: flex;
   justify-content: center;
@@ -18,7 +22,7 @@ S.Container = styled.div`
   background-color: #ffffff;
 `;
 
-S.InnerWrapper = styled.div`
+export const InnerWrapper = styled.div`
   width: 100%;
   max-width: 45.625rem;
   margin: 0 auto;
@@ -30,48 +34,63 @@ S.InnerWrapper = styled.div`
   }
 `;
 
-S.Card = styled.div`
-  width: 100%;
-  background: #fff;
-  border: 1px solid #e0e0e0;
-  border-radius: 0.625rem;
-  padding: 1.875rem 1.5rem 0 1.875rem;
-  box-sizing: border-box;
+export const SectionTitle = styled.h2`
   ${baseFont}
-
-  @media (max-width: 768px) {
-    padding: 1rem 1rem 0 1rem;
-  }
-`;
-
-// 제목 / 작성자 정보 / 헤더
-
-S.SectionTitle = styled.h2`
   font-size: 1.5rem;
   font-weight: 700;
   color: #000;
   margin-bottom: 0.4375rem;
   text-align: left;
-  ${baseFont}
 
   @media (max-width: 768px) {
     margin-bottom: 0.3125rem;
   }
 `;
 
-S.Header = styled.div`
+// ============================
+// 🧱 게시글 카드 레이아웃
+// ============================
+
+export const Card = styled.div`
+  ${baseFont}
+  width: 100%;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 0.625rem;
+  overflow: hidden;
+`;
+
+export const ContentWrapper = styled.div`
+  padding: 2rem 2rem 0 2rem;
+
+  @media (max-width: 768px) {
+    padding: 1.75rem 1.5rem 0 1.5rem;
+  }
+`;
+
+// ============================
+// 🧱 게시글 헤더 (작성자 정보)
+// ============================
+
+export const Header = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 1rem;
 `;
 
-S.AuthorInfo = styled.div`
+export const HeaderInner = styled.div`
+  display: flex;
+  align-items: center;
+  width: 100%;
+`;
+
+export const AuthorInfo = styled.div`
   display: flex;
   align-items: center;
 `;
 
-S.Profile = styled.img`
+export const Profile = styled.img`
   width: 3rem;
   height: 3rem;
   border-radius: 50%;
@@ -79,39 +98,43 @@ S.Profile = styled.img`
   object-fit: cover;
 `;
 
-S.Nickname = styled.div`
+export const Nickname = styled.div`
+  ${baseFont}
   font-size: 1rem;
   font-weight: 500;
   color: #000;
-  ${baseFont}
 `;
 
-S.DateText = styled.div`
+export const DateText = styled.div`
+  ${baseFont}
   font-size: 0.75rem;
   font-weight: 500;
   color: #A6A6A6;
-  ${baseFont}
 `;
 
-S.Title = styled.h1`
+// ============================
+// 🧱 게시글 본문
+// ============================
+
+export const Title = styled.h1`
+  ${baseFont}
   font-size: 1.75rem;
   font-weight: 600;
   color: #000;
   margin: 1rem 0 0.5rem 0;
-  ${baseFont}
 `;
 
-S.Content = styled.p`
+export const Content = styled.p`
+  ${baseFont}
   white-space: pre-wrap;
   line-height: 1.6;
   font-size: 1rem;
   font-weight: 400;
   color: #000;
   margin-bottom: 1.5rem;
-  ${baseFont}
 `;
 
-S.Meta = styled.div`
+export const Meta = styled.div`
   display: flex;
   justify-content: space-between;
   font-size: 0.75rem;
@@ -122,10 +145,6 @@ S.Meta = styled.div`
     cursor: pointer;
     color: #000;
     margin-left: 0.5rem;
-
-    &:first-child {
-      margin-left: 0;
-    }
   }
 
   div {
@@ -135,9 +154,10 @@ S.Meta = styled.div`
   }
 `;
 
-S.ControlButtons = styled.div`
+export const ControlButtons = styled.div`
   display: flex;
   gap: 0.5rem;
+  margin-left: auto;
   font-size: 0.9375rem;
   font-weight: 500;
   color: #A6A6A6;
@@ -150,46 +170,19 @@ S.ControlButtons = styled.div`
       text-decoration: underline;
     }
   }
-
-  .divider {
-    color: #A6A6A6;
-    margin: 0 0.25rem;
-  }
 `;
 
-S.CommentControlButtons = styled.div`
-  display: flex;
-  gap: 0.25rem;
-  margin-left: auto;
-  font-size: 0.8125rem;
-  font-weight: 500;
-  color: #A6A6A6;
-  cursor: pointer;
-
-  span {
-    color: #A6A6A6;
-    padding: 0 4px;
-
-    &:hover {
-      text-decoration: underline;
-    }
-  }
-
-  .divider {
-    color: #A6A6A6;
-    padding: 0 2px;
-  }
-`;
-
-S.Divider = styled.hr`
+export const Divider = styled.hr`
   border: none;
   border-top: 1px solid #eee;
   margin: 1.5rem 0 0 0;
 `;
 
-// 댓글
+// ============================
+// 🧱 댓글 리스트
+// ============================
 
-S.Comment = styled.div`
+export const Comment = styled.div`
   padding: 16px 0;
   border-bottom: 1px solid #f0f0f0;
   color: #000;
@@ -233,9 +226,26 @@ S.Comment = styled.div`
   }
 `;
 
-// 댓글 수정 및 버튼
+export const CommentControlButtons = styled.div`
+  display: flex;
+  gap: 0.25rem;
+  margin-left: auto;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: #A6A6A6;
+  cursor: pointer;
 
-S.CommentEditTextarea = styled.textarea`
+  span {
+    color: #A6A6A6;
+    padding: 0 4px;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+`;
+
+export const CommentEditTextarea = styled.textarea`
   width: 100%;
   min-height: 60px;
   font-size: 0.95rem;
@@ -254,7 +264,7 @@ S.CommentEditTextarea = styled.textarea`
   }
 `;
 
-S.EditButtonGroup = styled.div`
+export const EditButtonGroup = styled.div`
   display: flex;
   justify-content: flex-end;
   gap: 0.5rem;
@@ -277,31 +287,22 @@ S.EditButtonGroup = styled.div`
   }
 `;
 
-// 댓글 입력창
+// ============================
+// 🧱 댓글 입력창
+// ============================
 
-S.CommentInputWrapper = styled.div`
-  width: calc(100% + 3.375rem);
-  margin-left: -1.875rem;
-  margin-right: -1.5rem;
+export const CommentInputWrapper = styled.div`
+  width: 100%;
   background-color: #F0F0F0;
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  border-bottom-left-radius: 0.625rem;
-  border-bottom-right-radius: 0.625rem;
   border-top: 1px solid #f0f0f0;
   height: 2.5rem;
   overflow: hidden;
-
-  @media (max-width: 768px) {
-    width: calc(100% + 2rem);
-    margin: 0 -1rem;
-    padding: 0;
-    height: 2.5rem;
-  }
 `;
 
-S.CommentInput = styled.input`
+export const CommentInput = styled.textarea`
   flex: 1;
   padding: 0 0.75rem;
   font-size: 0.9375rem;
@@ -310,6 +311,12 @@ S.CommentInput = styled.input`
   color: #000;
   outline: none;
   height: 100%;
+  resize: none;
+
+  display: flex;
+  align-items: center;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
 
   &::placeholder {
     color: #797979;
@@ -321,16 +328,16 @@ S.CommentInput = styled.input`
   }
 `;
 
-S.IconButton = styled.button`
+export const IconButton = styled.button`
   width: 2.5rem;
   height: 2.5rem;
   background-color: #ffffff;
   background-image: url(${SubmitIcon});
   background-repeat: no-repeat;
   background-position: center;
-  border-bottom-right-radius: 0.625rem;
   background-size: 1.2rem 1.2rem;
   border: none;
+  border-bottom-right-radius: 0.625rem;
   cursor: pointer;
   margin-left: auto;
 
@@ -338,17 +345,13 @@ S.IconButton = styled.button`
     opacity: 0.5;
     cursor: not-allowed;
   }
-
-  @media (max-width: 768px) {
-    width: 2.5rem;
-    height: 2.5rem;
-  }
 `;
 
+// ============================
+// 🧱 욕설 제한 안내 메시지
+// ============================
 
-// 욕설 제한 안내 메시지
-
-S.RestrictionNotice = styled.div`
+export const RestrictionNotice = styled.div`
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -369,5 +372,3 @@ S.RestrictionNotice = styled.div`
     background-position: center;
   }
 `;
-
-export default S;
