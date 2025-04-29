@@ -1,28 +1,29 @@
 {
   "compilerOptions": {
-    "target": "ESNext",                     // 둘 중 최신 기준 (ES5 대신 ESNext)
-    "module": "ESNext",
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "target": "es5",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "noFallthroughCasesInSwitch": true,     // 두 번째 것에만 있었던 옵션 추가
-    "moduleResolution": "Node",
+    "noFallthroughCasesInSwitch": true,
+    "module": "esnext",
+    "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "baseUrl": ".",                         // 첫 번째는 "./", 두 번째는 ".", → "."로 통일
-    "paths": {
-      "*": ["src/*"]                        // 첫 번째에만 있었던 paths 옵션 유지
-    },
-    "typeRoots": ["./node_modules/@types", "./src/@types"] // 두 번째에만 있었던 타입 루트 추가
+    "typeRoots": ["./node_modules/@types", "./src/@types"],
+    "baseUrl": "."
   },
   "include": [
     "src",
-    "declarations.d.ts"                      // 두 번째에만 있었던 declarations.d.ts 추가
+    "declarations.d.ts"  // 여기에 SVG 선언 파일 추가
   ]
 }
