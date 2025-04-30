@@ -1,4 +1,3 @@
-// Main.tsx
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import AOS from 'aos';
@@ -108,7 +107,10 @@ const Main: React.FC = () => {
 
           {posts.length > 0 && (
             <S.Pagination>
-              <button disabled={currentPage === 0} onClick={() => setCurrentPage(0)}>
+              <button
+                disabled={currentPage === 0}
+                onClick={() => setCurrentPage(0)}
+              >
                 {'<<'}
               </button>
               <button
@@ -117,15 +119,17 @@ const Main: React.FC = () => {
               >
                 {'<'}
               </button>
+
               {Array.from({ length: totalPages }, (_, i) => (
                 <button
                   key={i}
+                  data-active={currentPage === i}
                   onClick={() => setCurrentPage(i)}
-                  style={{ fontWeight: currentPage === i ? 'bold' : 'normal' }}
                 >
                   {i + 1}
                 </button>
               ))}
+
               <button
                 disabled={currentPage === totalPages - 1}
                 onClick={() => setCurrentPage(p => Math.min(totalPages - 1, p + 1))}
