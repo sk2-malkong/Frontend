@@ -1,3 +1,5 @@
+/* eslint-disable react/no-unescaped-entities */
+
 import React, { useEffect, useState, useRef, useLayoutEffect } from "react";
 import CountUp from "react-countup";
 import { gsap } from "gsap";
