@@ -1,4 +1,3 @@
-// style.ts
 import styled, { keyframes } from 'styled-components';
 
 const fadeIn = keyframes`
@@ -12,7 +11,6 @@ const bubbleRise = keyframes`
   100% { transform: translateY(-100%) scale(1.2); opacity: 0.1; }
 `;
 
-/** Bubble 컴포넌트에 전달할 prop 타입 (key 제외!) */
 export interface BubbleProps {
   size: number;
   left: number;
@@ -89,14 +87,26 @@ const S = {
       padding: 6px 12px;
       border-radius: 4px;
       cursor: pointer;
-      &:hover { background: #5784e1; color: #fff; }
-      &:disabled { opacity: 0.5; cursor: default; }
+
+      &:hover {
+        background: #5784e1;
+        color: #fff;
+      }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: default;
+      }
+    }
+
+    /* 현재 페이지인 버튼만 빨간색으로 강조 */
+    button[data-active="true"] {
+      color: red;
     }
   `,
 
   SidebarCard: styled.div`
     width: 260px;
-    height: 250px;
     background: #fff;
     border-radius: 16px;
     box-shadow: 0 10px 20px rgba(0,0,0,0.08);
@@ -104,6 +114,7 @@ const S = {
     display: flex;
     flex-direction: column;
     align-items: center;
+    height: 250px;
   `,
 
   Avatar: styled.div`
@@ -130,9 +141,13 @@ const S = {
     color: #fff;
     border: none;
     padding: 10px 16px;
-    border-radius: 4px;
+    width: 125px;
+    border-radius: 50px;
     cursor: pointer;
-    &:hover { background: #447acc; }
+
+    &:hover {
+      background: #447acc;
+    }
   `,
 
   Bubble: styled.div<BubbleProps>`
