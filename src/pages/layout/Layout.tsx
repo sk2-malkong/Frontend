@@ -33,41 +33,50 @@ const Layout: React.FC = () => {
   };
 
   return (
-      <div>
-        <S.Background>
-          {!isIntroPage && (
-              <>
-                <S.HeaderWrap>
-                  <S.LogoWrap onClick={() => {navigate('/main');  window.location.reload(); }}>
-                    <img src="/logo/logo2.png" alt="logo" />
-                    <p>Purgo</p>
-                  </S.LogoWrap>
+    <div>
+      <S.Background>
+        {!isIntroPage && (
+          <>
+            <S.HeaderWrap>
+              <S.LogoWrap onClick={() => { navigate('/main'); window.location.reload(); }}>
+                <p>Purgo</p>
+              </S.LogoWrap>
 
-                  <S.SearchBox>
-                    <S.SearchInput
-                        placeholder="검색어를 입력하세요"
-                        value={keyword}
-                        onChange={(e: ChangeEvent<HTMLInputElement>) => setKeyword(e.target.value)}
-                        onKeyDown={handleKeyPress}
-                    />
-                    <p onClick={handleSearch} style={{ cursor: 'pointer' }}>검색</p>
-                  </S.SearchBox>
+              <S.SearchBox>
+                <S.SearchInput
+                  placeholder="검색어를 입력하세요"
+                  value={keyword}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => setKeyword(e.target.value)}
+                  onKeyDown={handleKeyPress}
+                />
+                <p onClick={handleSearch}>검색</p>
+              </S.SearchBox>
 
-                  {isLoggedIn ? (
-                      <S.LoginButton onClick={handleLogout}>로그아웃</S.LoginButton>
-                  ) : (
-                      <S.LoginButton onClick={() => navigate('/login')}>로그인</S.LoginButton>
-                  )}
-                </S.HeaderWrap>
-                <S.Topbar />
-              </>
-          )}
-          <S.Main>
-            <Outlet />
-          </S.Main>
-        </S.Background>
-        {!isIntroPage && <Footer />}
-      </div>
+              {isLoggedIn ? (
+                <S.LoginButton onClick={handleLogout}>로그아웃</S.LoginButton>
+              ) : (
+                <S.LoginButton onClick={() => navigate('/login')}>로그인</S.LoginButton>
+              )}
+            </S.HeaderWrap>
+            <S.Topbar />
+          </>
+        )}
+
+        <S.Main>
+          <Outlet />
+        </S.Main>
+      </S.Background>
+      
+      {!isIntroPage && (
+        <S.BubbleLogo
+          src="/images/purgo-logo.png"
+          alt="Bubble Logo"
+          onClick={() => navigate('/')}
+        />
+      )}
+
+      {!isIntroPage && <Footer />}
+    </div>
   );
 };
 
