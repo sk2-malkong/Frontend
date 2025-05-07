@@ -1,5 +1,17 @@
 // src/pages/layout/style.ts
-import styled from 'styled-components';
+import styled, {keyframes} from 'styled-components';
+
+
+const dropPos = keyframes`
+  from {
+    bottom: calc(100vh - 65px);  /* 화면 상단에서 헤더 바로 아래 */
+    opacity: 0;
+  }
+  to {
+    bottom: 20px; /* 최종 위치 */
+    opacity: 1;
+  }
+`;
 
 const S = {
   Background: styled.div`
@@ -120,6 +132,20 @@ const S = {
     &:hover {
       background-color: #447acc;
     }
+  `,
+    BubbleLogo: styled.img`
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    width: 80px;
+    height: 80px;
+    z-index: 1000;
+    cursor: pointer;
+    animation: ${dropPos} 2s ease-out forwards;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    &:hover {
+      transform: translateY(-15px) scale(1.15);
+}
   `,
 };
 

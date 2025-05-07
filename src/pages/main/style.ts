@@ -99,7 +99,6 @@ const S = {
       }
     }
 
-    /* 현재 페이지인 버튼만 빨간색으로 강조 */
     button[data-active="true"] {
       color: red;
     }
@@ -141,7 +140,7 @@ const S = {
     color: #fff;
     border: none;
     padding: 10px 16px;
-    width: 125px;
+    width: 120px;
     border-radius: 50px;
     cursor: pointer;
 
