@@ -48,7 +48,7 @@ const MyPageContainer: React.FC = () => {
 
                 try {
                     // 비속어 횟수 요청 - 타입 단언 사용
-                    const count = await userApi.getPenaltyCount() as number;
+                    const count = await userApi.postPenaltyCount() as number;
                     console.log('API에서 받아온 비속어 횟수:', count);
 
                     // 숫자값이 직접 반환되므로 바로 상태 업데이트
@@ -77,6 +77,11 @@ const MyPageContainer: React.FC = () => {
         navigate('/profilefix');
     };
 
+    // 이용 제한 내역 페이지로 이동하는 핸들러 함수
+    const handleNavigateToLimitLog = (): void => {
+        navigate('/limitlog');
+    };
+
     return (
         <MyPage
             loading={loading}
@@ -84,6 +89,7 @@ const MyPageContainer: React.FC = () => {
             userProfile={userProfile}
             penaltyCount={penaltyCount}
             onEditProfile={handleEditProfile}
+            onNavigateToLimitLog={handleNavigateToLimitLog}
         />
     );
 };
