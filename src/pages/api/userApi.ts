@@ -27,8 +27,8 @@ const getProfile = async (): Promise<UserProfile> => {
 /**
  * 사용자 비속어 사용 횟수 가져오기
  */
-const getPenaltyCount = async (): Promise<number> => {
-  const response = await api.get('/user/penaltyCount');
+const postPenaltyCount = async (): Promise<number> => {
+  const response = await api.post('/user/penaltyCount');
   return response.data;
 };
 
@@ -65,7 +65,7 @@ const withdrawUser = async (): Promise<void> => {
 
 const userApi = {
   getProfile,
-  getPenaltyCount,
+  postPenaltyCount,
   uploadProfileImage,
   updateProfile,
   withdrawUser,

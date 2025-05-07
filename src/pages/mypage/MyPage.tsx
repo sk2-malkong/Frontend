@@ -15,9 +15,17 @@ interface MyPageProps {
   userProfile: UserProfile | null;
   penaltyCount: number;
   onEditProfile: () => void;
+  onNavigateToLimitLog: () => void; // 새로운 prop 추가
 }
 
-const MyPage: React.FC<MyPageProps> = ({ loading, error, userProfile, penaltyCount, onEditProfile }) => {
+const MyPage: React.FC<MyPageProps> = ({
+                                         loading,
+                                         error,
+                                         userProfile,
+                                         penaltyCount,
+                                         onEditProfile,
+                                         onNavigateToLimitLog // 새로운 prop
+                                       }) => {
   if (loading) {
     return <div>로딩 중...</div>;
   }
@@ -87,7 +95,7 @@ const MyPage: React.FC<MyPageProps> = ({ loading, error, userProfile, penaltyCou
                   <S.TextWrapper2>작성한 게시글</S.TextWrapper2>
                 </S.Frame2>
                 <S.Line />
-                <S.Frame3>
+                <S.Frame3 onClick={onNavigateToLimitLog}>
                   <S.TextWrapper2>이용 제한 내역</S.TextWrapper2>
                 </S.Frame3>
               </S.Group>

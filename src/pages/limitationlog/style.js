@@ -343,4 +343,26 @@ S.PageDot = styled.div`
     -webkit-transition: background-color 0.3s ease;
 `;
 
+// 페이지 네비게이션 컨테이너
+// 5개 단위 페이지 간 이동을 위한 컨트롤 영역
+S.PageNavContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.625rem; /* 10px */
+  margin-bottom: 1.25rem; /* 20px */
+  width: 100%;
+`;
+
+// 페이지 정보 텍스트
+// 현재 페이지 및 전체 페이지 표시
+S.PageText = styled.span`
+  color: ${COLORS.tertiary};
+  font-size: 1rem; /* 16px */
+  font-family: ${FONTS.semiBold.family};
+  font-weight: ${FONTS.semiBold.weight};
+  line-height: 1.25rem; /* 20px */
+  word-wrap: break-word;
+`;
+
 export default S;
