@@ -1,4 +1,3 @@
-// style.js
 import styled, { createGlobalStyle, keyframes, css } from "styled-components"
 import "aos/dist/aos.css"
 
@@ -25,7 +24,7 @@ export const GlobalStyle = createGlobalStyle`
     box-sizing: border-box;
   }
   
-  /* 로고 고정을 위한 스타일 추가 */
+
   .fixed-logo {
     position: fixed !important;
     top: 20px !important;
@@ -35,8 +34,6 @@ export const GlobalStyle = createGlobalStyle`
     transition: all 0.3s ease-out !important;
   }
 `
-
-// 공통 애니메이션
 const upAnim = keyframes`
   0% { opacity: 0; transform: translateY(20px); }
   100% { opacity: 1; transform: translateY(0); }
@@ -47,17 +44,6 @@ const chevAnim = keyframes`
   100% { opacity: 0; transform: translateY(8px); }
 
 `
-const fadeIn = keyframes`
-  0% {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-`;
-
 const S = {}
 
 // 1) Header
@@ -85,14 +71,16 @@ S.Wrapper = styled.div`
 `
 
 S.svglocation=styled.div`
-    padding: 1.5rem var(--size--40px);
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    min-height: 60px;
-    margin: auto;
-    display: flex;
-    position: fixed;
+  padding: 1.5rem var(--size--40px);
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 60px;
+  margin: auto;
+  display: flex;
+  position: fixed;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
     a{
     width: 60px;
     height: 60px;
@@ -111,11 +99,12 @@ S.svglocation=styled.div`
 // 3) HeroSection
 S.HeroSection = styled.section`
   width: 100%;
-  height: 800px;
+  height: 900px;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
+  
   image {
     
   }
@@ -291,16 +280,81 @@ S.SendButton = styled.button`
 
 // 오늘 순화된 단어 수
 S.StatsSection = styled.section`
-  background: rgba(255,255,255,.8);
-  padding: 60px 40px;
-  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
-  box-shadow: 0 6px 20px rgba(0,0,0,.08);
+  height: 100%;
   margin-bottom: 80px;
-  h2 { font-size: 2rem; margin-bottom: 20px; color: #333; }
-  .countup { font-size: 3rem; font-weight: bold; color: #5784e1; }
-  p { font-size: 16px; color: #666; margin-top: 10px; }
-`
+
+  h2 {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #333;
+  }
+
+  /* 숫자를 감싸는 물방울 스타일 */
+  .count-bubble {
+  width: 300px;
+  height: 300px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 58% 43% 33% 64% / 50% 38% 53% 50%;
+  background: transparent;
+  box-shadow:
+    inset 6px 33px 20px 0 rgba(255, 255, 255, 0.7),
+    inset 20px 80px 15px 0 rgba(0, 0, 0, 0.1),
+    10px 20px 20px 0px  rgba(0, 0, 0, 0.15);
+  margin-bottom: 10px;
+  transition: transform 0.5s ease-in-out, box-shadow 0.5s ease-in-out;
+  &:hover {
+    transform: translateY(-10px) scale(1.2);
+    box-shadow: 0 20px 30px rgba(0, 0, 0, 0.3);
+  }
+
+  img {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+  }
+
+  &::before,
+  &::after {
+    content: '';
+    background: white;
+    position: absolute;
+  }
+
+  &::before {
+    width: 50px;
+    height: 15px;
+    border-radius: 37% 54% 46% 46%;
+    top: 40px;
+    left: 50px;
+    transform: rotate(-30deg);
+  }
+
+  &::after {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    top: 80px;
+    left: 20px;
+  }
+
+  .countup{
+    color:#5784e1 ;
+    font-size: 80px;
+  }
+  }
+  p {
+    margin-top: 1rem;
+    color: #666;
+  }
+`;
 
 // 사용자 후기
 S.ReviewSection = styled.section`
@@ -561,4 +615,7 @@ font-weight: bold;
   font-size: 16px;
   color: #333;
 `;
+
+/* style.js 안에 추가하세요 */
+
 export default S

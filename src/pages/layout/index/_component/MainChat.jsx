@@ -1,9 +1,8 @@
-import React, { useEffect, useState, useRef, useLayoutEffect } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import S, { GlobalStyle } from "./style";
 import HeroSection from "./HeroSection";
 import ServiceSection from "./ServiceSection";
@@ -14,8 +13,6 @@ import FeatureSection from "./FeatureSection";
 import BoardPreview from "./BoardPreview";
 import AdminDashboard from "./AdminDashboard";
 import FaqSection from "./FaqSection";
-
-gsap.registerPlugin(ScrollTrigger);
 
 const badWords = {
   바보: "친구",
@@ -31,10 +28,7 @@ const filterWithAnimation = (text, addMessage) => {
     const regex = new RegExp(bad, "gi");
     if (regex.test(html)) {
       const id = `w-${Date.now()}`;
-      html = html.replace(
-        regex,
-        `<span id="${id}" style="color:red;opacity:1;">${bad}</span>`
-      );
+      html = html.replace(regex, `<span id="${id}" style="color:red;opacity:1;">${bad}</span>`);
       setTimeout(() => {
         const el = document.getElementById(id);
         if (el) {
@@ -54,50 +48,30 @@ const filterWithAnimation = (text, addMessage) => {
 };
 
 const MainChat = () => {
-  const handleClickImage = () => (window.location.href = "/");
   const [messages, setMessages] = useState([
-    { sender: "bot", html: "Purgo에 오신 걸 환영합니다! 메시지를 입력해 보세요." },
+    { sender: "bot", html: "Purgo에 오신 걸 환영합니다! 메시지를 입력해 보세요." }
   ]);
   const [input, setInput] = useState("");
   const [scrollY, setScrollY] = useState(0);
-
-  const introTimeline = useRef(null);
   const anchorRef = useRef(null);
-  useLayoutEffect(() => {
-    if ("scrollRestoration" in window.history) window.history.scrollRestoration = "manual";
-    requestAnimationFrame(() => {
-      window.scrollTo(0, 0);
-      ScrollTrigger.refresh();
-      introTimeline.current?.restart(true);
-    });
-  }, []);
+
   useEffect(() => {
-    const onScroll = () => setScrollY(window.scrollY);
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-  useEffect(() => {
-    window.scrollTo(0, 0);
-    ScrollTrigger.refresh();
-    introTimeline.current = gsap.timeline({ delay: 0.5 });
+    const handleScroll = () => setScrollY(window.scrollY);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   useEffect(() => {
     AOS.init({ duration: 800, once: true });
   }, []);
-  const addMessage = (msg) => setMessages((cur) => [...cur, msg]);
 
+  const addMessage = (msg) => setMessages(cur => [...cur, msg]);
   const sendMessage = () => {
     if (!input.trim()) return;
     filterWithAnimation(input, addMessage);
     setInput("");
   };
-
-  const handleKeyPress = (e) => {
-    if (e.key === "Enter") sendMessage();
-  };
-
-  const handleSendMessage = () => sendMessage();
+  const handleKeyPress = (e) => { if (e.key === "Enter") sendMessage(); };
 
   return (
     <>
@@ -107,11 +81,10 @@ const MainChat = () => {
           ref={anchorRef}
           style={{
             zIndex: 1000,
-            opacity: scrollY > 300 ? 1 : 0,
-            transition: "opacity 0.3s ease-in-out",
+            opacity: scrollY > 300 ? 1 : 0      // 스크롤 300px 이상에서만 보이도록
           }}
         >
-          <Link to="/" onClick={handleClickImage}>
+          <Link to="/" onClick={() => window.location.href = "/"}>
             <img src="/images/purgo-logo.png" alt="purgo-logo" />
           </Link>
         </S.svglocation>
@@ -121,7 +94,7 @@ const MainChat = () => {
 
         <S.MainWrapper>
           <S.ChatNotice data-aos="fade-up">
-            ✨ 아래 채팅창에 아무 말이나 입력해보세요. <br />
+            ✨ 아래 채팅창에 아무 말이나 입력해보세요. <br/>
             AI가 순화된 단어로 교체해줍니다!
           </S.ChatNotice>
 
@@ -130,7 +103,7 @@ const MainChat = () => {
             input={input}
             setInput={setInput}
             handleKeyPress={handleKeyPress}
-            handleSendMessage={handleSendMessage}
+            handleSendMessage={sendMessage}
           />
 
           <StatsSection />
