@@ -25,23 +25,40 @@ const PostEdit: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true); // 로딩 상태
 
   /**
-   * 게시글 불러오기 + 작성자 검증
+   * 게시글 불러오기 + 작성자 검증 + penalty 정보 최신화
    * - GET /api/post/{id}
    * - 작성자가 아닐 경우 수정 제한
+   * - 서버에서 penalty 정보 받아서 localStorage에 저장
    */
   useEffect(() => {
-    const fetchPost = async () => {
+    const fetchPostAndUpdatePenalty = async () => {
       try {
         const token = localStorage.getItem("accessToken");
         const config = { headers: { Authorization: `Bearer ${token}` } };
 
         // 게시글 데이터 요청
-        const response = await axios.get(`http://localhost:8080/api/post/${id}?increaseView=false`, config);
+        const response = await axios.get(
+          `http://localhost:8080/api/post/${id}?increaseView=false`,
+          config
+        );
         const data = response.data;
 
-        // 작성자 확인
+        // 사용자 프로필 요청
         const profile = await auth.profile();
-        setIsAuthor(profile.username === data.username);
+
+        // 작성자 확인
+        const currentUsername = localStorage.getItem("username");
+        setIsAuthor(currentUsername === data.username);
+
+        // ✅ penalty 정보가 있을 때만 업데이트
+        if (profile.penaltyCount !== undefined) {
+          localStorage.setItem("penaltyCount", String(profile.penaltyCount));
+        }
+        if (profile.limits !== undefined) {
+          localStorage.setItem("penaltyEndDate", profile.limits);
+        }
+
+        console.log("🟢 최신 penalty 정보 갱신 완료");
 
         // 제목과 내용만 저장 (폼 초기값용)
         setPost({ title: data.title, content: data.content });
@@ -52,7 +69,7 @@ const PostEdit: React.FC = () => {
       }
     };
 
-    fetchPost();
+    fetchPostAndUpdatePenalty();
   }, [id]);
 
   /**
@@ -62,13 +79,13 @@ const PostEdit: React.FC = () => {
   const handleSubmit = async (updatedPost: PostData) => {
     try {
       if (!id) return;
-      await updatePost(Number(id), updatedPost); 
+      await updatePost(Number(id), updatedPost);
       window.location.href = `/post/${id}`; // 수정 성공 후 해당 페이지로 이동
     } catch (error) {
       alert("게시글 수정에 실패했습니다.");
     }
   };
-  
+
   /**
    * 수정 취소 (게시글 상세 페이지로 이동)
    */

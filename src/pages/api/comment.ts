@@ -7,6 +7,10 @@ interface CommentResponse {
   username: string;
   content: string;
   createdAt: string;
+
+  // ✅ 서버에서 내려주는 필드 추가 (옵셔널)
+  penaltyCount?: number;
+  endDate?: string;
 }
 
 /**

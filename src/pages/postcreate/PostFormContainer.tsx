@@ -12,6 +12,7 @@ interface PostFormContainerProps {
   initialContent?: string;
   onSubmit: (data: { title: string; content: string }) => Promise<void> | void;
   onCancel: () => void;
+  penaltyCount?: number;
 }
 
 const PostFormContainer: React.FC<PostFormContainerProps> = ({
@@ -19,6 +20,7 @@ const PostFormContainer: React.FC<PostFormContainerProps> = ({
   initialContent = "",
   onSubmit,
   onCancel,
+  penaltyCount = 0,
 }) => {
   return (
     <div>
