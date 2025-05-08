@@ -99,11 +99,12 @@ S.svglocation=styled.div`
 // 3) HeroSection
 S.HeroSection = styled.section`
   width: 100%;
-  height: 900px;
+  height: 1500px;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
+
   
   image {
     
@@ -128,7 +129,7 @@ S.HeroTextBlock = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+
   height: 100vh;
   gap: 1rem;
   text-align: center;

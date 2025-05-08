@@ -11,11 +11,6 @@ function App(): JSX.Element {
     if ("scrollRestoration" in window.history) {
       window.history.scrollRestoration = "manual";
     }
-    const onBeforeUnload = () => window.scrollTo(0, 0);
-    window.addEventListener("beforeunload", onBeforeUnload);
-    return () => {
-      window.removeEventListener("beforeunload", onBeforeUnload);
-    };
   }, []);
 
   return (
