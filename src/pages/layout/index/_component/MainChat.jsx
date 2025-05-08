@@ -81,7 +81,7 @@ const MainChat = () => {
           ref={anchorRef}
           style={{
             zIndex: 1000,
-            opacity: scrollY > 300 ? 1 : 0      // 스크롤 300px 이상에서만 보이도록
+            opacity: scrollY > 1000 ? 1 : 0     
           }}
         >
           <Link to="/" onClick={() => window.location.href = "/"}>
