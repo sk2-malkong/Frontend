@@ -1,7 +1,6 @@
 import React, { useState, useEffect, FormEvent, ChangeEvent } from "react";
 import S from "./style";
 import profileImageUrl from "./profile.svg"; 
-import auth from "../api/auth";
 import { useNavigate } from "react-router-dom";
 
 /**
@@ -34,29 +33,35 @@ const PostForm: React.FC<PostFormProps> = ({
   const [nickname, setNickname] = useState<string>('');
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
-  // 욕설 제한 로직 (욕설 제한 기능 api 연동이 안되어서 구현 덜 됨. 수정 필요)
-  const [profanityCount, setProfanityCount] = useState<number>(0);
+  // 욕설 제한 로직 상태
+  const [isRestricted, setIsRestricted] = useState<boolean>(false);
+  const [restrictionEnd, setRestrictionEnd] = useState<string | null>(null);
 
   /**
-   * 사용자 프로필 불러오기
-   * - 로그인 상태 확인
-   * - 닉네임 표시용 데이터 요청
+   * 로컬스토리지에서 penalty 정보 기반으로 제한 여부 판단
    */
   useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const token = localStorage.getItem("accessToken");
-        if (token) {
-          setIsLoggedIn(true);
-          const userData = await auth.profile();
-          console.log("프로필 데이터:", userData);
-          setNickname(userData.username);
-        }
-      } catch (error) {
-        console.error("프로필 조회 실패:", (error as Error).message);
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      setIsLoggedIn(true);
+      const storedUsername = localStorage.getItem("username");
+      if (storedUsername) setNickname(storedUsername);
+    }
+
+    const countStr = localStorage.getItem("penaltyCount");
+    const endDateStr = localStorage.getItem("penaltyEndDate");
+    const count = countStr ? parseInt(countStr) : 0;
+    const now = new Date();
+
+    console.log("🚫 penaltyCount:", count);
+    console.log("🚫 penaltyEndDate:", endDateStr);
+
+    if (count > 0 && count % 5 === 0) {
+      if (!endDateStr || new Date(endDateStr) > now) {
+        setIsRestricted(true);
+        if (endDateStr) setRestrictionEnd(endDateStr);
       }
-    };
-    fetchProfile();
+    }
   }, []);
 
   /**
@@ -68,9 +73,10 @@ const PostForm: React.FC<PostFormProps> = ({
     setContent(initialContent);
   }, [initialTitle, initialContent]);
 
-  // 작성 제한 여부 판단 (욕설 사용 횟수 기준)
-  const isRestricted = profanityCount > 0 && profanityCount % 5 === 0;
-  const restrictionMessage = "⚠️ 욕설 5회 사용으로 작성 제한되었습니다.";
+  // 제한 메시지
+  const restrictionMessage = restrictionEnd
+    ? `⚠️ 욕설 사용으로 인해 ${new Date(restrictionEnd).toLocaleString()}까지 작성이 제한됩니다.`
+    : "⚠️ 욕설 5회 사용으로 작성이 제한되었습니다.";
 
   // 유효성 검사용 정리된 값
   const trimmedTitle = title.trim();
@@ -100,7 +106,6 @@ const PostForm: React.FC<PostFormProps> = ({
     }
   };
 
-  
   const handleTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
   };
@@ -140,12 +145,14 @@ const PostForm: React.FC<PostFormProps> = ({
                 value={title}
                 onChange={handleTitleChange}
                 required
+                disabled={isRestricted} // 작성 제한 시 입력 차단
               />
               <S.TextArea
                 placeholder="글을 작성해 주세요..."
                 value={content}
                 onChange={handleContentChange}
                 required
+                disabled={isRestricted} // 작성 제한 시 입력 차단
               />
             </S.ContentBody>
           </S.ContentBox>
@@ -154,7 +161,11 @@ const PostForm: React.FC<PostFormProps> = ({
             <S.BackButton type="button" onClick={onCancel}>
               이전 화면으로
             </S.BackButton>
-            <S.SubmitButton type="submit" active={canSubmit} disabled={!canSubmit}>
+            <S.SubmitButton
+              type="submit"
+              active={canSubmit}
+              disabled={!canSubmit}
+            >
               {loading
                 ? "작성 중..."
                 : isRestricted

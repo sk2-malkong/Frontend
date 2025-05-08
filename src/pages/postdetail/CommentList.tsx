@@ -50,7 +50,7 @@ const CommentList: React.FC<CommentListProps> = ({ postId, currentUser, badWordC
     };
 
     if (postId) loadComments();
-  }, [postId, refreshTrigger]); // refreshTrigger 변경될 때 댓글 다시 fetch
+  }, [postId, refreshTrigger]);
 
   const handleDelete = async (commentId: number) => {
     if (!window.confirm('댓글을 삭제하시겠습니까?')) return;
@@ -65,7 +65,26 @@ const CommentList: React.FC<CommentListProps> = ({ postId, currentUser, badWordC
     }
   };
 
+  /**
+   * 댓글 수정 시작
+   * - 제한 조건 만족 시 팝업 띄우고 차단
+   * - 아니면 수정모드 진입
+   */
   const startEditing = (comment: Comment) => {
+    const count = parseInt(localStorage.getItem('penaltyCount') ?? '0', 10);
+    const endDateStr = localStorage.getItem('penaltyEndDate');
+    const now = new Date();
+
+    const isRestricted =
+      count > 0 &&
+      count % 5 === 0 &&
+      (!endDateStr || new Date(endDateStr) > now);
+
+    if (isRestricted) {
+      alert('❌ 욕설 5회 사용으로 댓글 수정이 제한됩니다.');
+      return;
+    }
+
     setEditingId(comment.commentId);
     setEditingContent(comment.content);
   };
@@ -84,13 +103,26 @@ const CommentList: React.FC<CommentListProps> = ({ postId, currentUser, badWordC
     if (editingId === null) return;
 
     try {
-      await updateComment(editingId, editingContent);
+      const res = await updateComment(editingId, editingContent);
       setEditingId(null);
       setEditingContent('');
+
       // 수정 완료 후 바로 새로고침 없이 목록 상태만 업데이트
       setComments(prev =>
-        prev.map(c => c.commentId === editingId ? { ...c, content: editingContent } : c)
+        prev.map(c =>
+          c.commentId === editingId ? { ...c, content: editingContent } : c
+        )
       );
+
+      // ✅ 댓글 수정 후 penalty 정보가 있다면 localStorage에 저장
+      if (res.penaltyCount !== undefined) {
+        localStorage.setItem('penaltyCount', String(res.penaltyCount));
+      }
+      if (res.endDate !== undefined) {
+        localStorage.setItem('penaltyEndDate', res.endDate);
+      }
+      console.log('🟢 댓글 수정 후 penalty 정보 갱신 완료');
+
     } catch (err) {
       console.error('❌ 댓글 수정 실패:', err);
       alert('댓글 수정에 실패했습니다.');

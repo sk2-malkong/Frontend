@@ -26,17 +26,49 @@ interface PostDetailProps {
   post: Post;
 }
 
+/**
+ * 🧠 localStorage 기반으로 작성 제한 여부 판단
+ */
+const getIsRestricted = (): boolean => {
+  const count = parseInt(localStorage.getItem('penaltyCount') ?? '0', 10);
+  const endDateStr = localStorage.getItem('penaltyEndDate');
+  const now = new Date();
+
+  console.log('🔍 penaltyCount:', count);
+  console.log('🔍 endDate:', endDateStr);
+
+  return (
+    count > 0 &&
+    count % 5 === 0 &&
+    (!endDateStr || new Date(endDateStr) > now)
+  );
+};
+
 const PostDetail: React.FC<PostDetailProps> = ({ post }) => {
   const navigate = useNavigate();
   const [currentUser, setCurrentUser] = useState<{ username: string; badWordCount: number } | null>(null);
   const [refreshTrigger, setRefreshTrigger] = useState<number>(0); // 댓글 새로고침용 트리거
-  
+
+  const isRestricted = getIsRestricted(); // ✅ 진입 시 판단
+
   // 현재 로그인된 사용자 정보 불러오기
   useEffect(() => {
     const fetchProfile = async () => {
       try {
         const profile = await auth.profile();
-        setCurrentUser(profile);
+
+        // penalty 정보 localStorage에 갱신
+        if (profile.penaltyCount !== undefined) {
+          localStorage.setItem('penaltyCount', String(profile.penaltyCount));
+        }
+        if (profile.limits !== undefined) {
+          localStorage.setItem('penaltyEndDate', profile.limits);
+        }
+
+        setCurrentUser({
+          username: profile.username,
+          badWordCount: profile.penaltyCount ?? 0,
+        });
       } catch (error) {
         console.error('프로필 조회 실패:', (error as Error).message);
       }
@@ -45,9 +77,18 @@ const PostDetail: React.FC<PostDetailProps> = ({ post }) => {
   }, []);
 
   const isAuthor = currentUser?.username === post.author;
-  const isRestricted = (currentUser?.badWordCount ?? 0) > 0 && (currentUser?.badWordCount ?? 0) % 5 === 0;
 
+  /**
+   * 글 수정 버튼 클릭
+   * - 제한 조건 만족 시: 팝업 띄우고 차단
+   * - 아니면 수정 페이지로 이동
+   */
   const handleEdit = () => {
+    if (getIsRestricted()) {
+      alert('❌ 욕설 5회 사용으로 글 수정이 제한됩니다.');
+      return;
+    }
+
     navigate(`/edit/${post.id}`);
   };
 
@@ -66,7 +107,7 @@ const PostDetail: React.FC<PostDetailProps> = ({ post }) => {
   };
 
   const handleRefreshComments = () => {
-    setRefreshTrigger(prev => prev + 1); // 댓글만 다시 불러오게 트리거 증가
+    setRefreshTrigger(prev => prev + 1);
   };
 
   return (
@@ -104,19 +145,24 @@ const PostDetail: React.FC<PostDetailProps> = ({ post }) => {
 
             <S.Divider />
 
-            {/* 댓글 리스트 */}
             <CommentList
               postId={post.id}
               currentUser={currentUser?.username || null}
               badWordCount={currentUser?.badWordCount || 0}
-              refreshTrigger={refreshTrigger} 
+              refreshTrigger={refreshTrigger}
             />
           </S.ContentWrapper>
+
+          {/* ✅ 댓글 작성 제한 문구 */}
+          {isRestricted && (
+            <S.RestrictionNotice>
+               욕설 5회 사용하여 기능이 제한됩니다.
+            </S.RestrictionNotice>
+          )}
 
           {/* 댓글 입력창 */}
           <CommentInput
             onSubmit={handleRefreshComments}
-            disabled={isRestricted}
             postId={post.id}
           />
 

@@ -1,191 +1,161 @@
-import api from './axios';
+import axios from "axios";
+import api from "./axios";
 
-interface SignupData {
+// 로그인 요청 데이터 타입
+interface LoginRequest {
+  id: string;
+  password: string;
+}
+
+// 회원가입 요청 데이터 타입
+interface RegisterRequest {
+  id: string;
+  password: string;
+  username: string;
+  email: string;
+}
+
+// 사용자 프로필 타입
+export interface UserProfile {
+  userId: number;
   id: string;
   username: string;
   email: string;
-  pw: string;
+  profileImage: string;
+  createdAt: string;
+  updatedAt: string;
+  comments: any[];
+  penaltyCount?: number; // ✅ 욕설 사용 횟수
+  limits?: string;       // ✅ 이용 제한 만료일
 }
-
-interface LoginResponse {
-  accessToken: string;
-  refreshToken: string;
-  userDto: {
-    username: string;
-    email: string;
-  };
-}
-
-interface UserProfile {
-  username: string;
-  email: string;
-  badWordCount: number;
-}
-
-// 회원가입
-const signup = async ({ id, username, email, pw }: SignupData): Promise<any> => {
-  try {
-    const res = await api.post('/auth/signup', { id, username, email, pw });
-    console.log('회원가입 성공:', res.data);
-    return res.data;
-  } catch (error: any) {
-    const serverMessage = error.response?.data?.message || error.response?.data || error.message;
-    console.error('회원가입 실패:', serverMessage);
-    throw new Error(serverMessage);
-  }
-};
 
 // 로그인
 const login = async (id: string, pw: string): Promise<any> => {
   try {
-    const response = await api.post('/auth/login', { id, pw }, {
+    const response = await api.post("/auth/login", { id, pw }, {
       headers: { 'Content-Type': 'application/json' },
     });
 
+    const data = response.data;
+
+    // ✅ penaltyCount와 endDate 저장
+    if (data.penaltyCount !== undefined) {
+      localStorage.setItem("penaltyCount", String(data.penaltyCount));
+    }
+    if (data.endDate) {
+      localStorage.setItem("penaltyEndDate", data.endDate);
+    }
+
+    // 토큰 및 사용자 정보 저장
     const accessToken = response.headers['authorization']?.replace('Bearer ', '');
     const refreshToken = response.headers['refresh-token'];
-    const userInfo = response.data.userDto || response.data.user || {};
+    const userInfo = data.userDto || data.user || {};
 
-    if (accessToken) localStorage.setItem('accessToken', accessToken);
-    if (refreshToken) localStorage.setItem('refreshToken', refreshToken);
-    if (userInfo.email) localStorage.setItem('email', userInfo.email);
-    if (userInfo.username) localStorage.setItem('username', userInfo.username);
+    if (accessToken) localStorage.setItem("accessToken", accessToken);
+    if (refreshToken) localStorage.setItem("refreshToken", refreshToken);
+    if (userInfo.email) localStorage.setItem("email", userInfo.email);
+    if (userInfo.username) localStorage.setItem("username", userInfo.username);
 
-    return response.data;
+    return data;
   } catch (error: any) {
-    console.error('로그인 실패:', error.response?.data || error.message);
-    throw new Error(error.response?.data?.message || '로그인에 실패했습니다.');
+    console.error("로그인 실패:", error.response?.data || error.message);
+    throw new Error(error.response?.data?.message || "로그인에 실패했습니다.");
   }
 };
 
-// 토큰 재발급
-const refreshAccessToken = async (): Promise<string> => {
-  try {
-    const refreshToken = localStorage.getItem('refreshToken');
-    if (!refreshToken) {
-      throw new Error('저장된 RefreshToken이 없습니다.');
-    }
-    console.log('🔄 [재발급 요청] RefreshToken:', refreshToken);
+// 회원가입
+const register = async (data: RegisterRequest): Promise<any> => {
+  const response = await axios.post("http://localhost:8080/api/auth/register", data);
+  return response.data;
+};
 
-    const response = await api.post('/auth/refresh', {
-      refreshToken: refreshToken
-    });
+// 회원가입 (signup)
+const signup = async ({ id, username, email, pw }: { id: string; username: string; email: string; pw: string }): Promise<any> => {
+  const res = await api.post("/auth/signup", { id, username, email, pw });
+  return res.data;
+};
 
-    const newAccessToken = response.headers['access-token']?.replace('Bearer ', '');
-    const newRefreshToken = response.headers['refresh-token'];
-
-    if (newAccessToken) {
-      localStorage.setItem('accessToken', newAccessToken);
-    }
-    if (newRefreshToken) {
-      localStorage.setItem('refreshToken', newRefreshToken);
-    }
-
-    console.log('🔁 AccessToken 재발급 완료');
-    return newAccessToken!;
-  } catch (error: any) {
-    console.error('❌ AccessToken 재발급 실패:', error.response?.data || error.message);
-    throw new Error(error.response?.data?.message || 'AccessToken 재발급에 실패했습니다.');
-  }
+// 사용자 프로필 조회 함수
+const profile = async (): Promise<UserProfile> => {
+  const accessToken = localStorage.getItem("accessToken");
+  const response = await api.get("/user/profile", {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Cache-Control": "no-cache", // ✅ 캐시 방지: 항상 최신 정보 요청
+    },
+  });
+  return response.data;
 };
 
 // 로그아웃
 const logout = async (): Promise<void> => {
   try {
-    const accessToken = localStorage.getItem('accessToken');
-    await api.post('/api/auth/logout', {}, {
+    const accessToken = localStorage.getItem("accessToken");
+    await api.post("/api/auth/logout", {}, {
       headers: { Authorization: `Bearer ${accessToken}` },
       withCredentials: true,
     });
-    console.log('로그아웃 완료');
+    console.log("로그아웃 완료");
   } catch (error: any) {
-    console.error('로그아웃 실패:', error.response?.data || error.message);
+    console.error("로그아웃 실패:", error.response?.data || error.message);
   } finally {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
-    localStorage.removeItem('email');
-    localStorage.removeItem('username');
-    localStorage.removeItem('id');
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("email");
+    localStorage.removeItem("username");
+    localStorage.removeItem("id");
+    localStorage.removeItem("penaltyCount");      // ✅ 추가: 로그아웃 시 삭제
+    localStorage.removeItem("penaltyEndDate");    // ✅ 추가: 로그아웃 시 삭제
   }
+};
+
+// 토큰 재발급
+const refreshAccessToken = async (): Promise<string> => {
+  const refreshToken = localStorage.getItem("refreshToken");
+  const response = await api.post("/auth/refresh", { refreshToken });
+  const newAccessToken = response.headers["access-token"]?.replace("Bearer ", "");
+  const newRefreshToken = response.headers["refresh-token"];
+  if (newAccessToken) localStorage.setItem("accessToken", newAccessToken);
+  if (newRefreshToken) localStorage.setItem("refreshToken", newRefreshToken);
+  return newAccessToken!;
 };
 
 // 아이디 찾기
 const findId = async (email: string): Promise<any> => {
-  try {
-    const res = await api.post('/auth/findId', { email });
-    console.log('아이디 찾기 성공:', res.data);
-    return res.data;
-  } catch (error: any) {
-    console.error('아이디 찾기 실패:', error.response?.data || error.message);
-    throw new Error(error.response?.data?.message || '아이디 찾기에 실패했습니다.');
-  }
+  const res = await api.post("/auth/findId", { email });
+  return res.data;
 };
 
 // 비밀번호 재설정
 const resetPassword = async (id: string, email: string, newPw: string): Promise<any> => {
-  try {
-    const res = await api.post('/auth/resetPassword', { id, email, newPw });
-    console.log('비밀번호 재설정 성공:', res.data);
-    return res.data;
-  } catch (error: any) {
-    console.error('비밀번호 재설정 실패:', error.response?.data || error.message);
-    throw new Error(error.response?.data?.message || '비밀번호 재설정에 실패했습니다.');
-  }
+  const res = await api.post("/auth/resetPassword", { id, email, newPw });
+  return res.data;
 };
 
 // 아이디 중복 확인
 const checkId = async (id: string): Promise<string> => {
-  try {
-    const res = await api.get('/auth/checkId', { params: { id } });
-    return res.data.message || "사용 가능한 아이디입니다.";
-  } catch (error: any) {
-    console.error('아이디 중복확인 실패:', error.response?.data || error.message);
-    throw new Error(error.response?.data?.message || '이미 사용 중인 아이디입니다.');
-  }
+  const res = await api.get("/auth/checkId", { params: { id } });
+  return res.data.message || "사용 가능한 아이디입니다.";
 };
 
 // 닉네임 중복 확인
 const checkName = async (username: string): Promise<string> => {
-  try {
-    const res = await api.get('/auth/checkName', { params: { username } });
-    return res.data.message || "사용 가능한 닉네임입니다.";
-  } catch (error: any) {
-    console.error('닉네임 중복확인 실패:', error.response?.data || error.message);
-    throw new Error(error.response?.data?.message || '이미 사용 중인 닉네임입니다.');
-  }
-};
+  const res = await api.get("/auth/checkName", { params: { username } });
+  return res.data.message || "사용 가능한 닉네임입니다.";
+}
 
-// 프로필 조회
-const profile = async (): Promise<UserProfile> => {
-  try {
-    const accessToken = localStorage.getItem('accessToken');
-    if (!accessToken) {
-      throw new Error('AccessToken이 없습니다.');
-    }
-
-    const res = await api.get('/user/profile', {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
-
-    return res.data;
-  } catch (error: any) {
-    console.error('프로필 조회 실패:', error.response?.data || error.message);
-    throw new Error(error.response?.data?.message || '프로필 조회에 실패했습니다.');
-  }
-};
-
+// ✅ 전체 auth 객체 export
 const auth = {
-  signup,
   login,
+  register,
+  signup,
+  profile,
   logout,
+  refreshAccessToken,
   findId,
   resetPassword,
   checkId,
   checkName,
-  profile,
-  refreshAccessToken
 };
 
 export default auth;
