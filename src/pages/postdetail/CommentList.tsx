@@ -2,6 +2,8 @@ import React, { useEffect, useState, ChangeEvent } from 'react';
 import * as S from './style';
 import defaultProfile from './profile.svg';
 import { fetchComments, deleteComment, updateComment } from '../api/comment';
+import auth from '../api/auth';
+import { isUserRestricted } from '../../utils/penalty'; // ✅ 경로 수정
 
 /**
  * CommentList
@@ -70,23 +72,33 @@ const CommentList: React.FC<CommentListProps> = ({ postId, currentUser, badWordC
    * - 제한 조건 만족 시 팝업 띄우고 차단
    * - 아니면 수정모드 진입
    */
-  const startEditing = (comment: Comment) => {
-    const count = parseInt(localStorage.getItem('penaltyCount') ?? '0', 10);
-    const endDateStr = localStorage.getItem('penaltyEndDate');
-    const now = new Date();
+  const startEditing = async (comment: Comment) => {
+    try {
+      const profile = await auth.profile();
 
-    const isRestricted =
-      count > 0 &&
-      count % 5 === 0 &&
-      (!endDateStr || new Date(endDateStr) > now);
+      // ✅ 닉네임 갱신
+      if (profile.username) {
+        localStorage.setItem("username", profile.username);
+      }
 
-    if (isRestricted) {
-      alert('❌ 욕설 5회 사용으로 댓글 수정이 제한됩니다.');
-      return;
+      // ✅ 제한 여부 판단
+      const restricted = isUserRestricted(profile.isActive, profile.endDate ?? undefined);
+      if (restricted) {
+        alert(`❌ 욕설로 인해 댓글 수정이 제한된 상태입니다.`);
+        return;
+      }
+
+      // ✅ 최신 endDate 저장
+      if (profile.endDate) {
+        localStorage.setItem("penaltyEndDate", profile.endDate);
+      }
+
+      setEditingId(comment.commentId);
+      setEditingContent(comment.content);
+    } catch (err) {
+      console.error('❌ 프로필 조회 실패:', err);
+      alert('제한 여부를 확인할 수 없습니다.');
     }
-
-    setEditingId(comment.commentId);
-    setEditingContent(comment.content);
   };
 
   const cancelEditing = () => {
@@ -114,13 +126,11 @@ const CommentList: React.FC<CommentListProps> = ({ postId, currentUser, badWordC
         )
       );
 
-      // ✅ 댓글 수정 후 penalty 정보가 있다면 localStorage에 저장
-      if (res.penaltyCount !== undefined) {
-        localStorage.setItem('penaltyCount', String(res.penaltyCount));
-      }
-      if (res.endDate !== undefined) {
+      // ✅ 응답에 endDate 정보가 있다면 localStorage에 저장
+      if (res.endDate) {
         localStorage.setItem('penaltyEndDate', res.endDate);
       }
+
       console.log('🟢 댓글 수정 후 penalty 정보 갱신 완료');
 
     } catch (err) {
@@ -128,8 +138,6 @@ const CommentList: React.FC<CommentListProps> = ({ postId, currentUser, badWordC
       alert('댓글 수정에 실패했습니다.');
     }
   };
-
-  const isRestricted = badWordCount > 0 && badWordCount % 5 === 0;
 
   if (error) return <div>{error}</div>;
 

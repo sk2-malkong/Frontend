@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import * as S from './style';
 import { createComment } from '../api/comment';
 import auth from '../api/auth';
+import { isUserRestricted } from '../../utils/penalty'; // ✅ 경로 수정
 
 /**
  * CommentInput
@@ -24,18 +25,32 @@ const CommentInput: React.FC<CommentInputProps> = ({
   const navigate = useNavigate();
 
   /**
-   * localStorage 기반으로 댓글 작성 제한 여부 판단
+   * 사용자 프로필 기반으로 댓글 작성 제한 여부 판단
    */
   useEffect(() => {
-    const count = parseInt(localStorage.getItem('penaltyCount') ?? '0', 10);
-    const endDateStr = localStorage.getItem('penaltyEndDate');
-    const now = new Date();
+    const checkRestriction = async () => {
+      try {
+        const profile = await auth.profile();
 
-    if (count > 0 && count % 5 === 0) {
-      if (!endDateStr || new Date(endDateStr) > now) {
-        setIsRestricted(true);
+        // ✅ 제한 판단
+        const restricted = isUserRestricted(profile.isActive, profile.endDate ?? undefined);
+        setIsRestricted(restricted);
+
+        // ✅ 닉네임 갱신
+        if (profile.username) {
+          localStorage.setItem("username", profile.username);
+        }
+
+        // ✅ 최신 endDate 정보 저장
+        if (profile.endDate) {
+          localStorage.setItem("penaltyEndDate", profile.endDate);
+        }
+      } catch (err) {
+        console.warn("⚠️ 프로필 조회 실패");
       }
-    }
+    };
+
+    checkRestriction();
   }, []);
 
   const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
@@ -63,26 +78,14 @@ const CommentInput: React.FC<CommentInputProps> = ({
       setComment('');
       if (onSubmit) onSubmit();
 
-      // ✅ 응답에 penalty 정보가 포함되어 있으면 localStorage 갱신
-      if (res.penaltyCount !== undefined) {
-        localStorage.setItem('penaltyCount', String(res.penaltyCount));
-      }
-      if (res.endDate !== undefined) {
+      // ✅ 응답에 endDate 정보가 포함되어 있으면 localStorage 갱신
+      if (res.endDate) {
         localStorage.setItem('penaltyEndDate', res.endDate);
       }
 
-      // ✅ 갱신된 정보로 다시 제한 여부 판단
-      const updatedCount = res.penaltyCount ?? 0;
-      const updatedEndDate = res.endDate;
-      const now = new Date();
-
-      if (updatedCount > 0 && updatedCount % 5 === 0) {
-        if (!updatedEndDate || new Date(updatedEndDate) > now) {
-          setIsRestricted(true);
-        }
-      } else {
-        setIsRestricted(false);
-      }
+      // ✅ 갱신된 정보로 다시 제한 여부 판단 (isActive는 false로 가정)
+      const restrictedAfter = isUserRestricted(false, res.endDate ?? undefined);
+      setIsRestricted(restrictedAfter);
 
       console.log('🟢 댓글 작성 후 penalty 정보 수동 갱신');
     } catch (error) {
