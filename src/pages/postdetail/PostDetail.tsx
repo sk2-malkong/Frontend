@@ -6,6 +6,7 @@ import CommentInput from './CommentInput';
 import profileImg from './profile.svg';
 import auth from '../api/auth';
 import { deletePost } from '../api/postdetail';
+import { isUserRestricted } from '../../utils/penalty'; // ✅ 경로 수정
 
 /**
  * PostDetail
@@ -30,18 +31,12 @@ interface PostDetailProps {
  * 🧠 localStorage 기반으로 작성 제한 여부 판단
  */
 const getIsRestricted = (): boolean => {
-  const count = parseInt(localStorage.getItem('penaltyCount') ?? '0', 10);
   const endDateStr = localStorage.getItem('penaltyEndDate');
   const now = new Date();
 
-  console.log('🔍 penaltyCount:', count);
-  console.log('🔍 endDate:', endDateStr);
+  console.log('🔍 penaltyEndDate:', endDateStr);
 
-  return (
-    count > 0 &&
-    count % 5 === 0 &&
-    (!endDateStr || new Date(endDateStr) > now)
-  );
+  return endDateStr !== null && new Date(endDateStr) > now;
 };
 
 const PostDetail: React.FC<PostDetailProps> = ({ post }) => {
@@ -57,17 +52,19 @@ const PostDetail: React.FC<PostDetailProps> = ({ post }) => {
       try {
         const profile = await auth.profile();
 
-        // penalty 정보 localStorage에 갱신
-        if (profile.penaltyCount !== undefined) {
-          localStorage.setItem('penaltyCount', String(profile.penaltyCount));
+        // ✅ 닉네임 갱신
+        if (profile.username) {
+          localStorage.setItem("username", profile.username);
         }
-        if (profile.limits !== undefined) {
-          localStorage.setItem('penaltyEndDate', profile.limits);
+
+        // ✅ 최신 endDate 정보 갱신
+        if (profile.endDate !== undefined && profile.endDate !== null) {
+          localStorage.setItem('penaltyEndDate', profile.endDate);
         }
 
         setCurrentUser({
           username: profile.username,
-          badWordCount: profile.penaltyCount ?? 0,
+          badWordCount: 0, // ✅ penaltyCount는 제거됨 → 기본값 사용
         });
       } catch (error) {
         console.error('프로필 조회 실패:', (error as Error).message);
@@ -156,7 +153,7 @@ const PostDetail: React.FC<PostDetailProps> = ({ post }) => {
           {/* ✅ 댓글 작성 제한 문구 */}
           {isRestricted && (
             <S.RestrictionNotice>
-               욕설 5회 사용하여 기능이 제한됩니다.
+              욕설 5회 사용하여 기능이 제한됩니다.
             </S.RestrictionNotice>
           )}
 

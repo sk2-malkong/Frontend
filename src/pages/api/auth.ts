@@ -21,12 +21,12 @@ export interface UserProfile {
   id: string;
   username: string;
   email: string;
-  profileImage: string;
+  profileImage: string | null;
   createdAt: string;
   updatedAt: string;
-  comments: any[];
-  penaltyCount?: number; // ✅ 욕설 사용 횟수
-  limits?: string;       // ✅ 이용 제한 만료일
+  comments?: any[];
+  endDate?: string | null;     // ✅ 이용 제한 만료일 (변경됨)
+  isActive: boolean;           // ✅ 현재 계정 제한 여부
 }
 
 // 로그인
@@ -38,10 +38,7 @@ const login = async (id: string, pw: string): Promise<any> => {
 
     const data = response.data;
 
-    // ✅ penaltyCount와 endDate 저장
-    if (data.penaltyCount !== undefined) {
-      localStorage.setItem("penaltyCount", String(data.penaltyCount));
-    }
+    // ✅ endDate 저장
     if (data.endDate) {
       localStorage.setItem("penaltyEndDate", data.endDate);
     }
@@ -54,7 +51,7 @@ const login = async (id: string, pw: string): Promise<any> => {
     if (accessToken) localStorage.setItem("accessToken", accessToken);
     if (refreshToken) localStorage.setItem("refreshToken", refreshToken);
     if (userInfo.email) localStorage.setItem("email", userInfo.email);
-    if (userInfo.username) localStorage.setItem("username", userInfo.username);
+    if (userInfo.username) localStorage.setItem("username", userInfo.username); // ✅ 닉네임 저장
 
     return data;
   } catch (error: any) {
@@ -102,10 +99,9 @@ const logout = async (): Promise<void> => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
     localStorage.removeItem("email");
-    localStorage.removeItem("username");
+    localStorage.removeItem("username");         // ✅ 닉네임 제거
     localStorage.removeItem("id");
-    localStorage.removeItem("penaltyCount");      // ✅ 추가: 로그아웃 시 삭제
-    localStorage.removeItem("penaltyEndDate");    // ✅ 추가: 로그아웃 시 삭제
+    localStorage.removeItem("penaltyEndDate");  // ✅ 제한정보 제거
   }
 };
 

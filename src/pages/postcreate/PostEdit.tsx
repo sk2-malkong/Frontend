@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import PostFormContainer from "./PostFormContainer";
 import auth from "../api/auth";
 import axios from "axios";
 import { updatePost } from "../api/postedit";
+import { isUserRestricted } from "../../utils/penalty"; // ✅ 경로 수정
 
 /**
  * PostEdit
@@ -20,9 +21,11 @@ interface PostData {
 
 const PostEdit: React.FC = () => {
   const { id } = useParams<{ id: string }>(); // URL 파라미터에서 게시글 ID 추출
+  const navigate = useNavigate();
   const [post, setPost] = useState<PostData | null>(null); // 게시글 데이터 상태
   const [isAuthor, setIsAuthor] = useState<boolean>(false); // 작성자 여부
-  const [loading, setLoading] = useState<boolean>(true); // 로딩 상태
+  const [loading, setLoading] = useState<boolean>(true); // 게시글 데이터 로딩 상태
+  const [isProfileReady, setIsProfileReady] = useState<boolean>(false); // ✅ 프로필 조회 완료 여부
 
   /**
    * 게시글 불러오기 + 작성자 검증 + penalty 정보 최신화
@@ -46,19 +49,28 @@ const PostEdit: React.FC = () => {
         // 사용자 프로필 요청
         const profile = await auth.profile();
 
+        // ✅ 제한 여부 판단
+        const restricted = isUserRestricted(profile.isActive, profile.endDate ?? undefined);
+        if (restricted) {
+          alert(`❌ 욕설로 인해 게시글 수정이 제한된 상태입니다.\n해제 시각: ${profile.endDate}`);
+          return;
+        }
+
+        // ✅ 닉네임 갱신
+        if (profile.username) {
+          localStorage.setItem("username", profile.username);
+        }
+
         // 작성자 확인
         const currentUsername = localStorage.getItem("username");
         setIsAuthor(currentUsername === data.username);
 
-        // ✅ penalty 정보가 있을 때만 업데이트
-        if (profile.penaltyCount !== undefined) {
-          localStorage.setItem("penaltyCount", String(profile.penaltyCount));
-        }
-        if (profile.limits !== undefined) {
-          localStorage.setItem("penaltyEndDate", profile.limits);
+        // ✅ endDate 정보 저장
+        if (profile.endDate) {
+          localStorage.setItem("penaltyEndDate", profile.endDate);
         }
 
-        console.log("🟢 최신 penalty 정보 갱신 완료");
+        console.log("🟢 최신 penalty 및 사용자 정보 갱신 완료");
 
         // 제목과 내용만 저장 (폼 초기값용)
         setPost({ title: data.title, content: data.content });
@@ -66,11 +78,12 @@ const PostEdit: React.FC = () => {
         alert("게시글 정보를 불러오는 데 실패했습니다.");
       } finally {
         setLoading(false);
+        setIsProfileReady(true); // ✅ 프로필 정보 준비 완료
       }
     };
 
     fetchPostAndUpdatePenalty();
-  }, [id]);
+  }, [id, navigate]);
 
   /**
    * 게시글 수정 요청
@@ -97,7 +110,7 @@ const PostEdit: React.FC = () => {
   /**
    * 렌더링 조건 분기
    */
-  if (loading) return <div>로딩 중...</div>;
+  if (loading || !isProfileReady) return <div>로딩 중...</div>;
   if (!isAuthor) return <div>✋ 작성자만 수정할 수 있습니다.</div>;
   if (!post) return <div>존재하지 않는 게시물입니다.</div>;
 
