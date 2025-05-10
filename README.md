@@ -1,8 +1,5 @@
-# Purgo Frontend (FrontDev)
+![header](https://capsule-render.vercel.app/api?type=waving&color=gradient&height=192&section=header&text=PURGO%20frontend&fontSize=90&animation=fadeIn&fontColor=FFF)
 
-> AI 기반 욕설 순화 서비스 **Purgo**의 프론트엔드 코드입니다.
-
----
 
 ## 🚀 주요 기능
 
