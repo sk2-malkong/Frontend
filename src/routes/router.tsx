@@ -14,6 +14,7 @@ import ProfileFixContainer from '../pages/profileFix/ProfileFixContainer';
 import LimitationLogContainer from '../pages/limitationlog/LimitationLogContainer';
 import Search from '../pages/search/Search';
 import PostEditContainer from '../pages/postcreate/PostEditContainer';
+import PdMain from '../pages/layout/index/apiIntroMain/PdMainContainer'
 
 const routes: RouteObject[] = [
   {
@@ -73,6 +74,10 @@ const routes: RouteObject[] = [
   {
     path: "/findpassword",
     element: <FindPasswordContainer/>
+  },
+  {
+    path: "/developers",
+    element: <PdMain/>
   }
 ];
 
