@@ -6,7 +6,7 @@ import CommentInput from './CommentInput';
 import profileImg from './profile.svg';
 import auth from '../api/auth';
 import { deletePost } from '../api/postdetail';
-import { isUserRestricted } from '../../utils/penalty'; // ✅ 경로 수정
+import { isUserRestricted } from '../../utils/penalty';
 
 /**
  * PostDetail
@@ -27,50 +27,50 @@ interface PostDetailProps {
   post: Post;
 }
 
-/**
- * 🧠 localStorage 기반으로 작성 제한 여부 판단
- */
-const getIsRestricted = (): boolean => {
-  const endDateStr = localStorage.getItem('penaltyEndDate');
-  const now = new Date();
-
-  console.log('🔍 penaltyEndDate:', endDateStr);
-
-  return endDateStr !== null && new Date(endDateStr) > now;
-};
-
 const PostDetail: React.FC<PostDetailProps> = ({ post }) => {
   const navigate = useNavigate();
   const [currentUser, setCurrentUser] = useState<{ username: string; badWordCount: number } | null>(null);
   const [refreshTrigger, setRefreshTrigger] = useState<number>(0); // 댓글 새로고침용 트리거
 
-  const isRestricted = getIsRestricted(); // ✅ 진입 시 판단
+  const [isRestricted, setIsRestricted] = useState<boolean>(false);
+  const [restrictionMessage, setRestrictionMessage] = useState<string | null>(null);
 
   // 현재 로그인된 사용자 정보 불러오기
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const profile = await auth.profile();
+  // ✅ 제한 여부 최신화 함수
+  const refreshProfile = async () => {
+    try {
+      const profile = await auth.profile();
 
-        // ✅ 닉네임 갱신
-        if (profile.username) {
-          localStorage.setItem("username", profile.username);
-        }
-
-        // ✅ 최신 endDate 정보 갱신
-        if (profile.endDate !== undefined && profile.endDate !== null) {
-          localStorage.setItem('penaltyEndDate', profile.endDate);
-        }
-
-        setCurrentUser({
-          username: profile.username,
-          badWordCount: 0, // ✅ penaltyCount는 제거됨 → 기본값 사용
-        });
-      } catch (error) {
-        console.error('프로필 조회 실패:', (error as Error).message);
+      if (profile.username) {
+        localStorage.setItem("username", profile.username);
       }
-    };
-    fetchProfile();
+
+      if (profile.endDate) {
+        localStorage.setItem("penaltyEndDate", profile.endDate);
+      }
+
+      const restricted = isUserRestricted(profile.isActive, profile.endDate ?? undefined);
+      setIsRestricted(restricted);
+
+      if (restricted && profile.endDate) {
+        setRestrictionMessage(
+          ` 욕설 사용으로 인해 ${new Date(profile.endDate).toLocaleString()}까지 댓글 작성이 제한됩니다.`
+        );
+      } else {
+        setRestrictionMessage(null);
+      }
+
+      setCurrentUser({
+        username: profile.username,
+        badWordCount: 0,
+      });
+    } catch (error) {
+      console.error('프로필 조회 실패:', (error as Error).message);
+    }
+  };
+
+  useEffect(() => {
+    refreshProfile();
   }, []);
 
   const isAuthor = currentUser?.username === post.author;
@@ -81,7 +81,7 @@ const PostDetail: React.FC<PostDetailProps> = ({ post }) => {
    * - 아니면 수정 페이지로 이동
    */
   const handleEdit = () => {
-    if (getIsRestricted()) {
+    if (isRestricted) {
       alert('❌ 욕설 5회 사용으로 글 수정이 제한됩니다.');
       return;
     }
@@ -106,6 +106,7 @@ const PostDetail: React.FC<PostDetailProps> = ({ post }) => {
   const handleRefreshComments = () => {
     setRefreshTrigger(prev => prev + 1);
   };
+
 
   return (
     <S.Container>
@@ -142,6 +143,7 @@ const PostDetail: React.FC<PostDetailProps> = ({ post }) => {
 
             <S.Divider />
 
+            {/* 댓글 목록 */}
             <CommentList
               postId={post.id}
               currentUser={currentUser?.username || null}
@@ -151,15 +153,16 @@ const PostDetail: React.FC<PostDetailProps> = ({ post }) => {
           </S.ContentWrapper>
 
           {/* ✅ 댓글 작성 제한 문구 */}
-          {isRestricted && (
-            <S.RestrictionNotice>
-              욕설 5회 사용하여 기능이 제한됩니다.
-            </S.RestrictionNotice>
+          {isRestricted && restrictionMessage && (
+            <S.RestrictionNotice>{restrictionMessage}</S.RestrictionNotice>
           )}
 
           {/* 댓글 입력창 */}
           <CommentInput
-            onSubmit={handleRefreshComments}
+            onSubmit={() => {
+              handleRefreshComments();  // 댓글 목록 갱신
+              refreshProfile();         // ✅ 제한 상태 최신화
+            }}
             postId={post.id}
           />
 
