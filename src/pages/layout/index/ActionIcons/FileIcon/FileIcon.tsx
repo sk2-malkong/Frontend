@@ -47,7 +47,7 @@ const S = {
      * 파일 아이콘의 가장 바깥쪽 레이어입니다.
      */
     WorkFile5: styled.div`
-        background-color: #6E7682; // 배경색
+        background-color: #464B4E; // 배경색 변경
         width: 100%;
         height: 100%;
         transform-origin: top;
@@ -63,7 +63,7 @@ const S = {
             left: 0;
             width: ${pxToRem(80)}; // 20 * 4
             height: ${pxToRem(16)}; // 4 * 4
-            background-color: #6E7682; // 배경색
+            background-color: #464B4E; // 배경색 변경
             border-top-left-radius: ${pxToRem(16)}; // 상단 모서리 둥글게
             border-top-right-radius: ${pxToRem(16)}; // 상단 모서리 둥글게
         }
@@ -75,7 +75,7 @@ const S = {
             left: ${pxToRem(75.5)};
             width: ${pxToRem(16)}; // 4 * 4
             height: ${pxToRem(16)}; // 4 * 4
-            background-color: #6E7682; // 배경색
+            background-color: #464B4E; // 배경색 변경
             clip-path: polygon(0 35%, 0% 100%, 50% 100%);
         }
     `,
@@ -87,7 +87,7 @@ const S = {
     WorkFile4: styled.div`
         position: absolute;
         inset: ${pxToRem(4)}; // 안쪽 여백
-        background-color: #a1a1aa; // 배경색
+        background-color: #61686c; // 배경색 변경 (약간 밝은 톤)
         border-radius: ${pxToRem(16)}; // 모서리 둥글게
         transition: all 0.3s ease;
         transform-origin: bottom;
@@ -101,7 +101,7 @@ const S = {
     WorkFile3: styled.div`
         position: absolute;
         inset: ${pxToRem(4)}; // 안쪽 여백
-        background-color: #d4d4d8; // 배경색
+        background-color: #7b848a; // 배경색 변경 (더 밝은 톤)
         border-radius: ${pxToRem(16)}; // 모서리 둥글게
         transition: all 0.3s ease;
         transform-origin: bottom;
@@ -114,7 +114,7 @@ const S = {
     WorkFile2: styled.div`
         position: absolute;
         inset: ${pxToRem(4)}; // 안쪽 여백
-        background-color: #e4e4e7; // 배경색
+        background-color: #959fa7; // 배경색 변경 (가장 밝은 톤)
         border-radius: ${pxToRem(16)}; // 모서리 둥글게
         transition: all 0.3s ease;
         transform-origin: bottom;
@@ -129,7 +129,7 @@ const S = {
         bottom: 0;
         width: 100%;
         height: ${pxToRem(156)};
-        background: linear-gradient(to top, #6E7682, #8D96A3); // 그라디언트 배경색
+        background: linear-gradient(to top, #464B4E, #5a6166); // 그라디언트 배경색 변경
         border-radius: ${pxToRem(16)}; // 모서리 둥글게
         border-top-right-radius: 0;
         transition: all 0.3s ease;
@@ -144,7 +144,7 @@ const S = {
             right: 0;
             width: ${pxToRem(146)};
             height: ${pxToRem(16)};
-            background-color: #6E7682; // 배경색
+            background-color: #464B4E; // 배경색 변경
             border-top-left-radius: ${pxToRem(16)}; // 상단 모서리 둥글게
             border-top-right-radius: ${pxToRem(16)}; // 상단 모서리 둥글게
         }
@@ -156,7 +156,7 @@ const S = {
             right: ${pxToRem(142)};
             width: ${pxToRem(12)}; // size-3
             height: ${pxToRem(12)}; // size-3
-            background-color: #fbbf24; // 배경색
+            background-color: #61686c; // 배경색 (노란색 접힌 부분은 유지)
             clip-path: polygon(100% 14%, 50% 100%, 100% 100%);
         }
     `,

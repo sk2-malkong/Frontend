@@ -15,12 +15,12 @@ const Loader = () => {
 
 const StyledWrapper = styled.div`
     .typewriter {
-        --blue: #b1b1b1;
-        --blue-dark: #7c7c7c;
+        --blue: #464B4E;
+        --blue-dark: #343a3d;
         --key: #fff;
         --paper: #EEF0FD;
         --text: #D3D4EC;
-        --tool: #FBC56C;
+        --tool: #fbbf24;
         --duration: 3s;
         position: relative;
         -webkit-animation: bounce05 var(--duration) linear infinite;

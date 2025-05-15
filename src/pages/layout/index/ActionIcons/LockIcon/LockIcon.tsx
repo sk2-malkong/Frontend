@@ -70,9 +70,9 @@ const S = {
         width: ${pxToRem(9)}; // 고리 너비
         border-top-right-radius: ${pxToRem(10)}; // 상단 오른쪽 모서리 둥글게
         border-top-left-radius: ${pxToRem(10)}; // 상단 왼쪽 모서리 둥글게
-        border-top: 3px solid #5C646A; // 상단 테두리
-        border-left: 3px solid #5C646A; // 왼쪽 테두리
-        border-right: 3px solid #5C646A; // 오른쪽 테두리
+        border-top: 3px solid #464B4E; // 상단 테두리
+        border-left: 3px solid #464B4E; // 왼쪽 테두리
+        border-right: 3px solid #464B4E; // 오른쪽 테두리
         transition: all 0.3s;
     `,
 
@@ -105,7 +105,7 @@ const LockIcon: React.FC = () => {
                                 fillRule="evenodd"
                                 clipRule="evenodd"
                                 d="M0 5C0 2.23858 2.23858 0 5 0H23C25.7614 0 28 2.23858 28 5V23C28 25.7614 25.7614 28 23 28H5C2.23858 28 0 25.7614 0 23V5ZM16 13.2361C16.6137 12.6868 17 11.8885 17 11C17 9.34315 15.6569 8 14 8C12.3431 8 11 9.34315 11 11C11 11.8885 11.3863 12.6868 12 13.2361V18C12 19.1046 12.8954 20 14 20C15.1046 20 16 19.1046 16 18V13.2361Z"
-                                fill="#4B5257"
+                                fill="#464B4E"
                             ></path>
                         </S.LockBody>
                     </S.LockInnerWrapper>

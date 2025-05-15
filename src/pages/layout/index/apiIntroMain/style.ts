@@ -13,15 +13,15 @@ const pxToRem = (px: number): string => `${px / 16}rem`;
 const overlapColors = {
     primary: {
         base: "#262b2f",    // 기본 배경색
-        hover: "#5784E1",   // 호버시 배경색
+        hover: "#c2dfff",   // 호버시 배경색
     },
     secondary: {
         base: "#212529",    // 기본 배경색
-        hover: "#5784E1",   // 호버시 배경색
+        hover: "#c2dfff",   // 호버시 배경색
     },
     tertiary: {
         base: "#31363a",    // 기본 배경색
-        hover: "#5784E1",   // 호버시 배경색
+        hover: "#c2dfff",   // 호버시 배경색
     }
 };
 
@@ -29,6 +29,93 @@ const overlapColors = {
  * 스타일 컴포넌트 정의
  */
 const S = {
+    // ==================== 헤더 관련 컴포넌트 ====================
+
+    /**
+     * 헤더 컨테이너
+     * 화면 상단에 고정된 헤더를 위한 컴포넌트입니다.
+     */
+    HeaderContainer: styled.div`
+        background-color:#000000;
+        height: ${pxToRem(70)};
+        width: 100%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 1000;
+        box-shadow: 0 ${pxToRem(2)} ${pxToRem(5)} rgba(0, 0, 0, 0.1);
+    `,
+
+    /**
+     * 헤더 내부 컨테이너
+     * 헤더 내용을 중앙에 배치합니다.
+     */
+    HeaderInner: styled.div`
+        max-width: ${pxToRem(1920)};
+        height: 100%;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 ${pxToRem(24)};
+    `,
+
+    /**
+     * 로고 컨테이너
+     * 헤더 내 로고 영역입니다.
+     */
+    LogoContainer: styled.div`
+        height: 100%;
+        display: flex;
+        align-items: center;
+
+        img {
+            max-height: ${pxToRem(40)};
+            width: auto;
+        }
+    `,
+    /**
+     * 로고 텍스트 컴포넌트
+     * 헤더 내 "PURGO" 텍스트 스타일입니다.
+     */
+    LogoText: styled.div`
+    font-family: "Pretendard-Bold", Helvetica;
+    font-size: ${pxToRem(24)};
+    font-weight: 700;
+    color: #c2dfff;
+    letter-spacing: ${pxToRem(-0.5)};
+`,
+
+    /**
+     * 버튼 컨테이너
+     * 헤더 내 버튼 그룹 영역입니다.
+     */
+    ButtonContainer: styled.div`
+        display: flex;
+        gap: ${pxToRem(16)};
+    `,
+
+    /**
+     * 헤더 버튼
+     * 로그인 및 앱 등록 버튼 스타일입니다.
+     */
+    HeaderButton: styled.button<{ primary?: boolean }>`
+        background-color: ${props => props.primary ? '#c2dfff' : 'transparent'};
+        color: ${props => props.primary ? '#111111' : '#333333'};
+        border: ${props => props.primary ? 'none' : `${pxToRem(1)} solid #cccccc`};
+        border-radius: ${pxToRem(4)};
+        padding: ${pxToRem(8)} ${pxToRem(16)};
+        font-family: "Pretendard-Medium", Helvetica;
+        font-size: ${pxToRem(14)};
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        
+        &:hover {
+            background-color: ${props => props.primary ? '#b5d8ff' : '#f5f5f5'};
+        }
+    `,
+
     // ==================== 레이아웃 구조 컴포넌트 ====================
 
     /**
@@ -38,7 +125,7 @@ const S = {
     FrameContainer: styled.div`
         background-color: #ffffff;
         display: flex;
-        flex-direction: row;
+        flex-direction: column;
         justify-content: center;
         width: 100%;
         height: 100vh; /* 뷰포트 높이에 맞춤 */
@@ -56,7 +143,8 @@ const S = {
         height: 100%; /* 부모 컨테이너의 높이에 맞춤 */
         max-width: ${pxToRem(1920)}; /* 최대 너비 제한 */
         margin: 0 auto; /* 중앙 정렬 */
-        padding-bottom: ${pxToRem(104)}; /* 푸터 높이만큼 패딩 추가 */
+        padding-top: ${pxToRem(70)}; /* 헤더 높이만큼 패딩 추가 */
+        padding-bottom: ${pxToRem(52)}; /* 푸터 높이의 절반만큼 패딩 추가 */
         display: flex;
         flex-direction: column;
     `,
@@ -108,10 +196,11 @@ const S = {
     /**
      * 푸터 영역 컨테이너
      * 화면 하단에 고정된 푸터를 위한 컴포넌트입니다.
+     * 높이를 절반으로 줄였습니다.
      */
     DivWrapper: styled.div`
         background-color: #060b11;
-        height: ${pxToRem(104)};
+        height: ${pxToRem(52)}; /* 기존 104px에서 절반으로 줄임 */
         position: fixed; /* 화면 하단에 고정 */
         bottom: 0;
         left: 0;
@@ -254,9 +343,9 @@ const S = {
      * 흰색 텍스트를 렌더링합니다.
      */
     TextWrapper: styled.p`
-        color: #ffffff;
+        color: #64676A;
         font-family: "Pretendard-Medium", Helvetica;
-        font-size: ${pxToRem(24)};
+        font-size: ${pxToRem(16)};
         font-weight: 500;
         letter-spacing: ${pxToRem(-0.60)};
         line-height: ${pxToRem(31.9)};
@@ -274,13 +363,13 @@ const S = {
      * 상단 여백이 있는 흰색 텍스트입니다.
      */
     P: styled.p`
-        color: #ffffff;
+        color: #64676A;
         font-family: "Pretendard-Medium", Helvetica;
-        font-size: ${pxToRem(24)};
+        font-size: ${pxToRem(16)};
         font-weight: 500;
         letter-spacing: ${pxToRem(-0.60)};
         line-height: ${pxToRem(31.9)};
-        margin-top: ${pxToRem(15)};
+        margin-top: ${pxToRem(-10)};
         white-space: normal; /* 텍스트 줄바꿈 허용 */
         z-index: 1;
 
@@ -295,10 +384,10 @@ const S = {
      * 어두운 배경의 텍스트를 위한 컴포넌트입니다.
      */
     TextWrapper2: styled.div`
-        color: #111111;
+        color: #64676A;
         font-family: "Pretendard-Medium", Helvetica;
         font-size: ${pxToRem(24)};
-        font-weight: 500;
+        font-weight: bold;
         letter-spacing: ${pxToRem(-0.60)};
         line-height: ${pxToRem(31.9)};
         white-space: normal;
@@ -314,13 +403,13 @@ const S = {
      * 상단 여백이 있는 어두운 배경의 텍스트입니다.
      */
     TextWrapper3: styled.p`
-        color: #111111;
+        color: #64676A;
         font-family: "Pretendard-Medium", Helvetica;
-        font-size: ${pxToRem(24)};
+        font-size: ${pxToRem(16)};
         font-weight: 500;
         letter-spacing: ${pxToRem(-0.60)};
         line-height: ${pxToRem(31.9)};
-        margin-top: ${pxToRem(15)};
+        margin-top: ${pxToRem(-5)};
         white-space: normal;
         z-index: 1;
 
