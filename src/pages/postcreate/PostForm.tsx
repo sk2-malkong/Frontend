@@ -1,6 +1,6 @@
 import React, { useState, useEffect, FormEvent, ChangeEvent } from "react";
 import S from "./style";
-import profileImageUrl from "./profile.svg"; 
+import profileImageUrl from "./profile.svg";
 import { useNavigate } from "react-router-dom";
 
 /**
@@ -14,15 +14,21 @@ interface PostFormProps {
   initialContent?: string;
   onSubmit: (data: { title: string; content: string }) => Promise<void> | void;
   onCancel: () => void;
+  isRestricted?: boolean;
+  restrictionEnd?: string;
 }
+
 
 const PostForm: React.FC<PostFormProps> = ({
   initialTitle = "",
   initialContent = "",
   onSubmit,
   onCancel,
+  isRestricted = false,
+  restrictionEnd,
 }) => {
   const navigate = useNavigate();
+
 
   // 입력 상태
   const [title, setTitle] = useState<string>(initialTitle);
@@ -31,37 +37,13 @@ const PostForm: React.FC<PostFormProps> = ({
 
   // 사용자 정보
   const [nickname, setNickname] = useState<string>('');
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-
-  // 욕설 제한 로직 상태
-  const [isRestricted, setIsRestricted] = useState<boolean>(false);
-  const [restrictionEnd, setRestrictionEnd] = useState<string | null>(null);
 
   /**
    * 로컬스토리지에서 penalty 정보 기반으로 제한 여부 판단
    */
   useEffect(() => {
-    const token = localStorage.getItem("accessToken");
-    if (token) {
-      setIsLoggedIn(true);
-      const storedUsername = localStorage.getItem("username");
-      if (storedUsername) setNickname(storedUsername);
-    }
-
-    const countStr = localStorage.getItem("penaltyCount");
-    const endDateStr = localStorage.getItem("penaltyEndDate");
-    const count = countStr ? parseInt(countStr) : 0;
-    const now = new Date();
-
-    console.log("🚫 penaltyCount:", count);
-    console.log("🚫 penaltyEndDate:", endDateStr);
-
-    if (count > 0 && count % 5 === 0) {
-      if (!endDateStr || new Date(endDateStr) > now) {
-        setIsRestricted(true);
-        if (endDateStr) setRestrictionEnd(endDateStr);
-      }
-    }
+    const storedUsername = localStorage.getItem("username");
+    if (storedUsername) setNickname(storedUsername);
   }, []);
 
   /**
