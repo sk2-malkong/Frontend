@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import PostFormContainer from "./PostFormContainer";
 import auth from "../api/auth";
 import { createPost } from "../api/postcreate";
-import { isUserRestricted } from "../../utils/penalty"; // ✅ 경로 주의
+import { isUserRestricted } from "../../utils/penalty"; 
 
 /**
  * 게시글 작성 페이지
@@ -18,8 +18,9 @@ interface CreatePostResponse {
 
 const PostCreate: React.FC = () => {
   const navigate = useNavigate();
-  const [isRestricted, setIsRestricted] = useState(false);           // ✅ 제한 여부
-  const [isProfileReady, setIsProfileReady] = useState(false);       // ✅ 프로필 로딩 완료 여부
+  const [isRestricted, setIsRestricted] = useState(false);
+  const [restrictionEnd, setRestrictionEnd] = useState<string | null>(null);
+  const [isProfileReady, setIsProfileReady] = useState(false);
 
   /**
    * 로그인 여부 확인 + 최신 penalty 정보 갱신
@@ -37,7 +38,7 @@ const PostCreate: React.FC = () => {
       }
 
       try {
-        const profile = await auth.profile(); // 최신 penalty 정보 요청
+        const profile = await auth.profile(); 
 
         // ✅ 닉네임 최신화
         if (profile.username) {
@@ -50,7 +51,7 @@ const PostCreate: React.FC = () => {
 
         // ✅ endDate 정보 저장
         if (profile.endDate) {
-          localStorage.setItem("penaltyEndDate", profile.endDate);
+          setRestrictionEnd(profile.endDate);
         }
 
         console.log("🟢 최신 penalty 및 사용자 정보 갱신 완료");
@@ -59,7 +60,7 @@ const PostCreate: React.FC = () => {
         alert("로그인 정보가 유효하지 않습니다. 다시 로그인해주세요.");
         navigate("/login");
       } finally {
-        setIsProfileReady(true); // ✅ 프로필 정보 받아왔으니 폼 렌더링 허용
+        setIsProfileReady(true);
       }
     };
 
@@ -95,6 +96,8 @@ const PostCreate: React.FC = () => {
     <PostFormContainer
       onSubmit={handleSubmit}
       onCancel={handleCancel}
+      isRestricted={isRestricted}
+      restrictionEnd={restrictionEnd ?? undefined}
     />
   );
 };
