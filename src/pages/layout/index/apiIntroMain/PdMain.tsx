@@ -108,6 +108,7 @@ const MiddleSection = () => (
  * ProductIntroSection 컴포넌트 - 제품 소개 영역
  * 자물쇠 아이콘과 호버 효과 포함
  * 위치 완전 고정 버전
+ * 호버 상태에 따라 자물쇠 아이콘 색상 변경
  */
 const ProductIntroSection = () => {
     const [isHovered, setIsHovered] = useState(false);
@@ -116,6 +117,7 @@ const ProductIntroSection = () => {
         <S.Overlap3
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
+            className={isHovered ? "hover-active" : ""}
         >
             {/* 호버 시 확장되는 오버레이 효과 */}
             <S.OverlayEffect className="overlay-2"/>
@@ -128,8 +130,8 @@ const ProductIntroSection = () => {
                     제품 특징을 알려줄게요.
                 </S.TextWrapper3>
             </S.TitleContainer>
-            {/* 자물쇠 아이콘 */}
-            <LockIcon/>
+            {/* 자물쇠 아이콘에 호버 상태 전달 */}
+            <LockIcon isHovered={isHovered}/>
         </S.Overlap3>
     );
 };
@@ -151,10 +153,10 @@ const ApiKeyIntroSection = () => {
             <S.OverlayEffect className="overlay-3"/>
             <S.TitleContainer>
                 <S.TextWrapper2 className="hover-title">
-                    API 키 소개
+                    API 키 사용법
                 </S.TextWrapper2>
                 <S.TextWrapper3 style={{opacity: isHovered ? 1 : 0}}>
-                    API 키에 대한 자세한 소개입니다.
+                    API 키에 대한 자세한 사용법입니다.
                 </S.TextWrapper3>
             </S.TitleContainer>
             {/* 파일 아이콘 */}

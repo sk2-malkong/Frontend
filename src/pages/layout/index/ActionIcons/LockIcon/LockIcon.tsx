@@ -74,6 +74,13 @@ const S = {
         border-left: 3px solid #464B4E; // 왼쪽 테두리
         border-right: 3px solid #464B4E; // 오른쪽 테두리
         transition: all 0.3s;
+
+        /* Overlap3에 호버시 자물쇠 고리 색상 변경 */
+        .hover-active & {
+            border-top: 3px solid #FFF100;
+            border-left: 3px solid #FFF100;
+            border-right: 3px solid #FFF100;
+        }
     `,
 
     /**
@@ -82,16 +89,26 @@ const S = {
      */
     LockBody: styled.svg`
         width: ${pxToRem(15)};
+
+        path {
+            transition: fill 0.3s ease;
+
+            /* Overlap3에 호버시 자물쇠 몸체 색상 변경 */
+            .hover-active & {
+                fill: #FFF100;
+            }
+        }
     `,
 };
 
 /**
  * 자물쇠 아이콘 컴포넌트
  * 호버시 애니메이션 효과가 있는 자물쇠 아이콘을 렌더링합니다.
+ * isHovered 속성을 받아 호버 상태에 따라 스타일을 변경합니다.
  */
-const LockIcon: React.FC = () => {
+const LockIcon: React.FC<{ isHovered?: boolean }> = ({ isHovered = false }) => {
     return (
-        <S.LockWrapper>
+        <S.LockWrapper className={isHovered ? "hover-active" : ""}>
             <S.LockContainer>
                 <S.LockLabel className="lock-label">
                     <S.LockInnerWrapper>

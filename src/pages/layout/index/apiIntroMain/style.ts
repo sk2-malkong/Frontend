@@ -284,6 +284,17 @@ const S = {
         &:hover .hover-title {
             color: #111111;
         }
+
+        /* 호버 시 자물쇠 색상 변경을 위한 클래스 */
+        &.hover-active .shackle {
+            border-top: 3px solid #5409DA !important;
+            border-left: 3px solid #5409DA !important;
+            border-right: 3px solid #5409DA !important;
+        }
+
+        &.hover-active path {
+            fill: #5409DA !important;
+        }
     `,
 
     /**
@@ -301,26 +312,40 @@ const S = {
         cursor: pointer; /* 커서 스타일 변경 */
         transition: background-color 0.3s ease;
 
-        /* 파일 아이콘 호버 효과를 Overlap2에 연결 */
-        &:hover .work-file-5 {
-            box-shadow: 0 ${pxToRem(20)} ${pxToRem(40)} rgba(0, 0, 0, 0.2);
+        /* 오버레이 호버 시 파일 아이콘 색상도 변경됩니다 - 클래스 연결 */
+        &:hover .work-file-5,
+        &:hover .work-file-5::after,
+        &:hover .work-file-5::before {
+            background-color: #5409DA; /* amber-600 색상 */
         }
 
         &:hover .work-file-4 {
+            background-color: #a1a1aa; /* zinc-400 색상 */
             transform: rotateX(-20deg);
         }
 
         &:hover .work-file-3 {
+            background-color: #d4d4d8; /* zinc-300 색상 */
             transform: rotateX(-30deg);
         }
 
         &:hover .work-file-2 {
+            background-color: #e4e4e7; /* zinc-200 색상 */
             transform: rotateX(-38deg);
         }
 
         &:hover .work-file-1 {
+            background: linear-gradient(to top, #5409DA, #4E71FF); /* amber-500에서 amber-400 그라디언트 */
             transform: rotateX(-46deg) translateY(${pxToRem(1)});
-            box-shadow: inset 0 ${pxToRem(20)} ${pxToRem(40)} #8D96A3, inset 0 ${pxToRem(-20)} ${pxToRem(40)} #6E7682;
+            box-shadow: inset 0 ${pxToRem(20)} ${pxToRem(40)} #4E71FF, inset 0 ${pxToRem(-20)} ${pxToRem(40)} #5409DA;
+        }
+
+        &:hover .work-file-1::after {
+            background-color: #4E71FF; /* amber-400 색상 */
+        }
+
+        &:hover .work-file-1::before {
+            background-color: #4E71FF; /* amber-400 색상 */
         }
 
         &:hover .overlay-3 {
@@ -332,7 +357,7 @@ const S = {
             color: #111111;
         }
     `,
-
+// -------------------------------
     /**
      * 그룹 3 컨테이너
      * 배경 요소를 위한 포지셔닝 컴포넌트입니다.
@@ -399,10 +424,10 @@ const S = {
         font-size: ${pxToRem(24)};
         font-weight: bold;
         letter-spacing: ${pxToRem(-0.60)};
-        line-height: ${pxToRem(31.9)};
         white-space: normal;
         z-index: 1;
         transition: color 0.3s ease;
+        margin-bottom: ${pxToRem(2)} ;
 
         @media (max-width: 768px) {
             font-size: ${pxToRem(20)};
@@ -420,20 +445,18 @@ const S = {
         font-size: ${pxToRem(16)};
         font-weight: 500;
         letter-spacing: ${pxToRem(-0.60)};
-        line-height: ${pxToRem(31.9)};
-        margin-top: ${pxToRem(5)}; /* 상단 여백 추가 */
         white-space: normal;
         z-index: 1;
-        
+
         /* 항상 표시하되 opacity만 조절하여 위치 변경 방지 */
         /* visibility, max-height 관련 속성 제거 */
         transition: opacity 0.3s ease;
-        
+
         &.description-text {
             display: block; /* 항상 표시 */
             height: auto; /* 고정 높이 사용 */
         }
-        
+
         @media (max-width: 768px) {
             font-size: ${pxToRem(20)};
         }
@@ -544,13 +567,13 @@ const S = {
      */
     TitleContainer: styled.div`
         position: relative;
-        
+
         /* 호버 효과 스타일 추가 */
         .hover-title {
             color: #64676A;
             transition: color 0.3s ease;
         }
-        
+
         &:hover .hover-title {
             color: #111111;
         }

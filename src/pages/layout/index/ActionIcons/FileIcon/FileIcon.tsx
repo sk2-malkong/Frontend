@@ -1,3 +1,4 @@
+// FileIcon.tsx 부분 수정 (paste-3.txt 파일 수정)
 import React from "react";
 import styled from "styled-components";
 
@@ -47,7 +48,7 @@ const S = {
      * 파일 아이콘의 가장 바깥쪽 레이어입니다.
      */
     WorkFile5: styled.div`
-        background-color: #464B4E; // 배경색 변경
+        background-color: #464B4E; // 기본 배경색
         width: 100%;
         height: 100%;
         transform-origin: top;
@@ -56,6 +57,10 @@ const S = {
         transition: all 0.3s ease;
         position: relative;
 
+        .overlay-3:hover & {
+            background-color: #024CAA; // amber-600 호버 시 색상 #d97706
+        }
+
         &::after {
             content: '';
             position: absolute;
@@ -63,9 +68,13 @@ const S = {
             left: 0;
             width: ${pxToRem(80)}; // 20 * 4
             height: ${pxToRem(16)}; // 4 * 4
-            background-color: #464B4E; // 배경색 변경
+            background-color: #464B4E; // 기본 배경색
             border-top-left-radius: ${pxToRem(16)}; // 상단 모서리 둥글게
             border-top-right-radius: ${pxToRem(16)}; // 상단 모서리 둥글게
+
+            .overlay-3:hover & {
+                background-color: #024CAA; // amber-600 호버 시 색상
+            }
         }
 
         &::before {
@@ -75,8 +84,12 @@ const S = {
             left: ${pxToRem(75.5)};
             width: ${pxToRem(16)}; // 4 * 4
             height: ${pxToRem(16)}; // 4 * 4
-            background-color: #464B4E; // 배경색 변경
+            background-color: #464B4E; // 기본 배경색
             clip-path: polygon(0 35%, 0% 100%, 50% 100%);
+
+            .overlay-3:hover & {
+                background-color: #024CAA; // amber-600 호버 시 색상
+            }
         }
     `,
 
@@ -87,11 +100,16 @@ const S = {
     WorkFile4: styled.div`
         position: absolute;
         inset: ${pxToRem(4)}; // 안쪽 여백
-        background-color: #61686c; // 배경색 변경 (약간 밝은 톤)
+        background-color: #61686c; // 기본 배경색
         border-radius: ${pxToRem(16)}; // 모서리 둥글게
         transition: all 0.3s ease;
         transform-origin: bottom;
         user-select: none;
+
+        .overlay-3:hover & {
+            background-color: #a1a1aa; // zinc-400 호버 시 색상
+            transform: rotateX(-20deg);
+        }
     `,
 
     /**
@@ -101,10 +119,15 @@ const S = {
     WorkFile3: styled.div`
         position: absolute;
         inset: ${pxToRem(4)}; // 안쪽 여백
-        background-color: #7b848a; // 배경색 변경 (더 밝은 톤)
+        background-color: #7b848a; // 기본 배경색
         border-radius: ${pxToRem(16)}; // 모서리 둥글게
         transition: all 0.3s ease;
         transform-origin: bottom;
+
+        .overlay-3:hover & {
+            background-color: #d4d4d8; // zinc-300 호버 시 색상
+            transform: rotateX(-30deg);
+        }
     `,
 
     /**
@@ -114,10 +137,15 @@ const S = {
     WorkFile2: styled.div`
         position: absolute;
         inset: ${pxToRem(4)}; // 안쪽 여백
-        background-color: #959fa7; // 배경색 변경 (가장 밝은 톤)
+        background-color: #959fa7; // 기본 배경색
         border-radius: ${pxToRem(16)}; // 모서리 둥글게
         transition: all 0.3s ease;
         transform-origin: bottom;
+
+        .overlay-3:hover & {
+            background-color: #e4e4e7; // zinc-200 호버 시 색상
+            transform: rotateX(-38deg);
+        }
     `,
 
     /**
@@ -129,13 +157,19 @@ const S = {
         bottom: 0;
         width: 100%;
         height: ${pxToRem(156)};
-        background: linear-gradient(to top, #464B4E, #5a6166); // 그라디언트 배경색 변경
+        background: linear-gradient(to top, #464B4E, #5a6166); // 기본 그라디언트 배경색
         border-radius: ${pxToRem(16)}; // 모서리 둥글게
         border-top-right-radius: 0;
         transition: all 0.3s ease;
         transform-origin: bottom;
         display: flex;
         align-items: flex-end;
+
+        .overlay-3:hover & {
+            background: linear-gradient(to top, #5409DA, #4E71FF); // amber-500에서 amber-400 그라디언트 호버 시 색상 f59e0b, #fbbf24
+            transform: rotateX(-46deg) translateY(${pxToRem(1)});
+            box-shadow: inset 0 ${pxToRem(20)} ${pxToRem(40)} #4E71FF, inset 0 ${pxToRem(-20)} ${pxToRem(40)} #5409DA;
+        }
 
         &::after {
             content: '';
@@ -144,9 +178,13 @@ const S = {
             right: 0;
             width: ${pxToRem(146)};
             height: ${pxToRem(16)};
-            background-color: #464B4E; // 배경색 변경
+            background-color: #464B4E; // 기본 배경색
             border-top-left-radius: ${pxToRem(16)}; // 상단 모서리 둥글게
             border-top-right-radius: ${pxToRem(16)}; // 상단 모서리 둥글게
+
+            .overlay-3:hover & {
+                background-color: #4E71FF; // amber-400 호버 시 색상
+            }
         }
 
         &::before {
@@ -156,8 +194,12 @@ const S = {
             right: ${pxToRem(142)};
             width: ${pxToRem(12)}; // size-3
             height: ${pxToRem(12)}; // size-3
-            background-color: #61686c; // 배경색 (노란색 접힌 부분은 유지)
+            background-color: #61686c; // 기본 배경색
             clip-path: polygon(100% 14%, 50% 100%, 100% 100%);
+
+            .overlay-3:hover & {
+                background-color: #4E71FF; // amber-400 호버 시 색상
+            }
         }
     `,
 };
