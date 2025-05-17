@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import S from "./style";
 import banerTitleImg from './banertitle.png';
 import LockIcon from "../ActionIcons/LockIcon/LockIcon";
@@ -23,21 +23,21 @@ const PdMain: React.FC = () => {
     return (
         <S.FrameContainer>
             {/* 헤더 영역 */}
-            <Header openPopup={openPopup} />
+            <Header openPopup={openPopup}/>
 
             <S.InnerDiv>
                 {/* 메인 배너 영역 */}
-                <MainBanner />
+                <MainBanner/>
 
                 {/* 중앙 섹션 영역 */}
-                <MiddleSection />
+                <MiddleSection/>
 
                 {/* 푸터 영역 */}
-                <Footer />
+                <Footer/>
             </S.InnerDiv>
 
             {/* API 키 발급 팝업 */}
-            <ApiKeyPopup isOpen={isPopupOpen} onClose={closePopup} />
+            <ApiKeyPopup isOpen={isPopupOpen} onClose={closePopup}/>
         </S.FrameContainer>
     );
 };
@@ -46,7 +46,7 @@ const PdMain: React.FC = () => {
  * Header 컴포넌트 - 페이지 상단 헤더 영역
  * 로고와 API 키 신청 버튼을 포함
  */
-const Header = ({ openPopup }: { openPopup: () => void }) => (
+const Header = ({openPopup}: { openPopup: () => void }) => (
     <S.HeaderContainer>
         <S.HeaderInner>
             <S.LogoContainer>
@@ -68,7 +68,7 @@ const Header = ({ openPopup }: { openPopup: () => void }) => (
 const MainBanner = () => (
     <S.Overlap>
         {/* 호버 시 확장되는 오버레이 효과 */}
-        <S.OverlayEffect className="overlay-1" />
+        <S.OverlayEffect className="overlay-1"/>
         <S.InnerDiv2>
             <S.Group2 className="group2">
                 <S.ImageWrapper className="image-wrapper">
@@ -85,7 +85,7 @@ const MainBanner = () => (
                     새로운 기회와 가치를 함께 만들어봐요.
                 </S.P>
             </S.Group2>
-            <PrinterIcon />
+            <PrinterIcon/>
         </S.InnerDiv2>
     </S.Overlap>
 );
@@ -97,47 +97,71 @@ const MainBanner = () => (
 const MiddleSection = () => (
     <S.MiddleSection>
         {/* 제품 소개 영역 */}
-        <ProductIntroSection />
+        <ProductIntroSection/>
 
         {/* API 키 소개 영역 */}
-        <ApiKeyIntroSection />
+        <ApiKeyIntroSection/>
     </S.MiddleSection>
 );
 
 /**
  * ProductIntroSection 컴포넌트 - 제품 소개 영역
  * 자물쇠 아이콘과 호버 효과 포함
+ * 위치 완전 고정 버전
  */
-const ProductIntroSection = () => (
-    <S.Overlap3>
-        {/* 호버 시 확장되는 오버레이 효과 */}
-        <S.OverlayEffect className="overlay-2" />
-        <S.Group3 />
-        <S.TextWrapper2>제품 소개</S.TextWrapper2>
-        <S.TextWrapper3>
-            제품 특징을 알려줄게요.
-        </S.TextWrapper3>
-        {/* 자물쇠 아이콘 */}
-        <LockIcon />
-    </S.Overlap3>
-);
+const ProductIntroSection = () => {
+    const [isHovered, setIsHovered] = useState(false);
+
+    return (
+        <S.Overlap3
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+        >
+            {/* 호버 시 확장되는 오버레이 효과 */}
+            <S.OverlayEffect className="overlay-2"/>
+            <S.Group3/>
+            <S.TitleContainer>
+                <S.TextWrapper2 className="hover-title">
+                    제품 소개
+                </S.TextWrapper2>
+                <S.TextWrapper3 style={{opacity: isHovered ? 1 : 0}}>
+                    제품 특징을 알려줄게요.
+                </S.TextWrapper3>
+            </S.TitleContainer>
+            {/* 자물쇠 아이콘 */}
+            <LockIcon/>
+        </S.Overlap3>
+    );
+};
 
 /**
  * ApiKeyIntroSection 컴포넌트 - API 키 소개 영역
  * 파일 아이콘과 호버 효과 포함
+ * 위치 완전 고정 버전
  */
-const ApiKeyIntroSection = () => (
-    <S.Overlap2>
-        {/* 호버 시 확장되는 오버레이 효과 */}
-        <S.OverlayEffect className="overlay-3" />
-        <S.TextWrapper2>API 키 소개</S.TextWrapper2>
-        <S.TextWrapper3>
-            API 키에 대한 자세한 소개입니다.
-        </S.TextWrapper3>
-        {/* 파일 아이콘 */}
-        <FileIcon />
-    </S.Overlap2>
-);
+const ApiKeyIntroSection = () => {
+    const [isHovered, setIsHovered] = useState(false);
+
+    return (
+        <S.Overlap2
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+        >
+            {/* 호버 시 확장되는 오버레이 효과 */}
+            <S.OverlayEffect className="overlay-3"/>
+            <S.TitleContainer>
+                <S.TextWrapper2 className="hover-title">
+                    API 키 소개
+                </S.TextWrapper2>
+                <S.TextWrapper3 style={{opacity: isHovered ? 1 : 0}}>
+                    API 키에 대한 자세한 소개입니다.
+                </S.TextWrapper3>
+            </S.TitleContainer>
+            {/* 파일 아이콘 */}
+            <FileIcon/>
+        </S.Overlap2>
+    );
+};
 
 /**
  * Footer 컴포넌트 - 페이지 하단 푸터 영역

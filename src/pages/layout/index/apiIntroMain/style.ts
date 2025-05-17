@@ -79,12 +79,12 @@ const S = {
      * 헤더 내 "PURGO" 텍스트 스타일입니다.
      */
     LogoText: styled.div`
-    font-family: "Pretendard-Bold", Helvetica;
-    font-size: ${pxToRem(24)};
-    font-weight: 700;
-    color: #c2dfff;
-    letter-spacing: ${pxToRem(-0.5)};
-`,
+        font-family: "Pretendard-Bold", Helvetica;
+        font-size: ${pxToRem(24)};
+        font-weight: 700;
+        color: #c2dfff;
+        letter-spacing: ${pxToRem(-0.5)};
+    `,
 
     /**
      * 버튼 컨테이너
@@ -110,7 +110,7 @@ const S = {
         font-weight: 500;
         cursor: pointer;
         transition: all 0.2s ease;
-        
+
         &:hover {
             background-color: ${props => props.primary ? '#b5d8ff' : '#f5f5f5'};
         }
@@ -279,6 +279,11 @@ const S = {
         &:hover .overlay-2 {
             transform: translate(-50%, -50%) scale(10);
         }
+
+        /* 호버 시 텍스트 색상 변경 */
+        &:hover .hover-title {
+            color: #111111;
+        }
     `,
 
     /**
@@ -320,6 +325,11 @@ const S = {
 
         &:hover .overlay-3 {
             transform: translate(-50%, -50%) scale(10);
+        }
+
+        /* 호버 시 텍스트 색상 변경 */
+        &:hover .hover-title {
+            color: #111111;
         }
     `,
 
@@ -392,6 +402,7 @@ const S = {
         line-height: ${pxToRem(31.9)};
         white-space: normal;
         z-index: 1;
+        transition: color 0.3s ease;
 
         @media (max-width: 768px) {
             font-size: ${pxToRem(20)};
@@ -401,18 +412,28 @@ const S = {
     /**
      * 세 번째 텍스트 래퍼 컴포넌트
      * 상단 여백이 있는 어두운 배경의 텍스트입니다.
+     * 호버시 위치 변경 효과 제거 버전
      */
     TextWrapper3: styled.p`
-        color: #64676A;
+        color: #111111;
         font-family: "Pretendard-Medium", Helvetica;
         font-size: ${pxToRem(16)};
         font-weight: 500;
         letter-spacing: ${pxToRem(-0.60)};
         line-height: ${pxToRem(31.9)};
-        margin-top: ${pxToRem(-5)};
+        margin-top: ${pxToRem(5)}; /* 상단 여백 추가 */
         white-space: normal;
         z-index: 1;
-
+        
+        /* 항상 표시하되 opacity만 조절하여 위치 변경 방지 */
+        /* visibility, max-height 관련 속성 제거 */
+        transition: opacity 0.3s ease;
+        
+        &.description-text {
+            display: block; /* 항상 표시 */
+            height: auto; /* 고정 높이 사용 */
+        }
+        
         @media (max-width: 768px) {
             font-size: ${pxToRem(20)};
         }
@@ -512,6 +533,26 @@ const S = {
 
         &.large {
             max-width: 100%;
+        }
+    `,
+
+    // ==================== 새로 추가된 애니메이션 컴포넌트 ====================
+
+    /**
+     * 타이틀 컨테이너
+     * 제목과 설명 텍스트를 감싸는 컨테이너입니다.
+     */
+    TitleContainer: styled.div`
+        position: relative;
+        
+        /* 호버 효과 스타일 추가 */
+        .hover-title {
+            color: #64676A;
+            transition: color 0.3s ease;
+        }
+        
+        &:hover .hover-title {
+            color: #111111;
         }
     `,
 };
