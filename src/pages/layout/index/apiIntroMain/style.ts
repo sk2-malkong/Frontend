@@ -1,0 +1,496 @@
+import styled from "styled-components";
+
+/**
+ * px 값을 rem으로 변환하는 유틸리티 함수
+ * 16px을 1rem으로 기준으로 계산합니다.
+ */
+const pxToRem = (px: number): string => `${px / 16}rem`;
+
+/**
+ * 각 영역별 호버시 사용할 배경색 변수
+ * 기본 배경색(base)과 호버시 배경색(hover)을 정의합니다.
+ */
+const overlapColors = {
+    primary: {
+        base: "#262b2f",    // 기본 배경색
+        hover: "#c2dfff",   // 호버시 배경색
+    },
+    secondary: {
+        base: "#212529",    // 기본 배경색
+        hover: "#c2dfff",   // 호버시 배경색
+    },
+    tertiary: {
+        base: "#31363a",    // 기본 배경색
+        hover: "#c2dfff",   // 호버시 배경색
+    }
+};
+
+/**
+ * 스타일 컴포넌트 정의 - 헤더 관련 스타일은 제거됨
+ */
+const S = {
+    // ==================== 레이아웃 구조 컴포넌트 ====================
+
+    /**
+     * 전체 프레임을 감싸는 최상위 컨테이너
+     * 화면 전체 높이를 차지하고 내용을 가로 중앙에 배치합니다.
+     */
+    FrameContainer: styled.div`
+        background-color: #ffffff;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        width: 100%;
+        height: 100vh; /* 뷰포트 높이에 맞춤 */
+        overflow: hidden; /* 스크롤 방지 */
+    `,
+
+    /**
+     * 전체 컨텐츠를 담는 내부 컨테이너
+     * 최대 너비를 제한하고 중앙 정렬합니다.
+     */
+    InnerDiv: styled.div`
+        background-color: #ffffff;
+        position: relative;
+        width: 100%; /* 전체 너비 사용 */
+        height: 100%; /* 부모 컨테이너의 높이에 맞춤 */
+        max-width: ${pxToRem(1920)}; /* 최대 너비 제한 */
+        margin: 0 auto; /* 중앙 정렬 */
+        padding-top: ${pxToRem(70)}; /* 헤더 높이만큼 패딩 추가 */
+        padding-bottom: ${pxToRem(52)}; /* 푸터 높이의 절반만큼 패딩 추가 */
+        display: flex;
+        flex-direction: column;
+    `,
+
+    /**
+     * 내부 콘텐츠 영역을 위한 컨테이너
+     * 높이와 너비를 조절하고 내부 요소를 배치합니다.
+     */
+    InnerDiv2: styled.div`
+        height: 80%;
+        position: relative;
+        width: 90%;
+        max-width: ${pxToRem(1010)};
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 1; /* 오버레이 위에 표시 */
+
+        @media (max-width: 1200px) {
+            width: 90%; /* 작은 화면에서 비율 유지 */
+        }
+    `,
+
+    /**
+     * 화면 중앙 섹션 컨테이너
+     * 화면의 절반을 차지하는 영역입니다.
+     */
+    MiddleSection: styled.div`
+        flex: 0 0 50%; /* 화면의 1/2 차지하도록 설정 */
+        display: flex;
+        width: 100%;
+    `,
+
+    /**
+     * 콘텐츠 그룹을 위한 컨테이너
+     * 섹션 내에서 콘텐츠 영역을 정의합니다.
+     */
+    Group2: styled.div`
+        width: 60%;
+        position: relative;
+        z-index: 1; /* 오버레이 위에 표시 */
+
+        @media (max-width: 768px) {
+            width: 90%;
+        }
+    `,
+
+    /**
+     * 푸터 영역 컨테이너
+     * 화면 하단에 고정된 푸터를 위한 컴포넌트입니다.
+     * 높이를 절반으로 줄였습니다.
+     */
+    DivWrapper: styled.div`
+        background-color: #060b11;
+        height: ${pxToRem(52)}; /* 기존 104px에서 절반으로 줄임 */
+        position: fixed; /* 화면 하단에 고정 */
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000; /* 다른 요소보다 앞에 배치 */
+    `,
+
+    // ==================== 오버레이 효과 관련 컴포넌트 ====================
+
+    /**
+     * 오버레이 호버 효과를 위한 컴포넌트
+     * 클릭 가능한 영역에 호버시 원형으로 퍼지는 애니메이션 효과를 줍니다.
+     */
+    OverlayEffect: styled.div`
+        width: ${pxToRem(100)};
+        height: ${pxToRem(100)};
+        position: absolute;
+        border-radius: 50%;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0);
+        transition: transform 0.7s ease-out;
+        z-index: 0;
+
+        &.overlay-1 {
+            background: ${overlapColors.primary.hover};
+        }
+
+        &.overlay-2 {
+            background: ${overlapColors.secondary.hover};
+        }
+
+        &.overlay-3 {
+            background: ${overlapColors.tertiary.hover};
+        }
+    `,
+
+    /**
+     * 첫 번째 오버랩 영역 컴포넌트
+     * 호버시 오버레이 효과가 나타나는 영역입니다.
+     */
+    Overlap: styled.div`
+        background-color: ${overlapColors.primary.base};
+        flex: 0 0 50%;
+        position: relative;
+        width: 100%;
+        overflow: hidden; /* 오버레이가 넘치지 않도록 설정 */
+        transition: background-color 0.3s ease;
+        cursor: pointer;
+
+        &:hover .overlay-1 {
+            transform: translate(-50%, -50%) scale(40);
+        }
+    `,
+
+    /**
+     * 두 번째 오버랩 영역 컴포넌트 (자물쇠 효과)
+     * 호버시 자물쇠 애니메이션과 오버레이 효과가 나타납니다.
+     */
+    Overlap3: styled.div`
+        background-color: ${overlapColors.secondary.base};
+        flex: 1;
+        position: relative;
+        overflow: hidden; /* 오버레이가 넘치지 않도록 설정 */
+        display: flex;
+        flex-direction: column;
+        padding: ${pxToRem(23)} ${pxToRem(24)};
+        cursor: pointer; /* 커서 스타일 변경 */
+        transition: background-color 0.3s ease;
+
+        &:hover .shackle {
+            transform: rotateY(150deg) translateX(3px);
+            transform-origin: right;
+        }
+
+        &:hover .overlay-2 {
+            transform: translate(-50%, -50%) scale(10);
+        }
+
+        /* 호버 시 텍스트 색상 변경 */
+        &:hover .hover-title {
+            color: #111111;
+        }
+
+        /* 호버 시 자물쇠 색상 변경을 위한 클래스 */
+        &.hover-active .shackle {
+            border-top: 3px solid #5409DA !important;
+            border-left: 3px solid #5409DA !important;
+            border-right: 3px solid #5409DA !important;
+        }
+
+        &.hover-active path {
+            fill: #5409DA !important;
+        }
+    `,
+
+    /**
+     * 세 번째 오버랩 영역 컴포넌트 (파일 효과)
+     * 호버시 파일 아이콘 애니메이션과 오버레이 효과가 나타납니다.
+     */
+    Overlap2: styled.div`
+        background-color: ${overlapColors.tertiary.base};
+        flex: 1;
+        position: relative;
+        overflow: hidden; /* 오버레이가 넘치지 않도록 설정 */
+        display: flex;
+        flex-direction: column;
+        padding: ${pxToRem(23)} ${pxToRem(24)};
+        cursor: pointer; /* 커서 스타일 변경 */
+        transition: background-color 0.3s ease;
+
+        /* 오버레이 호버 시 파일 아이콘 색상도 변경됩니다 - 클래스 연결 */
+        &:hover .work-file-5,
+        &:hover .work-file-5::after,
+        &:hover .work-file-5::before {
+            background-color: #5409DA; /* amber-600 색상 */
+        }
+
+        &:hover .work-file-4 {
+            background-color: #a1a1aa; /* zinc-400 색상 */
+            transform: rotateX(-20deg);
+        }
+
+        &:hover .work-file-3 {
+            background-color: #d4d4d8; /* zinc-300 색상 */
+            transform: rotateX(-30deg);
+        }
+
+        &:hover .work-file-2 {
+            background-color: #e4e4e7; /* zinc-200 색상 */
+            transform: rotateX(-38deg);
+        }
+
+        &:hover .work-file-1 {
+            background: linear-gradient(to top, #5409DA, #4E71FF); /* amber-500에서 amber-400 그라디언트 */
+            transform: rotateX(-46deg) translateY(${pxToRem(1)});
+            box-shadow: inset 0 ${pxToRem(20)} ${pxToRem(40)} #4E71FF, inset 0 ${pxToRem(-20)} ${pxToRem(40)} #5409DA;
+        }
+
+        &:hover .work-file-1::after {
+            background-color: #4E71FF; /* amber-400 색상 */
+        }
+
+        &:hover .work-file-1::before {
+            background-color: #4E71FF; /* amber-400 색상 */
+        }
+
+        &:hover .overlay-3 {
+            transform: translate(-50%, -50%) scale(10);
+        }
+
+        /* 호버 시 텍스트 색상 변경 */
+        &:hover .hover-title {
+            color: #111111;
+        }
+    `,
+// -------------------------------
+    /**
+     * 그룹 3 컨테이너
+     * 배경 요소를 위한 포지셔닝 컴포넌트입니다.
+     */
+    Group3: styled.div`
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+    `,
+
+    // ==================== 텍스트 스타일 컴포넌트 ====================
+
+    /**
+     * 기본 텍스트 컴포넌트
+     * 흰색 텍스트를 렌더링합니다.
+     */
+    TextWrapper: styled.p`
+        color: #64676A;
+        font-family: "Pretendard-Medium", Helvetica;
+        font-size: ${pxToRem(16)};
+        font-weight: 500;
+        letter-spacing: ${pxToRem(-0.60)};
+        line-height: ${pxToRem(31.9)};
+        white-space: normal; /* 텍스트 줄바꿈 허용 */
+        z-index: 1;
+
+        @media (max-width: 768px) {
+            font-size: ${pxToRem(20)};
+            line-height: ${pxToRem(28)};
+        }
+    `,
+
+    /**
+     * 단락 텍스트 컴포넌트
+     * 상단 여백이 있는 흰색 텍스트입니다.
+     */
+    P: styled.p`
+        color: #64676A;
+        font-family: "Pretendard-Medium", Helvetica;
+        font-size: ${pxToRem(16)};
+        font-weight: 500;
+        letter-spacing: ${pxToRem(-0.60)};
+        line-height: ${pxToRem(31.9)};
+        margin-top: ${pxToRem(-10)};
+        white-space: normal; /* 텍스트 줄바꿈 허용 */
+        z-index: 1;
+
+        @media (max-width: 768px) {
+            font-size: ${pxToRem(20)};
+            line-height: ${pxToRem(28)};
+        }
+    `,
+
+    /**
+     * 두 번째 텍스트 래퍼 컴포넌트
+     * 어두운 배경의 텍스트를 위한 컴포넌트입니다.
+     */
+    TextWrapper2: styled.div`
+        color: #64676A;
+        font-family: "Pretendard-Medium", Helvetica;
+        font-size: ${pxToRem(24)};
+        font-weight: bold;
+        letter-spacing: ${pxToRem(-0.60)};
+        white-space: normal;
+        z-index: 1;
+        transition: color 0.3s ease;
+        margin-bottom: ${pxToRem(2)} ;
+
+        @media (max-width: 768px) {
+            font-size: ${pxToRem(20)};
+        }
+    `,
+
+    /**
+     * 세 번째 텍스트 래퍼 컴포넌트
+     * 상단 여백이 있는 어두운 배경의 텍스트입니다.
+     * 호버시 위치 변경 효과 제거 버전
+     */
+    TextWrapper3: styled.p`
+        color: #111111;
+        font-family: "Pretendard-Medium", Helvetica;
+        font-size: ${pxToRem(16)};
+        font-weight: 500;
+        letter-spacing: ${pxToRem(-0.60)};
+        white-space: normal;
+        z-index: 1;
+
+        /* 항상 표시하되 opacity만 조절하여 위치 변경 방지 */
+        /* visibility, max-height 관련 속성 제거 */
+        transition: opacity 0.3s ease;
+
+        &.description-text {
+            display: block; /* 항상 표시 */
+            height: auto; /* 고정 높이 사용 */
+        }
+
+        @media (max-width: 768px) {
+            font-size: ${pxToRem(20)};
+        }
+    `,
+
+    /**
+     * 네 번째 텍스트 래퍼 컴포넌트
+     * 큰 크기의 중앙 정렬 텍스트입니다.
+     */
+    TextWrapper4: styled.div`
+        color: #ffffff;
+        font-family: "Pretendard-Medium", Helvetica;
+        font-size: ${pxToRem(40)};
+        font-weight: 500;
+        letter-spacing: ${pxToRem(-0.60)};
+        line-height: ${pxToRem(31.9)};
+        white-space: normal;
+        text-align: center;
+        margin-top: auto;
+        margin-bottom: auto;
+        z-index: 1;
+
+        @media (max-width: 768px) {
+            font-size: ${pxToRem(32)};
+        }
+    `,
+
+    /**
+     * 다섯 번째 텍스트 래퍼 컴포넌트
+     * 푸터에 위치하는 작은 크기의 중앙 정렬 텍스트입니다.
+     */
+    TextWrapper5: styled.div`
+        color: #ffffff;
+        font-family: "Pretendard-Medium", Helvetica;
+        font-size: ${pxToRem(14)};
+        font-weight: 500;
+        letter-spacing: ${pxToRem(-0.60)};
+        line-height: ${pxToRem(31.9)};
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%); /* 완전 중앙 정렬 */
+        white-space: normal;
+        text-align: center;
+    `,
+
+    // ==================== 기타 UI 요소 컴포넌트 ====================
+
+    /**
+     * 사각형 요소 컴포넌트
+     * 둥근 모서리를 가진 사각형 UI 요소입니다.
+     */
+    Rectangle: styled.div`
+        background-color: #5b6771;
+        border-radius: ${pxToRem(40)};
+        height: ${pxToRem(150)};
+        width: ${pxToRem(150)};
+        z-index: 1;
+
+        @media (max-width: 1200px) {
+            height: ${pxToRem(200)};
+            width: ${pxToRem(200)};
+        }
+
+        @media (max-width: 768px) {
+            height: ${pxToRem(150)};
+            width: ${pxToRem(150)};
+        }
+    `,
+
+    /**
+     * 이미지 래퍼 컴포넌트
+     * 이미지를 담는 컨테이너입니다.
+     */
+    ImageWrapper: styled.div`
+        width: 100%;
+        margin-bottom: ${pxToRem(15)};
+        position: relative;
+    `,
+
+    /**
+     * 이미지 컴포넌트
+     * 반응형으로 크기가 조절되는 이미지입니다.
+     */
+    Image: styled.img`
+        width: 100%;
+        height: auto;
+        display: block;
+        /* 이미지 크기 조절을 위한 클래스 */
+        &.small {
+            max-width: 60%;
+        }
+
+        &.medium {
+            max-width: 80%;
+        }
+
+        &.large {
+            max-width: 100%;
+        }
+    `,
+
+    // ==================== 새로 추가된 애니메이션 컴포넌트 ====================
+
+    /**
+     * 타이틀 컨테이너
+     * 제목과 설명 텍스트를 감싸는 컨테이너입니다.
+     */
+    TitleContainer: styled.div`
+        position: relative;
+
+        /* 호버 효과 스타일 추가 */
+        .hover-title {
+            color: #64676A;
+            transition: color 0.3s ease;
+        }
+
+        &:hover .hover-title {
+            color: #111111;
+        }
+    `,
+};
+
+export default S;
