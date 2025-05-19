@@ -6,6 +6,7 @@ export const DocsContainer = styled.div`
   height: 100vh;
   background-color: white;
   color: black;
+  margin-top: 70px;
 `;
 
 export const Sidebar = styled.div`
