@@ -3,7 +3,8 @@ import { NavLink } from "react-router-dom";
 
 export const DocsContainer = styled.div`
   display: flex;
-  height: 100vh;
+  align-items: stretch;
+  min-height: 100vh;
   background-color: white;
   color: black;
   margin-top: 70px;
@@ -18,6 +19,11 @@ export const Sidebar = styled.div`
   flex-direction: column;
   gap: 1rem;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  position: sticky;   
+  top: 70px;          
+
+  height: calc(100vh - 70px);
+  flex-shrink: 0;
 `;
 
 export const MenuTitle = styled.h2`
