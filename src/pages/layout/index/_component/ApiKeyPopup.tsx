@@ -8,29 +8,40 @@ interface FormData {
     reason: string;
 }
 
+interface ApiResponse {
+    api_key: string;
+    jwt_secret: string;
+}
+
 interface ApiKeyPopupProps {
     isOpen: boolean;
     onClose: () => void;
 }
 
 // API 키 생성 함수
-const generateApiKey = async (userData: FormData): Promise<string> => {
-    // 실제 구현에서는 서버에 요청을 보내 API 키를 발급받아야 합니다.
-    // 여기서는 예시로 랜덤 API 키를 생성합니다.
+const generateApiKey = async (userData: FormData): Promise<ApiResponse> => {
+    try {
+        // 백엔드에 POST 요청 보내기
+        const response = await fetch('http://192.168.0.243:8001/issue-key', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                user_name: userData.name
+            }),
+        });
 
-    // 서버 요청을 시뮬레이션하기 위한 지연
-    await new Promise(resolve => setTimeout(resolve, 1000));
+        if (!response.ok) {
+            throw new Error('API 키 생성 요청에 실패했습니다.');
+        }
 
-    // 랜덤 API 키 생성 (실제로는 서버에서 생성해야 함)
-    const randomKey = Array.from(
-        { length: 32 },
-        () => Math.floor(Math.random() * 36).toString(36)
-    ).join('');
-
-    // API 키 형식 포맷팅 (일반적인 포맷)
-    const formattedKey = `api_${randomKey.substring(0, 8)}_${randomKey.substring(8, 16)}_${randomKey.substring(16, 24)}_${randomKey.substring(24, 32)}`;
-
-    return formattedKey;
+        // 응답 데이터 반환
+        return await response.json();
+    } catch (error) {
+        console.error('API 키 생성 오류:', error);
+        throw error;
+    }
 };
 
 // 스타일 컴포넌트 정의
@@ -220,24 +231,28 @@ const StyledWrapper = styled.div`
     .api-key-label {
         font-weight: 600;
         margin: 0;
+        color: #111111;
     }
 
-    .api-key-box {
-        background-color: #f5f5f5;
-        border: 1px solid #ddd;
-        border-radius: 10px;
-        padding: 15px;
-        position: relative;
-        word-break: break-all;
-        font-family: monospace;
+    .api-key-container {
         display: flex;
-        align-items: center;
-        justify-content: space-between;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 10px;
     }
 
-    .api-key-box code {
-        color: #0066cc; /* API 키 글자 색상 - 파란색으로 변경 */
-        font-weight: 500;
+    .api-key-label {
+        font-weight: 600;
+        margin: 0;
+        color: #111111 !important; /* 중요도 증가 */
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 5px;
+    }
+
+    .api-key-label span {
+        color: #111111 !important; /* 명시적으로 span 요소에 색상 지정 */
     }
 
     .copy-button {
@@ -247,8 +262,30 @@ const StyledWrapper = styled.div`
         padding: 5px 10px;
         border-radius: 5px;
         cursor: pointer;
-        margin-left: 10px;
         font-size: 12px;
+        height: 30px;
+        flex-shrink: 0; /* 크기 고정 */
+    }
+
+    .copy-button:hover {
+        background-color: rgb(56, 90, 194);
+    }
+
+    .api-key-box {
+        background-color: #f5f5f5;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        padding: 15px;
+        font-family: monospace;
+        overflow-x: auto; /* 가로 스크롤 추가 */
+        white-space: nowrap; /* 텍스트가 줄바꿈되지 않도록 설정 */
+        margin-bottom: 15px;
+    }
+
+    .api-key-box code {
+        color: #0066cc; /* API 키 글자 색상 - 파란색으로 변경 */
+        font-weight: 500;
+        overflow-x: visible; /* 코드 내용이 넘쳐도 숨기지 않음 */
     }
 
     .copy-button:hover {
@@ -257,7 +294,7 @@ const StyledWrapper = styled.div`
 
     .api-key-notice {
         color: #e74c3c;
-        font-size: 12px;
+        font-size: 14px;
         margin: 5px 0;
     }
 
@@ -288,7 +325,7 @@ const ApiKeyPopup: React.FC<ApiKeyPopupProps> = ({ isOpen, onClose }) => {
         email: '',
         reason: ''
     });
-    const [apiKey, setApiKey] = useState<string | null>(null);
+    const [apiResponse, setApiResponse] = useState<ApiResponse | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -310,8 +347,15 @@ const ApiKeyPopup: React.FC<ApiKeyPopupProps> = ({ isOpen, onClose }) => {
 
         try {
             // API 키 생성 함수 호출
-            const key = await generateApiKey(formData);
-            setApiKey(key);
+            const response = await generateApiKey(formData);
+            setApiResponse(response);
+
+            // 응답을 받으면 폼 필드를 숨기고 API 키 결과만 표시
+            setFormData({
+                name: '',
+                email: '',
+                reason: ''
+            });
         } catch (error) {
             console.error('API 키 생성 오류:', error);
         } finally {
@@ -319,11 +363,9 @@ const ApiKeyPopup: React.FC<ApiKeyPopupProps> = ({ isOpen, onClose }) => {
         }
     };
 
-    const handleCopy = () => {
-        if (apiKey) {
-            navigator.clipboard.writeText(apiKey);
-            alert('API 키가 클립보드에 복사되었습니다.');
-        }
+    const handleCopy = (text: string) => {
+        navigator.clipboard.writeText(text);
+        alert('클립보드에 복사되었습니다.');
     };
 
     const handleReset = () => {
@@ -332,7 +374,7 @@ const ApiKeyPopup: React.FC<ApiKeyPopupProps> = ({ isOpen, onClose }) => {
             email: '',
             reason: ''
         });
-        setApiKey(null);
+        setApiResponse(null);
     };
 
     // 팝업창 닫기 함수 - 상태 초기화 추가
@@ -343,7 +385,7 @@ const ApiKeyPopup: React.FC<ApiKeyPopupProps> = ({ isOpen, onClose }) => {
             email: '',
             reason: ''
         });
-        setApiKey(null);
+        setApiResponse(null);
         // 부모 컴포넌트의 onClose 함수 호출
         onClose();
     };
@@ -357,61 +399,84 @@ const ApiKeyPopup: React.FC<ApiKeyPopupProps> = ({ isOpen, onClose }) => {
                     <p className="title">API 키 발급</p>
                     <p className="message">서비스 이용을 위한 API 키를 발급받으세요.</p>
 
-                    <label>
-                        <input
-                            required
-                            placeholder=""
-                            type="text"
-                            name="name"
-                            className="input"
-                            value={formData.name}
-                            onChange={handleChange}
-                        />
-                        <span>이름</span>
-                    </label>
+                    {!apiResponse ? (
+                        <>
+                            <label>
+                                <input
+                                    required
+                                    placeholder=""
+                                    type="text"
+                                    name="name"
+                                    className="input"
+                                    value={formData.name}
+                                    onChange={handleChange}
+                                />
+                                <span>이름</span>
+                            </label>
 
-                    <label>
-                        <input
-                            required
-                            placeholder=""
-                            type="email"
-                            name="email"
-                            className="input"
-                            value={formData.email}
-                            onChange={handleChange}
-                        />
-                        <span>이메일</span>
-                    </label>
+                            <label>
+                                <input
+                                    required
+                                    placeholder=""
+                                    type="email"
+                                    name="email"
+                                    className="input"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                />
+                                <span>이메일</span>
+                            </label>
 
-                    <label>
-                        <span style={{color: 'grey'}}>제품 사용 사유</span>
-            <textarea
-                required
-                placeholder=""
-                name="reason"
-                className="input reason"
-                value={formData.reason}
-                onChange={handleChange}
-            />
-                    </label>
+                            <label>
+                                <span style={{color: 'grey'}}>제품 사용 사유</span>
+                                <textarea
+                                    required
+                                    placeholder=""
+                                    name="reason"
+                                    className="input reason"
+                                    value={formData.reason}
+                                    onChange={handleChange}
+                                />
+                            </label>
 
-                    <button
-                        className="submit"
-                        type="submit"
-                        disabled={isLoading}
-                    >
-                        {isLoading ? '처리 중...' : 'API 키 발급받기'}
-                    </button>
-
-                    {apiKey && (
+                            <button
+                                className="submit"
+                                type="submit"
+                                disabled={isLoading}
+                            >
+                                {isLoading ? '처리 중...' : 'API 키 발급받기'}
+                            </button>
+                        </>
+                    ) : (
                         <div className="api-key-container">
-                            <p className="api-key-label">발급된 API 키</p>
-                            <div className="api-key-box">
-                                <code>{apiKey}</code>
-                                <button type="button" className="copy-button" onClick={handleCopy}>
+                            <div className="api-key-label">
+                                <span style={{color: '#111111'}}>발급된 API 키</span>
+                                <button
+                                    type="button"
+                                    className="copy-button"
+                                    onClick={() => handleCopy(apiResponse.api_key)}
+                                >
                                     복사
                                 </button>
                             </div>
+                            <div className="api-key-box">
+                                <code>{apiResponse.api_key}</code>
+                            </div>
+
+                            <div className="api-key-label">
+                                <span style={{color: '#111111'}}>JWT Secret</span>
+                                <button
+                                    type="button"
+                                    className="copy-button"
+                                    onClick={() => handleCopy(apiResponse.jwt_secret)}
+                                >
+                                    복사
+                                </button>
+                            </div>
+                            <div className="api-key-box">
+                                <code>{apiResponse.jwt_secret}</code>
+                            </div>
+
                             <p className="api-key-notice">
                                 * 이 키는 다시 표시되지 않습니다. 안전한 곳에 보관하세요.
                             </p>
