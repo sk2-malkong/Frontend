@@ -15,6 +15,14 @@ import LimitationLogContainer from '../pages/limitationlog/LimitationLogContaine
 import Search from '../pages/search/Search';
 import PostEditContainer from '../pages/postcreate/PostEditContainer';
 import PdMain from '../pages/layout/index/apiIntroMain/PdMainContainer'
+import DocsLayout from "../pages/layout/index/docspages/DocsLayout";
+import StartPage from "../pages/layout/index/docspages/views/StartPage";
+import FAQPage from "../pages/layout/index/docspages/views/FAQPage";
+import AuthPage from "../pages/layout/index/docspages/views/AuthPage";
+import JwthashPage from "../pages/layout/index/docspages/views/Jwthash";
+import RequestPage from "../pages/layout/index/docspages/views/Request";
+import SecurityPage from "../pages/layout/index/docspages/views/Security";
+
 
 const routes: RouteObject[] = [
   {
@@ -78,7 +86,39 @@ const routes: RouteObject[] = [
   {
     path: "/developers",
     element: <PdMain/>
+  },
+
+  {
+    path: "/docs",
+    element: <DocsLayout />,
+    children: [
+      {
+        path: "start",
+        element: <StartPage />
+      },
+      {
+        path: "faq",
+        element: <FAQPage />
+      },
+      {
+        path: "auth",
+        element: <AuthPage />
+      },
+      {
+        path: "jwthash",
+        element: <JwthashPage />
+      },
+      {
+        path: "request",
+        element: <RequestPage />
+      },
+      {
+        path: "security",
+        element: <SecurityPage />
+      },
+    ]
   }
+
 ];
 
 const router = createBrowserRouter(routes);
