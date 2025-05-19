@@ -5,6 +5,7 @@ import LockIcon from "../ActionIcons/LockIcon/LockIcon";
 import FileIcon from "../ActionIcons/FileIcon/FileIcon";
 import PrinterIcon from "../ActionIcons/PrinterIcon/PrinterIcon";
 import ApiKeyPopup from "../_component/ApiKeyPopup";
+import Header from "../_component/Header/Header"; // Import the new Header component
 
 /**
  * PdMain 컴포넌트 - 메인 페이지의 레이아웃과 기능을 구현한 컴포넌트
@@ -22,7 +23,7 @@ const PdMain: React.FC = () => {
 
     return (
         <S.FrameContainer>
-            {/* 헤더 영역 */}
+            {/* 헤더 영역 - 분리된 컴포넌트 사용 */}
             <Header openPopup={openPopup}/>
 
             <S.InnerDiv>
@@ -41,25 +42,6 @@ const PdMain: React.FC = () => {
         </S.FrameContainer>
     );
 };
-
-/**
- * Header 컴포넌트 - 페이지 상단 헤더 영역
- * 로고와 API 키 신청 버튼을 포함
- */
-const Header = ({openPopup}: { openPopup: () => void }) => (
-    <S.HeaderContainer>
-        <S.HeaderInner>
-            <S.LogoContainer>
-                <S.LogoText>PURGO</S.LogoText>
-            </S.LogoContainer>
-            <S.ButtonContainer>
-                <S.HeaderButton primary onClick={openPopup}>
-                    API 키 신청
-                </S.HeaderButton>
-            </S.ButtonContainer>
-        </S.HeaderInner>
-    </S.HeaderContainer>
-);
 
 /**
  * MainBanner 컴포넌트 - 메인 페이지 상단 배너 영역
