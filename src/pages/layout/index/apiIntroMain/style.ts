@@ -194,14 +194,16 @@ const S = {
         }
 
         /* 호버 시 텍스트 색상 변경 */
+
         &:hover .hover-title {
             color: #111111;
         }
 
         /* 호버 시 자물쇠 색상 변경을 위한 클래스 */
+
         &.hover-active .shackle {
             border-top: 3px solid #5409DA !important;
-            border-left: 3px solid #5409DA !important;
+            border-left: 3px solid #5409da !important;
             border-right: 3px solid #5409DA !important;
         }
 

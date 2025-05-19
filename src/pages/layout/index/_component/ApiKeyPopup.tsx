@@ -8,29 +8,40 @@ interface FormData {
     reason: string;
 }
 
+interface ApiResponse {
+    api_key: string;
+    jwt_secret: string;
+}
+
 interface ApiKeyPopupProps {
     isOpen: boolean;
     onClose: () => void;
 }
 
 // API 키 생성 함수
-const generateApiKey = async (userData: FormData): Promise<string> => {
-    // 실제 구현에서는 서버에 요청을 보내 API 키를 발급받아야 합니다.
-    // 여기서는 예시로 랜덤 API 키를 생성합니다.
+const generateApiKey = async (userData: FormData): Promise<ApiResponse> => {
+    try {
+        // 백엔드에 POST 요청 보내기
+        const response = await fetch('http://192.168.0.243:8001/issue-key', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                user_name: userData.name
+            }),
+        });
 
-    // 서버 요청을 시뮬레이션하기 위한 지연
-    await new Promise(resolve => setTimeout(resolve, 1000));
+        if (!response.ok) {
+            throw new Error('API 키 생성 요청에 실패했습니다.');
+        }
 
-    // 랜덤 API 키 생성 (실제로는 서버에서 생성해야 함)
-    const randomKey = Array.from(
-        { length: 32 },
-        () => Math.floor(Math.random() * 36).toString(36)
-    ).join('');
-
-    // API 키 형식 포맷팅 (일반적인 포맷)
-    const formattedKey = `api_${randomKey.substring(0, 8)}_${randomKey.substring(8, 16)}_${randomKey.substring(16, 24)}_${randomKey.substring(24, 32)}`;
-
-    return formattedKey;
+        // 응답 데이터 반환
+        return await response.json();
+    } catch (error) {
+        console.error('API 키 생성 오류:', error);
+        throw error;
+    }
 };
 
 // 스타일 컴포넌트 정의
@@ -233,6 +244,7 @@ const StyledWrapper = styled.div`
         display: flex;
         align-items: center;
         justify-content: space-between;
+        margin-bottom: 10px;
     }
 
     .api-key-box code {
@@ -288,7 +300,7 @@ const ApiKeyPopup: React.FC<ApiKeyPopupProps> = ({ isOpen, onClose }) => {
         email: '',
         reason: ''
     });
-    const [apiKey, setApiKey] = useState<string | null>(null);
+    const [apiResponse, setApiResponse] = useState<ApiResponse | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -310,8 +322,8 @@ const ApiKeyPopup: React.FC<ApiKeyPopupProps> = ({ isOpen, onClose }) => {
 
         try {
             // API 키 생성 함수 호출
-            const key = await generateApiKey(formData);
-            setApiKey(key);
+            const response = await generateApiKey(formData);
+            setApiResponse(response);
         } catch (error) {
             console.error('API 키 생성 오류:', error);
         } finally {
@@ -319,11 +331,9 @@ const ApiKeyPopup: React.FC<ApiKeyPopupProps> = ({ isOpen, onClose }) => {
         }
     };
 
-    const handleCopy = () => {
-        if (apiKey) {
-            navigator.clipboard.writeText(apiKey);
-            alert('API 키가 클립보드에 복사되었습니다.');
-        }
+    const handleCopy = (text: string) => {
+        navigator.clipboard.writeText(text);
+        alert('클립보드에 복사되었습니다.');
     };
 
     const handleReset = () => {
@@ -332,7 +342,7 @@ const ApiKeyPopup: React.FC<ApiKeyPopupProps> = ({ isOpen, onClose }) => {
             email: '',
             reason: ''
         });
-        setApiKey(null);
+        setApiResponse(null);
     };
 
     // 팝업창 닫기 함수 - 상태 초기화 추가
@@ -343,7 +353,7 @@ const ApiKeyPopup: React.FC<ApiKeyPopupProps> = ({ isOpen, onClose }) => {
             email: '',
             reason: ''
         });
-        setApiKey(null);
+        setApiResponse(null);
         // 부모 컴포넌트의 onClose 함수 호출
         onClose();
     };
@@ -385,14 +395,14 @@ const ApiKeyPopup: React.FC<ApiKeyPopupProps> = ({ isOpen, onClose }) => {
 
                     <label>
                         <span style={{color: 'grey'}}>제품 사용 사유</span>
-            <textarea
-                required
-                placeholder=""
-                name="reason"
-                className="input reason"
-                value={formData.reason}
-                onChange={handleChange}
-            />
+                        <textarea
+                            required
+                            placeholder=""
+                            name="reason"
+                            className="input reason"
+                            value={formData.reason}
+                            onChange={handleChange}
+                        />
                     </label>
 
                     <button
@@ -403,15 +413,32 @@ const ApiKeyPopup: React.FC<ApiKeyPopupProps> = ({ isOpen, onClose }) => {
                         {isLoading ? '처리 중...' : 'API 키 발급받기'}
                     </button>
 
-                    {apiKey && (
+                    {apiResponse && (
                         <div className="api-key-container">
                             <p className="api-key-label">발급된 API 키</p>
                             <div className="api-key-box">
-                                <code>{apiKey}</code>
-                                <button type="button" className="copy-button" onClick={handleCopy}>
+                                <code>{apiResponse.api_key}</code>
+                                <button
+                                    type="button"
+                                    className="copy-button"
+                                    onClick={() => handleCopy(apiResponse.api_key)}
+                                >
                                     복사
                                 </button>
                             </div>
+
+                            <p className="api-key-label">JWT Secret</p>
+                            <div className="api-key-box">
+                                <code>{apiResponse.jwt_secret}</code>
+                                <button
+                                    type="button"
+                                    className="copy-button"
+                                    onClick={() => handleCopy(apiResponse.jwt_secret)}
+                                >
+                                    복사
+                                </button>
+                            </div>
+
                             <p className="api-key-notice">
                                 * 이 키는 다시 표시되지 않습니다. 안전한 곳에 보관하세요.
                             </p>
