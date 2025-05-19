@@ -231,25 +231,28 @@ const StyledWrapper = styled.div`
     .api-key-label {
         font-weight: 600;
         margin: 0;
+        color: #111111;
     }
 
-    .api-key-box {
-        background-color: #f5f5f5;
-        border: 1px solid #ddd;
-        border-radius: 10px;
-        padding: 15px;
-        position: relative;
-        word-break: break-all;
-        font-family: monospace;
+    .api-key-container {
         display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 10px;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 10px;
     }
 
-    .api-key-box code {
-        color: #0066cc; /* API 키 글자 색상 - 파란색으로 변경 */
-        font-weight: 500;
+    .api-key-label {
+        font-weight: 600;
+        margin: 0;
+        color: #111111 !important; /* 중요도 증가 */
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 5px;
+    }
+
+    .api-key-label span {
+        color: #111111 !important; /* 명시적으로 span 요소에 색상 지정 */
     }
 
     .copy-button {
@@ -259,8 +262,30 @@ const StyledWrapper = styled.div`
         padding: 5px 10px;
         border-radius: 5px;
         cursor: pointer;
-        margin-left: 10px;
         font-size: 12px;
+        height: 30px;
+        flex-shrink: 0; /* 크기 고정 */
+    }
+
+    .copy-button:hover {
+        background-color: rgb(56, 90, 194);
+    }
+
+    .api-key-box {
+        background-color: #f5f5f5;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        padding: 15px;
+        font-family: monospace;
+        overflow-x: auto; /* 가로 스크롤 추가 */
+        white-space: nowrap; /* 텍스트가 줄바꿈되지 않도록 설정 */
+        margin-bottom: 15px;
+    }
+
+    .api-key-box code {
+        color: #0066cc; /* API 키 글자 색상 - 파란색으로 변경 */
+        font-weight: 500;
+        overflow-x: visible; /* 코드 내용이 넘쳐도 숨기지 않음 */
     }
 
     .copy-button:hover {
@@ -269,7 +294,7 @@ const StyledWrapper = styled.div`
 
     .api-key-notice {
         color: #e74c3c;
-        font-size: 12px;
+        font-size: 14px;
         margin: 5px 0;
     }
 
@@ -324,6 +349,13 @@ const ApiKeyPopup: React.FC<ApiKeyPopupProps> = ({ isOpen, onClose }) => {
             // API 키 생성 함수 호출
             const response = await generateApiKey(formData);
             setApiResponse(response);
+
+            // 응답을 받으면 폼 필드를 숨기고 API 키 결과만 표시
+            setFormData({
+                name: '',
+                email: '',
+                reason: ''
+            });
         } catch (error) {
             console.error('API 키 생성 오류:', error);
         } finally {
@@ -367,57 +399,58 @@ const ApiKeyPopup: React.FC<ApiKeyPopupProps> = ({ isOpen, onClose }) => {
                     <p className="title">API 키 발급</p>
                     <p className="message">서비스 이용을 위한 API 키를 발급받으세요.</p>
 
-                    <label>
-                        <input
-                            required
-                            placeholder=""
-                            type="text"
-                            name="name"
-                            className="input"
-                            value={formData.name}
-                            onChange={handleChange}
-                        />
-                        <span>이름</span>
-                    </label>
+                    {!apiResponse ? (
+                        <>
+                            <label>
+                                <input
+                                    required
+                                    placeholder=""
+                                    type="text"
+                                    name="name"
+                                    className="input"
+                                    value={formData.name}
+                                    onChange={handleChange}
+                                />
+                                <span>이름</span>
+                            </label>
 
-                    <label>
-                        <input
-                            required
-                            placeholder=""
-                            type="email"
-                            name="email"
-                            className="input"
-                            value={formData.email}
-                            onChange={handleChange}
-                        />
-                        <span>이메일</span>
-                    </label>
+                            <label>
+                                <input
+                                    required
+                                    placeholder=""
+                                    type="email"
+                                    name="email"
+                                    className="input"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                />
+                                <span>이메일</span>
+                            </label>
 
-                    <label>
-                        <span style={{color: 'grey'}}>제품 사용 사유</span>
-                        <textarea
-                            required
-                            placeholder=""
-                            name="reason"
-                            className="input reason"
-                            value={formData.reason}
-                            onChange={handleChange}
-                        />
-                    </label>
+                            <label>
+                                <span style={{color: 'grey'}}>제품 사용 사유</span>
+                                <textarea
+                                    required
+                                    placeholder=""
+                                    name="reason"
+                                    className="input reason"
+                                    value={formData.reason}
+                                    onChange={handleChange}
+                                />
+                            </label>
 
-                    <button
-                        className="submit"
-                        type="submit"
-                        disabled={isLoading}
-                    >
-                        {isLoading ? '처리 중...' : 'API 키 발급받기'}
-                    </button>
-
-                    {apiResponse && (
+                            <button
+                                className="submit"
+                                type="submit"
+                                disabled={isLoading}
+                            >
+                                {isLoading ? '처리 중...' : 'API 키 발급받기'}
+                            </button>
+                        </>
+                    ) : (
                         <div className="api-key-container">
-                            <p className="api-key-label">발급된 API 키</p>
-                            <div className="api-key-box">
-                                <code>{apiResponse.api_key}</code>
+                            <div className="api-key-label">
+                                <span style={{color: '#111111'}}>발급된 API 키</span>
                                 <button
                                     type="button"
                                     className="copy-button"
@@ -426,10 +459,12 @@ const ApiKeyPopup: React.FC<ApiKeyPopupProps> = ({ isOpen, onClose }) => {
                                     복사
                                 </button>
                             </div>
-
-                            <p className="api-key-label">JWT Secret</p>
                             <div className="api-key-box">
-                                <code>{apiResponse.jwt_secret}</code>
+                                <code>{apiResponse.api_key}</code>
+                            </div>
+
+                            <div className="api-key-label">
+                                <span style={{color: '#111111'}}>JWT Secret</span>
                                 <button
                                     type="button"
                                     className="copy-button"
@@ -437,6 +472,9 @@ const ApiKeyPopup: React.FC<ApiKeyPopupProps> = ({ isOpen, onClose }) => {
                                 >
                                     복사
                                 </button>
+                            </div>
+                            <div className="api-key-box">
+                                <code>{apiResponse.jwt_secret}</code>
                             </div>
 
                             <p className="api-key-notice">
