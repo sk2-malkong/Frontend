@@ -78,7 +78,39 @@ const routes: RouteObject[] = [
   {
     path: "/developers",
     element: <PdMain/>
+  },
+
+  {
+    path: "/docs",
+    element: <DocsLayout />,
+    children: [
+      {
+        path: "start",
+        element: <StartPage />
+      },
+      {
+        path: "faq",
+        element: <FAQPage />
+      },
+      {
+        path: "auth",
+        element: <AuthPage />
+      },
+      {
+        path: "jwthash",
+        element: <JwthashPage />
+      },
+      {
+        path: "request",
+        element: <RequestPage />
+      },
+      {
+        path: "security",
+        element: <SecurityPage />
+      },
+    ]
   }
+
 ];
 
 const router = createBrowserRouter(routes);
