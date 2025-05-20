@@ -54,6 +54,9 @@ export const MainContent = styled.div`
   overflow-y: auto;
   background-color: white;
   color: black;
+  
+  max-width: 860px;
+  margin: 0 auto;
 
   h1, h2, h3, h4, h5, h6,
   p, li, strong, em, a,
@@ -149,22 +152,30 @@ export const MainContent = styled.div`
     color: #0056b3;
   }
 
-  code {
-  background-color: #f6f8fa;
-  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
-  padding: 0.2em 0.4em;
-  margin: 0;
-  font-size: 85%;
-  border-radius: 6px;
-  color: #e83e8c;
+  pre, pre code, code, pre > code {
+  font-family: 'Source Code Pro', 'Consolas', 'Courier New', monospace !important;
   }
 
-  pre code {
-  background-color: transparent;
+  pre {
+  margin: 0;
   padding: 0;
-  font-size: 0.95rem;
-  color: inherit;
+  background: none;
+  border: none;
+}
+
+  pre > code {
+  all: unset; /* 완전 초기화 */
   }
+
+
+  code {
+  background-color: #f6f8fa;
+  color: #e83e8c;
+  padding: 0.2em 0.4em;
+  font-size: 0.95rem;
+  border-radius: 4px;
+  }
+
 `;
 
 export const FAQWrapper = styled.div`
