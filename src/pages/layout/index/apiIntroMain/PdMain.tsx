@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // ✅ 추가
+import { useNavigate } from 'react-router-dom';
 import S from "./style";
-import banerTitleImg from './banertitle.png';
+import banerTitleImg from './Group 3696.svg';
 import LockIcon from "../ActionIcons/LockIcon/LockIcon";
 import FileIcon from "../ActionIcons/FileIcon/FileIcon";
 import PrinterIcon from "../ActionIcons/PrinterIcon/PrinterIcon";
 import ApiKeyPopup from "../_component/ApiKeyPopup";
-import Header from "../_component/Header/Header"; // Import the new Header component
+import Header from "../_component/Header/Header";
 
 /**
  * PdMain 컴포넌트 - 메인 페이지의 레이아웃과 기능을 구현한 컴포넌트
@@ -34,30 +34,38 @@ const PdMain: React.FC = () => {
 };
 
 /**
- * MainBanner 컴포넌트
+ * MainBanner 컴포넌트 - style.ts에서 가져온 StyledBanner를 사용
  */
 const MainBanner = () => (
-    <S.Overlap>
-        <S.OverlayEffect className="overlay-1" />
-        <S.InnerDiv2>
-            <S.Group2 className="group2">
-                <S.ImageWrapper className="image-wrapper">
-                    <S.Image
-                        src={banerTitleImg}
-                        alt="비속어 필터링 서비스"
-                        className="small"
-                    />
-                </S.ImageWrapper>
-                <S.TextWrapper>
-                    비속어 필터링 서비스 개발자센터에 오신 것을 환영합니다.
-                </S.TextWrapper>
-                <S.P className="text-p">
-                    새로운 기회와 가치를 함께 만들어봐요.
-                </S.P>
-            </S.Group2>
-            <PrinterIcon />
-        </S.InnerDiv2>
-    </S.Overlap>
+    <S.StyledBanner>
+        <div className="card">
+            <div className="wave" />
+            <div className="wave" />
+            <div className="wave" />
+            <div className="info-top">
+                <S.InnerDiv2>
+                    <S.Group2 className="group2">
+                        <S.ContentContainer>
+                            <S.ImageWrapper className="image-wrapper">
+                                <S.Image
+                                    src={banerTitleImg}
+                                    alt="비속어 필터링 서비스"
+                                    className="small"
+                                />
+                            </S.ImageWrapper>
+                            <S.TextWrapper>
+                                비속어 필터링 서비스 개발자센터에 오신 것을 환영합니다.
+                            </S.TextWrapper>
+                            <S.P className="text-p">
+                                새로운 기회와 가치를 함께 만들어봐요.
+                            </S.P>
+                        </S.ContentContainer>
+                    </S.Group2>
+                    <PrinterIcon />
+                </S.InnerDiv2>
+            </div>
+        </div>
+    </S.StyledBanner>
 );
 
 /**
@@ -102,14 +110,14 @@ const ProductIntroSection = () => {
  */
 const ApiKeyIntroSection = () => {
     const [isHovered, setIsHovered] = useState(false);
-    const navigate = useNavigate(); // ✅ 내비게이터 사용
+    const navigate = useNavigate();
 
     return (
         <S.Overlap2
-            onClick={() => navigate("/docs/start")} // ✅ 클릭 시 이동
+            onClick={() => navigate("/docs/start")}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
-            style={{ cursor: "pointer" }} // ✅ 커서 변경
+            style={{ cursor: "pointer" }}
         >
             <S.OverlayEffect className="overlay-3" />
             <S.TitleContainer>
