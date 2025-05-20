@@ -77,9 +77,9 @@ const S = {
 
         /* Overlap3에 호버시 자물쇠 고리 색상 변경 */
         .hover-active & {
-            border-top: 3px solid #FFF100;
-            border-left: 3px solid #FFF100;
-            border-right: 3px solid #FFF100;
+            border-top: 3px solid #4E71FF;
+            border-left: 3px solid #4E71FF;
+            border-right: 3px solid #4E71FF;
         }
     `,
 

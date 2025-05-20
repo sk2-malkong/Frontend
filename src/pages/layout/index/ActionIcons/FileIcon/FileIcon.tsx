@@ -58,7 +58,7 @@ const S = {
         position: relative;
 
         .overlay-3:hover & {
-            background-color: #024CAA; // amber-600 호버 시 색상 #d97706
+            background-color: #4E71FF; // amber-600 호버 시 색상 #d97706
         }
 
         &::after {
@@ -73,7 +73,7 @@ const S = {
             border-top-right-radius: ${pxToRem(16)}; // 상단 모서리 둥글게
 
             .overlay-3:hover & {
-                background-color: #024CAA; // amber-600 호버 시 색상
+                background-color: #4E71FF; // amber-600 호버 시 색상
             }
         }
 
@@ -88,7 +88,7 @@ const S = {
             clip-path: polygon(0 35%, 0% 100%, 50% 100%);
 
             .overlay-3:hover & {
-                background-color: #024CAA; // amber-600 호버 시 색상
+                background-color: #4E71FF; // amber-600 호버 시 색상
             }
         }
     `,
@@ -166,9 +166,9 @@ const S = {
         align-items: flex-end;
 
         .overlay-3:hover & {
-            background: linear-gradient(to top, #5409DA, #4E71FF); // amber-500에서 amber-400 그라디언트 호버 시 색상 f59e0b, #fbbf24
+            background: linear-gradient(to top, #4E71FF, #8DD8FF); // amber-500에서 amber-400 그라디언트 호버 시 색상 f59e0b, #fbbf24
             transform: rotateX(-46deg) translateY(${pxToRem(1)});
-            box-shadow: inset 0 ${pxToRem(20)} ${pxToRem(40)} #4E71FF, inset 0 ${pxToRem(-20)} ${pxToRem(40)} #5409DA;
+            box-shadow: inset 0 ${pxToRem(20)} ${pxToRem(40)} #8DD8FF, inset 0 ${pxToRem(-20)} ${pxToRem(40)} #4E71FF;
         }
 
         &::after {

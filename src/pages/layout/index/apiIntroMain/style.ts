@@ -1,3 +1,5 @@
+// style.ts 파일 수정
+
 import styled from "styled-components";
 
 /**
@@ -153,20 +155,14 @@ const S = {
 
     /**
      * 첫 번째 오버랩 영역 컴포넌트
-     * 호버시 오버레이 효과가 나타나는 영역입니다.
+     * 물결 효과로 대체되었습니다.
      */
     Overlap: styled.div`
         background-color: ${overlapColors.primary.base};
         flex: 0 0 50%;
         position: relative;
         width: 100%;
-        overflow: hidden; /* 오버레이가 넘치지 않도록 설정 */
-        transition: background-color 0.3s ease;
-        cursor: pointer;
-
-        &:hover .overlay-1 {
-            transform: translate(-50%, -50%) scale(40);
-        }
+        overflow: hidden;
     `,
 
     /**
@@ -202,13 +198,13 @@ const S = {
         /* 호버 시 자물쇠 색상 변경을 위한 클래스 */
 
         &.hover-active .shackle {
-            border-top: 3px solid #5409DA !important;
-            border-left: 3px solid #5409da !important;
-            border-right: 3px solid #5409DA !important;
+            border-top: 3px solid #4E71FF !important;
+            border-left: 3px solid #4E71FF !important;
+            border-right: 3px solid #4E71FF !important;
         }
 
         &.hover-active path {
-            fill: #5409DA !important;
+            fill: #4E71FF !important;
         }
     `,
 
@@ -228,10 +224,11 @@ const S = {
         transition: background-color 0.3s ease;
 
         /* 오버레이 호버 시 파일 아이콘 색상도 변경됩니다 - 클래스 연결 */
+
         &:hover .work-file-5,
         &:hover .work-file-5::after,
         &:hover .work-file-5::before {
-            background-color: #5409DA; /* amber-600 색상 */
+            background-color: #4E71FF; /* amber-600 색상 */
         }
 
         &:hover .work-file-4 {
@@ -250,9 +247,9 @@ const S = {
         }
 
         &:hover .work-file-1 {
-            background: linear-gradient(to top, #5409DA, #4E71FF); /* amber-500에서 amber-400 그라디언트 */
+            background: linear-gradient(to top, #4E71FF, #4765e8); /* amber-500에서 amber-400 그라디언트 */
             transform: rotateX(-46deg) translateY(${pxToRem(1)});
-            box-shadow: inset 0 ${pxToRem(20)} ${pxToRem(40)} #4E71FF, inset 0 ${pxToRem(-20)} ${pxToRem(40)} #5409DA;
+            box-shadow: inset 0 ${pxToRem(20)} ${pxToRem(40)} #4E71FF, inset 0 ${pxToRem(-20)} ${pxToRem(40)} #4765e8;
         }
 
         &:hover .work-file-1::after {
@@ -268,6 +265,7 @@ const S = {
         }
 
         /* 호버 시 텍스트 색상 변경 */
+
         &:hover .hover-title {
             color: #111111;
         }
@@ -293,7 +291,7 @@ const S = {
      * 흰색 텍스트를 렌더링합니다.
      */
     TextWrapper: styled.p`
-        color: #64676A;
+        color: #ffffff;
         font-family: "Pretendard-Medium", Helvetica;
         font-size: ${pxToRem(16)};
         font-weight: 500;
@@ -303,7 +301,7 @@ const S = {
         z-index: 1;
 
         @media (max-width: 768px) {
-            font-size: ${pxToRem(20)};
+            font-size: ${pxToRem(14)};
             line-height: ${pxToRem(28)};
         }
     `,
@@ -313,18 +311,17 @@ const S = {
      * 상단 여백이 있는 흰색 텍스트입니다.
      */
     P: styled.p`
-        color: #64676A;
+        color: #ffffff;
         font-family: "Pretendard-Medium", Helvetica;
         font-size: ${pxToRem(16)};
         font-weight: 500;
         letter-spacing: ${pxToRem(-0.60)};
         line-height: ${pxToRem(31.9)};
-        margin-top: ${pxToRem(-10)};
         white-space: normal; /* 텍스트 줄바꿈 허용 */
         z-index: 1;
 
         @media (max-width: 768px) {
-            font-size: ${pxToRem(20)};
+            font-size: ${pxToRem(14)};
             line-height: ${pxToRem(28)};
         }
     `,
@@ -491,6 +488,119 @@ const S = {
 
         &:hover .hover-title {
             color: #111111;
+        }
+    `,
+
+    /**
+     * 물결 효과가 적용된 배너 컴포넌트
+     * 개선된 Card 컴포넌트의 물결 애니메이션을 적용합니다.
+     */
+    StyledBanner: styled.div`
+        /* 배너 크기 변수 설정 */
+        --card-width: ${pxToRem(1800)};
+        --card-height: ${pxToRem(800)};
+
+        /* 웨이브 크기 계산 - 배너 너비 기준으로 설정 */
+        --wave-width: calc(2.25 * var(--card-width));
+        --wave-height: calc(2.92 * var(--card-width));
+
+        position: relative;
+        width: 100%;
+        height: 100%;
+        flex: 0 0 50%;
+        background-color: ${overlapColors.primary.base};
+
+        .card {
+            background: transparent;
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .wave {
+            position: absolute;
+            width: var(--wave-width);
+            height: var(--wave-height);
+            opacity: 0.6;
+            left: 0;
+            top: 0;
+            margin-left: -50%;
+            margin-top: calc(-0.292 * var(--card-width));
+            background: linear-gradient(744deg, #4E71FF, #8DD8FF 60%, #BBFBFF);
+            border-radius: 40%;
+            //50
+            animation: wave 30s infinite linear;  
+            z-index: 0;
+        }
+
+        .wave:nth-child(2),
+        .wave:nth-child(3) {
+            top: calc(0.525 * var(--card-height));
+        }
+
+        .playing .wave {
+            animation-duration: 3000ms;
+        }
+
+        .playing .wave:nth-child(2) {
+            animation-duration: 4000ms;
+        }
+
+        .wave:nth-child(2) {
+            animation-duration: 30s;
+        }
+
+        .playing .wave:nth-child(3) {
+            animation-duration: 5000ms;
+        }
+
+        .wave:nth-child(3) {
+            animation-duration: 25s;
+        }
+
+        @keyframes wave {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .info-top {
+            text-align: center;
+            position: absolute;
+            top: calc(0.17 * var(--card-height));
+            left: 0;
+            right: 0;
+            color: rgb(255, 255, 255);
+            font-weight: 600;
+            z-index: 1;
+        }
+    `,
+    ContentContainer: styled.div`
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start; /* 왼쪽 정렬 */
+        text-align: left;
+        width: 100%;
+        z-index: 1;
+        margin-top: ${pxToRem(-70)};
+
+        /* 클래스 이름을 사용한 선택자로 변경 */
+        .image-wrapper {
+            margin-bottom: ${pxToRem(10)};
+        }
+
+        /* 직접 스타일을 적용하는 방식으로 변경 */
+        p {
+            margin-bottom: ${pxToRem(-8)};
+        }
+
+        /* text-p 클래스를 가진 요소의 마진 제거 */
+        .text-p {
+            margin-top: 0;
         }
     `,
 };
