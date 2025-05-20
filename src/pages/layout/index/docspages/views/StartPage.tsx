@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
+import MarkdownRenderer from "../components/MarkdownRenderer"; // ✅ 커스텀 렌더러 import
 import * as S from "../DocsStyle";
 
 const StartPage: React.FC = () => {
   const [content, setContent] = useState<string>("");
 
   useEffect(() => {
-    fetch("/docs/start.md") // ✅ public/docs/start.md 파일에서 내용 불러오기
+    fetch("/docs/start.md")
       .then((res) => res.text())
       .then((text) => setContent(text))
       .catch(() =>
@@ -17,9 +16,7 @@ const StartPage: React.FC = () => {
 
   return (
     <S.MainContent>
-      <ReactMarkdown remarkPlugins={[remarkGfm]}>
-        {content}
-      </ReactMarkdown>
+      <MarkdownRenderer content={content} />
     </S.MainContent>
   );
 };
