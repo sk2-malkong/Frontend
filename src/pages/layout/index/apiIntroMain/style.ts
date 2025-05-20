@@ -202,13 +202,13 @@ const S = {
         /* 호버 시 자물쇠 색상 변경을 위한 클래스 */
 
         &.hover-active .shackle {
-            border-top: 3px solid #5409DA !important;
-            border-left: 3px solid #5409da !important;
-            border-right: 3px solid #5409DA !important;
+            border-top: 3px solid #4E71FF !important;
+            border-left: 3px solid #4E71FF !important;
+            border-right: 3px solid #4E71FF !important;
         }
 
         &.hover-active path {
-            fill: #5409DA !important;
+            fill: #4E71FF !important;
         }
     `,
 
@@ -228,10 +228,11 @@ const S = {
         transition: background-color 0.3s ease;
 
         /* 오버레이 호버 시 파일 아이콘 색상도 변경됩니다 - 클래스 연결 */
+
         &:hover .work-file-5,
         &:hover .work-file-5::after,
         &:hover .work-file-5::before {
-            background-color: #5409DA; /* amber-600 색상 */
+            background-color: #4E71FF; /* amber-600 색상 */
         }
 
         &:hover .work-file-4 {
@@ -250,9 +251,9 @@ const S = {
         }
 
         &:hover .work-file-1 {
-            background: linear-gradient(to top, #5409DA, #4E71FF); /* amber-500에서 amber-400 그라디언트 */
+            background: linear-gradient(to top, #4E71FF, #4765e8); /* amber-500에서 amber-400 그라디언트 */
             transform: rotateX(-46deg) translateY(${pxToRem(1)});
-            box-shadow: inset 0 ${pxToRem(20)} ${pxToRem(40)} #4E71FF, inset 0 ${pxToRem(-20)} ${pxToRem(40)} #5409DA;
+            box-shadow: inset 0 ${pxToRem(20)} ${pxToRem(40)} #4E71FF, inset 0 ${pxToRem(-20)} ${pxToRem(40)} #4765e8;
         }
 
         &:hover .work-file-1::after {
@@ -268,6 +269,7 @@ const S = {
         }
 
         /* 호버 시 텍스트 색상 변경 */
+
         &:hover .hover-title {
             color: #111111;
         }
