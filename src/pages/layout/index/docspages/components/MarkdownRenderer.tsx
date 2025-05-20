@@ -1,41 +1,12 @@
+/* eslint-disable react/prop-types */
 import React from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { ComponentProps, useState } from "react";
-import { Element } from "hast";
-import { PrismLight as SyntaxHighlighter } from "react-syntax-highlighter";
-import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
-import js from "react-syntax-highlighter/dist/esm/languages/prism/javascript";
-import ts from "react-syntax-highlighter/dist/esm/languages/prism/typescript";
-import python from "react-syntax-highlighter/dist/esm/languages/prism/python";
-import java from "react-syntax-highlighter/dist/esm/languages/prism/java";
-import bash from "react-syntax-highlighter/dist/esm/languages/prism/bash";
-
-// 언어 등록
-SyntaxHighlighter.registerLanguage("js", js);
-SyntaxHighlighter.registerLanguage("javascript", js);
-SyntaxHighlighter.registerLanguage("ts", ts);
-SyntaxHighlighter.registerLanguage("typescript", ts);
-SyntaxHighlighter.registerLanguage("python", python);
-SyntaxHighlighter.registerLanguage("java", java);
-SyntaxHighlighter.registerLanguage("bash", bash);
+import CopyButton from "../components/CopyButton";
+import styled from "styled-components";
 
 interface MarkdownRendererProps {
   content: string;
-}
-
-interface CodeProps extends ComponentProps<"code"> {
-  inline?: boolean;
-  children?: React.ReactNode;
-  node?: Element & {
-    position?: {
-      start: { line: number };
-      end: { line: number };
-    };
-    properties?: {
-      className?: string;
-    };
-  };
 }
 
 const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) => {
@@ -43,32 +14,14 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) => {
     <ReactMarkdown
       remarkPlugins={[remarkGfm]}
       components={{
-        code({ inline, children, className, node, ...props }: CodeProps) {
+        code: (props) => {
+          const { children, className } = props;
           const codeText = String(children).trim();
-          const isMultiline =
-            !!node?.position && node.position.end.line > node.position.start.line;
+          const language = className?.replace("language-", "") ?? "";
+          const isBlock = !!className || codeText.includes("\n");
 
-          const langMatch = className?.match(/language-(\w+)/);
-          const language = langMatch ? langMatch[1].toLowerCase() : "text";
-
-          if (!isMultiline) {
-            return (
-              <code
-                style={{
-                  backgroundColor: "#f0f0f0",
-                  color: "#e83e8c",
-                  fontFamily:
-                    "'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace",
-                  padding: "0.2em 0.4em",
-                  fontSize: "1rem",
-                  borderRadius: "4px",
-                  letterSpacing: "0.05em",
-                }}
-                {...props}
-              >
-                {children}
-              </code>
-            );
+          if (!isBlock) {
+            return <code>{codeText}</code>;
           }
 
           return <CodeBlock codeText={codeText} language={language} />;
@@ -82,64 +35,31 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) => {
 
 export default MarkdownRenderer;
 
-// ✅ 복사 상태를 CodeBlock 내부에서 관리
-const CodeBlock = ({
-  codeText,
-  language,
-}: {
-  codeText: string;
-  language: string;
-}) => {
-  const [copied, setCopied] = useState(false);
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(codeText).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    });
-  };
-
+const CodeBlock = ({ codeText, language }: { codeText: string; language: string }) => {
   return (
-    <div style={{ position: "relative", marginBottom: "1.5rem" }}>
-      <SyntaxHighlighter
-        language={language}
-        style={vscDarkPlus}
-        customStyle={{
-          borderRadius: "8px",
-          padding: "1.5rem",
-          fontSize: "0.95rem",
-          lineHeight: "1.8",
-          letterSpacing: "0.05em",
-          backgroundColor: "#1e2a38",
-          fontFamily:
-            "'Fira Code', 'Consolas', 'Liberation Mono', Menlo, monospace",
-        }}
-        codeTagProps={{
-          style: {
-            fontSize: "0.95rem",
-            letterSpacing: "0.05em",
-          },
-        }}
-      >
-        {codeText}
-      </SyntaxHighlighter>
-      <button
-        onClick={handleCopy}
-        style={{
-          position: "absolute",
-          top: "8px",
-          right: "12px",
-          padding: "4px 8px",
-          fontSize: "12px",
-          backgroundColor: copied ? "#38a169" : "#2b6cb0",
-          color: "white",
-          border: "none",
-          borderRadius: "4px",
-          cursor: "pointer",
-        }}
-      >
-        {copied ? "복사됨!" : "복사"}
-      </button>
-    </div>
+    <Wrapper>
+      <CopyButton text={codeText} />
+      <code className={`language-${language}`}>{codeText}</code>
+    </Wrapper>
   );
 };
+
+const Wrapper = styled.div`
+  position: relative;
+  margin: 1.5rem 0;
+  background-color: #f5f7fa;
+  padding: 1rem;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-family: 'Source Code Pro', 'Consolas', 'Courier New', monospace;
+  overflow-x: auto;
+
+  code {
+    display: block;
+    white-space: pre;
+    background: none;
+    color: #2d2d2d;
+    padding: 0;
+    margin: 0;
+  }
+`;
