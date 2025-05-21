@@ -89,7 +89,7 @@ const Main: React.FC = () => {
               {posts.map(post => (
                 <tr
                   key={post.postId}
-                  onClick={() => navigate(`/post/${post.postId}`)}
+                  onClick={() => navigate(`/post/post/${post.postId}`)}
                   style={{ cursor: 'pointer' }}
                 >
                   <S.Td>{post.postId}</S.Td>
@@ -152,7 +152,7 @@ const Main: React.FC = () => {
           <S.ButtonGroup>
             <S.Button
               onClick={() => {
-                if (isLoggedIn) navigate('/postcreate');
+                if (isLoggedIn) navigate('/post/postcreate');
                 else {
                   alert('로그인이 필요합니다.');
                   navigate('/login');
@@ -163,7 +163,7 @@ const Main: React.FC = () => {
             </S.Button>
             <S.Button
               onClick={() => {
-                if (isLoggedIn) navigate('/mypage');
+                if (isLoggedIn) navigate('/post/mypage');
                 else {
                   alert('로그인이 필요합니다.');
                   navigate('/login');

@@ -16,7 +16,7 @@ const Header: React.FC<HeaderProps> = ({ openPopup }) => {
   return (
     <S.HeaderContainer>
       <S.HeaderInner>
-        <S.LogoContainer onClick={() => navigate("/developers")} style={{ cursor: "pointer" }}>
+        <S.LogoContainer onClick={() => navigate("/")} style={{ cursor: "pointer" }}>
           <S.LogoText>PURGO</S.LogoText>
         </S.LogoContainer>
         <S.ButtonContainer>
