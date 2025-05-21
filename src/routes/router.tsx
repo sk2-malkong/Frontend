@@ -22,6 +22,7 @@ import AuthPage from "../pages/layout/index/docspages/views/AuthPage";
 import JwthashPage from "../pages/layout/index/docspages/views/Jwthash";
 import RequestPage from "../pages/layout/index/docspages/views/Request";
 import SecurityPage from "../pages/layout/index/docspages/views/Security";
+import DetailPage from 'src/pages/layout/index/detailpage/DetailPage';
 
 
 const routes: RouteObject[] = [
@@ -87,7 +88,10 @@ const routes: RouteObject[] = [
     path: "/developers",
     element: <PdMain/>
   },
-
+  {
+    path : "/detail",
+    element : <DetailPage/>
+  },
   {
     path: "/docs",
     element: <DocsLayout />,
