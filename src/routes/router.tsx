@@ -27,43 +27,38 @@ import DetailPage from 'src/pages/layout/index/detailpage/DetailPage';
 const routes: RouteObject[] = [
   {
     path: "/",
-    element: <PdMain />,  // 루트 경로에 PdMain 컴포넌트 직접 배치
-    index: true,
-  },
-  {
-    path: "/layout",  // 기존 루트 경로를 /layout으로 변경
     element: <Layout/>,
     children: [
       {
-        path: '/layout/main',
+        path: '/main',
         element: <MainContainer/>
       },
       {
-        path: '/layout/mypage',
+        path: '/mypage',
         element: <MyPageContainer/>
       },
       {
-        path: "/layout/profilefix",
+        path: "/profilefix",
         element: <ProfileFixContainer/>
       },
       {
-        path: '/layout/limitlog',
+        path: '/limitlog',
         element: <LimitationLogContainer/>
       },
       {
-        path: '/layout/postcreate',
+        path: '/postcreate',
         element: <PostCreateContainer/>
       },
       {
-        path: '/layout/post/:id',
+        path: '/post/:id',
         element: <PostDetailContainer/>
       },
       {
-        path: '/layout/edit/:id',
+        path: '/edit/:id',
         element: <PostEditContainer />
       },
       {
-        path: '/layout/search',
+        path: '/search',
         element: <Search/>
       }
     ]
@@ -84,7 +79,10 @@ const routes: RouteObject[] = [
     path: "/findpassword",
     element: <FindPasswordContainer/>
   },
-  // "/developers" 경로는 제거 (이미 루트 경로에 설정됨)
+  {
+    path: "/developers",
+    element: <PdMain/>
+  },
   {
     path : "/detail",
     element : <DetailPage/>
@@ -118,12 +116,8 @@ const routes: RouteObject[] = [
         element: <SecurityPage />
       },
     ]
-  },
-  // 원래 경로로도 접근할 수 있도록 유지 (선택 사항)
-  {
-    path: "/developers",
-    element: <PdMain/>
   }
+
 ];
 
 const router = createBrowserRouter(routes);

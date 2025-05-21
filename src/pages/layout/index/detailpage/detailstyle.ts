@@ -85,8 +85,8 @@ export const Background = styled.section<{
   &::before {
     content: '';
     position: absolute;
-    width: 3000px;
-    height: 3000px;
+    width: 100000px;
+    height: 100000px;
     background: #ffd700;
     border-radius: 50%;
     transform: translate(-50%, -50%) scale(0);
@@ -247,6 +247,8 @@ export const TopCenterDrop = styled(Drop)`
   top: 0;
   left: 50%;
   transform: translate(-50%, -20%);
+  transition: transform 0.5s ease-in-out, box-shadow 0.5s ease-in-out;
+  filter: blur(8px);
   animation:
     ${appearClear} 0.6s ease-out both,
     ${dropAnimation} 2s infinite alternate ease-in-out;
@@ -459,3 +461,4 @@ export const TwitterLink = styled.a`
     fill: #fff;
   }
 `;
+
