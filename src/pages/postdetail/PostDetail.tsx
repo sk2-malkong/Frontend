@@ -86,7 +86,7 @@ const PostDetail: React.FC<PostDetailProps> = ({ post }) => {
       return;
     }
 
-    navigate(`/edit/${post.id}`);
+    navigate(`/post/edit/${post.id}`);
   };
 
   const handleDeletePost = async () => {
@@ -96,7 +96,7 @@ const PostDetail: React.FC<PostDetailProps> = ({ post }) => {
     try {
       await deletePost(post.id);
       alert('게시글이 삭제되었습니다.');
-      navigate('/main');
+      navigate('/post/main');
     } catch (error) {
       console.error('❌ 게시글 삭제 실패:', error);
       alert('게시글 삭제에 실패했습니다.');

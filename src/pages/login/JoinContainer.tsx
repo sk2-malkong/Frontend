@@ -99,7 +99,7 @@ const JoinContainer: React.FC = () => {
   return (
       <S.JoinPageWrapper>
         <S.JoinContent>
-          <S.LogoWrapper onClick={() => { navigate('/main'); window.location.reload(); }}>
+          <S.LogoWrapper onClick={() => { navigate('/post/main'); window.location.reload(); }}>
             <img src="../logo/logo3.png" alt="로고" />
           </S.LogoWrapper>
 

@@ -75,7 +75,7 @@ const PostCreate: React.FC = () => {
   const handleSubmit = async ({ title, content }: { title: string; content: string }) => {
     try {
       const response = await createPost({ title, content }) as CreatePostResponse;
-      navigate(`/post/${response.postId}`); // 성공 후 해당 게시글 상세 페이지로 이동
+      navigate(`/post/post/${response.postId}`); // 성공 후 해당 게시글 상세 페이지로 이동
     } catch (error) {
       alert("게시글 작성 중 오류가 발생했습니다.");
     }

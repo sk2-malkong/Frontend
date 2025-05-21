@@ -92,7 +92,7 @@ const MyPage: React.FC<MyPageProps> = ({
             <S.GroupWrapper>
               <S.Group>
                 <S.Frame2>
-                  {/*<S.TextWrapper2>작성한 게시글</S.TextWrapper2>*/}
+                  <S.TextWrapper2>작성한 게시글</S.TextWrapper2>
                 </S.Frame2>
                 <S.Line />
                 <S.Frame3 onClick={onNavigateToLimitLog}>

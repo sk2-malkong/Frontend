@@ -40,7 +40,7 @@ const LoginContainer: React.FC = () => {
       localStorage.setItem('pw', pw); // pw 저장
 
       alert("로그인 성공");
-      navigate('/main'); // 메인 페이지로 이동
+      navigate('/post/main'); // 메인 페이지로 이동
     } catch (error: any) {
       alert(error.message || '로그인에 실패했습니다.');
     }
