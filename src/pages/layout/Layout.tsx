@@ -21,7 +21,7 @@ const Layout: React.FC = () => {
 
   const handleSearch = (): void => {
     if (keyword.trim()) {
-      navigate(`/search?keyword=${encodeURIComponent(keyword.trim())}`);
+      navigate(`/post/search?keyword=${encodeURIComponent(keyword.trim())}`);
     }
   };
 
@@ -38,7 +38,7 @@ const Layout: React.FC = () => {
         {!isIntroPage && (
           <>
             <S.HeaderWrap>
-              <S.LogoWrap onClick={() => { navigate('/main'); window.location.reload(); }}>
+              <S.LogoWrap onClick={() => { navigate('/post/main'); window.location.reload(); }}>
                 <p>Purgo</p>
               </S.LogoWrap>
 
