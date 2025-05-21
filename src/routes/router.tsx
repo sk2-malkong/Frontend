@@ -2,7 +2,6 @@ import React from 'react';
 import { createBrowserRouter, RouteObject } from 'react-router-dom'
 import Layout from '../pages/layout/Layout';
 import MainContainer from '../pages/main/MainContainer';
-import IndexContainer from '../pages/layout/index/IndexContainer';
 import MyPageContainer from '../pages/mypage/MyPageContainer';
 import JoinContainer from '../pages/login/JoinContainer';
 import LoginContainer from '../pages/login/LoginContainer';
@@ -30,10 +29,6 @@ const routes: RouteObject[] = [
     path: "/",
     element: <Layout/>,
     children: [
-      {
-        index: true,
-        element: <IndexContainer/>
-      },
       {
         path: '/main',
         element: <MainContainer/>
