@@ -3,10 +3,11 @@
 > **Q.** API 요청 시 어떤 인증 정보를 보내야 하나요?  
 > **A.** 두 개의 인증 헤더를 함께 포함해야 합니다:  
 > 
-> ```bash
-> Authorization: Bearer {API_KEY}
-> X-Auth-Token: {JWT}
-> ```
+> 
+> `Authorization: Bearer {API_KEY}`
+>
+> `X-Auth-Token: {JWT}`
+>
 > 
 > API Key는 발급받은 값을 그대로, JWT는 **요청 본문을 해시해 서버에서 생성한 토큰**을 넣어야 합니다.
 
