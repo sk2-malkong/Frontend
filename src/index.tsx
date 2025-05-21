@@ -9,6 +9,7 @@ import { legacy_createStore as createStore } from 'redux';
 import { Provider } from 'react-redux';
 import { devToolsEnhancer } from '@redux-devtools/extension';
 import rootReducer from './modules';
+import 'fullpage.js/dist/fullpage.min.css';
 
 const store = createStore(rootReducer, devToolsEnhancer());
 

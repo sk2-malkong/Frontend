@@ -616,6 +616,17 @@ font-weight: bold;
   font-size: 16px;
   color: #333;
 `;
+S.PageContainer = styled.div`
+  height: 100vh;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+`;
+
+S.FullPageSection = styled.div`
+  scroll-snap-align: start;
+  height: 100vh;
+  position: relative;
+`;
 
 /* style.js 안에 추가하세요 */
 
