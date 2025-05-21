@@ -18,10 +18,16 @@ const fishPositions = [
   { top: "110vh", left: "70vw" },
 ];
 
-const Intro = () => {
-  const [ripples, setRipples] = useState([]);
+interface IntroProps {
+  active: boolean;
+}
+
+const Intro: React.FC<IntroProps> = ({ active }) => {
+  const [ripples, setRipples] = useState<{ id: string; top: string; left: string }[]>([]);
 
   useEffect(() => {
+    if (!active) return; // 비활성화되면 애니메이션 멈춤
+
     const spawnRipples = () => {
       ripplePositions.forEach((pos, index) => {
         setTimeout(() => {
@@ -37,7 +43,7 @@ const Intro = () => {
     spawnRipples();
     const interval = setInterval(spawnRipples, 9000);
     return () => clearInterval(interval);
-  }, []);
+  }, [active]);
 
   return (
     <S.Container>
@@ -66,11 +72,10 @@ const Intro = () => {
             <br />
             <S.Wave className="oppo">비속어 탐지 순화 AI</S.Wave>
           </blockquote>
-          <figcaption>
-          </figcaption>
         </figure>
       </S.Quote>
 
+      {/* SVG Filters */}
       <S.SvgFilters xmlns="http://www.w3.org/2000/svg">
         <defs>
           <filter id="goo">

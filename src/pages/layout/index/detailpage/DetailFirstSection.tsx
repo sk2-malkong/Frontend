@@ -11,10 +11,10 @@ const DetailFirstSection: React.FC = () => {
   const card = {
     title: 'Purgo API',
     description1:
-      'Purgo API는 무료로 제공되고 있습니다.',
+      'Purgo는 라틴어로 정제하다라는 의미를 가지고 있습니다.',
     description2:
-      'Purgo APP Key를 등록하신 후, 지금 바로 사용해보세요.',
-    link: '#',
+      'Purgo API를 사용해서 깨끗한 온라인 문화를 만듭시다.',
+    link: '/docs/start',
   };
 
   return (
@@ -26,14 +26,14 @@ const DetailFirstSection: React.FC = () => {
             {card.title}
           </h2>
           <p
-            style={{
-              margin: '0 1rem ',
-              color: '#fff',
-              lineHeight: 1.4,
-              zIndex: 1,
-            }}
+         style={{
+         margin: '0 1rem',
+         color: '#fff',
+         lineHeight: 1.4,
+         zIndex: 1,
+         }}
           >
-            {card.description1}
+          Purgo는 라틴어로 <span style={{ color: 'blue', fontWeight: 'bold' }}>정제하다</span>라는 의미를 가지고 있습니다.
           </p>
           <p
             style={{

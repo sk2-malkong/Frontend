@@ -77,7 +77,6 @@ const indexMap: Record<DropKey, string> = {
       setShowContent(false);
       const t = window.setTimeout(() => {
         setDisplayDrop(activeDrop);
-        // showContent를 항상 true로 설정
         setShowContent(true);
       }, 550);
       return () => clearTimeout(t);
@@ -206,7 +205,7 @@ const indexMap: Record<DropKey, string> = {
                   ref={topRef}
                   onMouseEnter={handleEnter('top')}
                   onMouseLeave={handleLeave('top')}
-                  style={{transform: 'translate(-50%, -100%)' }}
+                  style={{transform: 'translate(-50%, -90%)' }}
                 >
                   <img src="/images/rocketchat-brands.svg" alt="chat" />
                 </TopCenterDrop>
