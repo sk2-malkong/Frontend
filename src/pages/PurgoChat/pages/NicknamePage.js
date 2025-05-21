@@ -4,7 +4,8 @@ import IPhoneMockup from "../Mockup/IPhoneMockup";
 
 const NicknamePage = () => {
     return (
-        <div className="flex justify-center items-center min-h-screen bg-gray-200 p-4">
+        // flex justify-center items-center min-h-screen bg-gray-200 p-4"
+        <div className="flex justify-center items-center  ">
             <IPhoneMockup>
                 <NicknameForm />
             </IPhoneMockup>
