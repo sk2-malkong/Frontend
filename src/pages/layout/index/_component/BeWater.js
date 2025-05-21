@@ -27,11 +27,11 @@ S.voyage = keyframes`
 `;
 
 S.flow = keyframes`
-  100% { background-position: 150% 0%; }
+  100% { background-position: 100% 0%; }
 `;
 
 S.sheen = keyframes`
-  100% { background-position: 150% 0%; }
+  100% { background-position: 100% 0%; }
 `;
 
 S.Container = styled.div`
@@ -42,6 +42,7 @@ S.Container = styled.div`
   align-items: center;
   background: radial-gradient(circle at bottom right, #007cb7, #83b4b6 69%, #e6ecebaf 70%, #00abc5);
   perspective: 1440px;
+   overflow: hidden;
 `;
 
 S.Pond = styled.div`

@@ -125,7 +125,7 @@ const StyledWrapper = styled.div`
     margin-bottom: 20px;
   }
   .box {
-    top: 50%;
+    top: 60%;
     left: 50%;
     width: 500px;
     height: 500px;
@@ -261,7 +261,7 @@ const StyledWrapper = styled.div`
   }
   .ai {
     position: absolute;
-    top: 10px;
+    top: 10%;
     left: 50%;
     transform: translateX(-50%);
     z-index: 10;
@@ -556,7 +556,6 @@ const DetailThreadSection: React.FC<DetailThreadSectionProps> = ({ active, count
   const [leftActive, setLeftActive] = useState(false);
   const [rightActive, setRightActive] = useState(false);
  const [chartVisible, setChartVisible] = useState(false);
- const [hoveredSegmentIdx, setHoveredSegmentIdx] = useState<number | null>(null);
 
 
   // 점 애니메이션 사이클
