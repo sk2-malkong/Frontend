@@ -68,7 +68,7 @@ const FindIdContainer: React.FC = () => {
                   <S.LoginButton onClick={() => navigate('/login')}>
                     로그인 바로가기
                   </S.LoginButton>
-                  <S.LoginButton onClick={() => navigate('/main')}>
+                  <S.LoginButton onClick={() => navigate('/post/main')}>
                     메인페이지 바로가기
                   </S.LoginButton>
                 </div>

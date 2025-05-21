@@ -93,7 +93,7 @@ const PostEdit: React.FC = () => {
     try {
       if (!id) return;
       await updatePost(Number(id), updatedPost);
-      window.location.href = `/post/${id}`; // 수정 성공 후 해당 페이지로 이동
+      window.location.href = `/post/post/${id}`; // 수정 성공 후 해당 페이지로 이동
     } catch (error) {
       alert("게시글 수정에 실패했습니다.");
     }
@@ -104,7 +104,7 @@ const PostEdit: React.FC = () => {
    */
   const handleCancel = () => {
     if (!id) return;
-    window.location.href = `/post/${id}`;
+    window.location.href = `/post/post/${id}`;
   };
 
   /**
