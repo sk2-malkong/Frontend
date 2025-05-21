@@ -25,7 +25,7 @@ const NicknameForm = () => {
     return (
         <StyledWrapper>
             <div className="form-container">
-                <p className="title">닉네임 입력</p>
+                <p className="title" style={{color : "black"}}>닉네임 입력</p>
                 <form className="form" onSubmit={handleSubmit}>
                     <div className="input-group">
                         <input
@@ -51,6 +51,7 @@ const StyledWrapper = styled.div`
         background-color: rgb(255, 255, 255);
         padding: 2rem;
         color: #111111;
+        margin: auto;
     }
 
     .title {
