@@ -9,6 +9,7 @@ import router from "./routes/router";
 function App(): JSX.Element {
   useEffect(() => {
     if ("scrollRestoration" in window.history) {
+      window.screenTop
       window.history.scrollRestoration = "manual";
     }
   }, []);

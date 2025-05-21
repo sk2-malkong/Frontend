@@ -4,11 +4,11 @@ import styled, {keyframes} from 'styled-components';
 
 const dropPos = keyframes`
   from {
-    bottom: calc(100vh - 65px);  /* 화면 상단에서 헤더 바로 아래 */
+    bottom: calc(100vh - 65px);  
     opacity: 0;
   }
   to {
-    bottom: 20px; /* 최종 위치 */
+    bottom: 20px; 
     opacity: 1;
   }
 `;
