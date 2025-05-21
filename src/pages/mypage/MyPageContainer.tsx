@@ -74,12 +74,12 @@ const MyPageContainer: React.FC = () => {
 
     // 프로필 수정 페이지로 이동하는 핸들러 함수
     const handleEditProfile = (): void => {
-        navigate('/profilefix');
+        navigate('/post/profilefix');
     };
 
     // 이용 제한 내역 페이지로 이동하는 핸들러 함수
     const handleNavigateToLimitLog = (): void => {
-        navigate('/limitlog');
+        navigate('/post/limitlog');
     };
 
     return (
