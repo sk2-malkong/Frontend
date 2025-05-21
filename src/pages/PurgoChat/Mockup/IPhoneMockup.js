@@ -2,7 +2,7 @@ import React from "react";
 
 const IPhoneMockup = ({ children }) => {
     return (
-        <div className="relative w-auto h-auto" style={{ transform: "scale(0.7)" }}>
+        <div className="relative w-auto h-auto" style={{transform: "scale(0.7)",display: "flex",alignItems: "center",justifyContent: "center",height: "100vh",width: "100vw"}}>
             <svg width="427" height="858" viewBox="0 0 427 858" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g clipPath="url(#clip0_1830_162)">
                     <path fillRule="evenodd" clipRule="evenodd" d="M424 197H425C426.105 197 427 197.895 427 199V295C427 296.105 426.105 297 425 297H424V197Z" fill="#121515"/>
