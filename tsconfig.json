@@ -18,12 +18,15 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx",
-    "typeRoots": ["./node_modules/@types", "./src/@types"],
+    "jsx": "preserve",
+    "typeRoots": [
+      "./node_modules/@types",
+      "./src/@types"
+    ],
     "baseUrl": "."
   },
   "include": [
     "src",
-    "declarations.d.ts"  // 여기에 SVG 선언 파일 추가
+    "declarations.d.ts"
   ]
 }

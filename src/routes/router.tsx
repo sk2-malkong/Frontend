@@ -14,16 +14,14 @@ import ProfileFixContainer from '../pages/profileFix/ProfileFixContainer';
 import LimitationLogContainer from '../pages/limitationlog/LimitationLogContainer';
 import Search from '../pages/search/Search';
 import PostEditContainer from '../pages/postcreate/PostEditContainer';
+import IntroContainer from 'src/pages/layout/index/_component/IntroContainer';
+import DetailPageContainer from 'src/pages/layout/index/detailpage/DetailPageContainer';
 
 const routes: RouteObject[] = [
   {
     path: "/",
     element: <Layout/>,
     children: [
-      {
-        index: true,
-        element: <IndexContainer/>
-      },
       {
         path: '/main',
         element: <MainContainer/>
@@ -55,6 +53,10 @@ const routes: RouteObject[] = [
       {
         path: '/search',
         element: <Search/>
+      },
+      {
+        index : true,
+        element : <IntroContainer/>
       }
     ]
   },

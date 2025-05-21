@@ -20,6 +20,7 @@ const badWords = {
   씨발: "세상아",
   병신: "천재",
   미친놈: "재밌는 사람",
+  지랄: "헛소리",
 };
 
 const filterWithAnimation = (text, addMessage) => {
