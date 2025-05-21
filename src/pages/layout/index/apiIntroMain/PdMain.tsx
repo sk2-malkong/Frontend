@@ -80,15 +80,19 @@ const MiddleSection = () => (
 
 /**
  * ProductIntroSection 컴포넌트
+ * 클릭 시 /detail 페이지로 이동하는 기능 추가
  */
 const ProductIntroSection = () => {
     const [isHovered, setIsHovered] = useState(false);
+    const navigate = useNavigate();
 
     return (
         <S.Overlap3
+            onClick={() => navigate("/detail")}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
             className={isHovered ? "hover-active" : ""}
+            style={{ cursor: "pointer" }}
         >
             <S.OverlayEffect className="overlay-2" />
             <S.Group3 />
