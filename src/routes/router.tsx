@@ -22,7 +22,7 @@ import JwthashPage from "../pages/layout/index/docspages/views/Jwthash";
 import RequestPage from "../pages/layout/index/docspages/views/Request";
 import SecurityPage from "../pages/layout/index/docspages/views/Security";
 import DetailPage from 'src/pages/layout/index/detailpage/DetailPage';
-
+import Chat from '../pages/PurgoChat/pages/NicknamePage';
 
 const routes: RouteObject[] = [
   {
@@ -31,39 +31,39 @@ const routes: RouteObject[] = [
     index: true,
   },
   {
-    path: "/layout",  // 기존 루트 경로를 /layout으로 변경
+    path: "/post",  // 기존 루트 경로를 /layout으로 변경
     element: <Layout/>,
     children: [
       {
-        path: '/layout/main',
+        path: '/post/main',
         element: <MainContainer/>
       },
       {
-        path: '/layout/mypage',
+        path: '/post/mypage',
         element: <MyPageContainer/>
       },
       {
-        path: "/layout/profilefix",
+        path: "/post/profilefix",
         element: <ProfileFixContainer/>
       },
       {
-        path: '/layout/limitlog',
+        path: '/post/limitlog',
         element: <LimitationLogContainer/>
       },
       {
-        path: '/layout/postcreate',
+        path: '/post/postcreate',
         element: <PostCreateContainer/>
       },
       {
-        path: '/layout/post/:id',
+        path: '/post/post/:id',
         element: <PostDetailContainer/>
       },
       {
-        path: '/layout/edit/:id',
+        path: '/post/edit/:id',
         element: <PostEditContainer />
       },
       {
-        path: '/layout/search',
+        path: '/post/search',
         element: <Search/>
       }
     ]
@@ -120,10 +120,11 @@ const routes: RouteObject[] = [
     ]
   },
   // 원래 경로로도 접근할 수 있도록 유지 (선택 사항)
+
   {
-    path: "/developers",
-    element: <PdMain/>
-  }
+    path: "/chat",
+    element: <Chat/>
+  },
 ];
 
 const router = createBrowserRouter(routes);

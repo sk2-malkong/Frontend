@@ -5,6 +5,7 @@ import GlobalStyle from "./global/global";
 import theme from "./global/theme";
 import { RouterProvider } from "react-router-dom";
 import router from "./routes/router";
+import { NicknameProvider } from "./pages/PurgoChat/context/NicknameContext"; // 추가
 
 function App(): JSX.Element {
   useEffect(() => {
@@ -15,10 +16,12 @@ function App(): JSX.Element {
   }, []);
 
   return (
-    <ThemeProvider theme={theme}>
-      <GlobalStyle />
-      <RouterProvider router={router} />
-    </ThemeProvider>
+      <ThemeProvider theme={theme}>
+        <NicknameProvider> {/* 추가 */}
+          <GlobalStyle />
+          <RouterProvider router={router} />
+        </NicknameProvider> {/* 추가 */}
+      </ThemeProvider>
   );
 }
 
