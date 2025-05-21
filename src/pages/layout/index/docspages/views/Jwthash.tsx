@@ -27,13 +27,7 @@ const JwthashPage: React.FC = () => {
 
       <LanguageTabs
         codeMap={{
-          Python: `import json
-import hashlib
-import time
-import jwt
-import requests
-
-# JSON 직렬화: 키 정렬 + 공백 포함 + 한글 유지
+          Python: `# JSON 직렬화: 키 정렬 + 공백 포함 + 한글 유지
 json_str = json.dumps(data, sort_keys=True, ensure_ascii=False)
 
 # 해시 생성
@@ -59,11 +53,7 @@ headers = {
 response = requests.post(PROXY_URL, data=json_str.encode("utf-8"), headers=headers)
 `,
 
-          "Node.js": `const crypto = require('crypto');
-const jwt = require('jsonwebtoken');
-const axios = require('axios');
-
-// JSON 직렬화: 키 정렬 + 공백 포함 + 한글 유지
+          "Node.js": `// JSON 직렬화: 키 정렬 + 공백 포함 + 한글 유지
 const jsonStr = JSON.stringify(data, Object.keys(data).sort());
 
 // 해시 생성

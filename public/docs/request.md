@@ -45,52 +45,21 @@ Content-Type: application/json
 
 ```json
 {
-  "result": {
-    "rewritten_text": "조용히 해",
-    "abusive_score": 0.91
-  },
-  "final_decision": "1"
+  fasttext: { detected_words: [], is_bad: 0 },
+  final_decision: 0,
+  kobert: { confidence: 0.9933, is_bad: 0 },
+  result: { original_text: '배고파요', rewritten_text: '배고파요' }
 }
 ```
 
-| 필드명           | 설명                                    |
-|------------------|-----------------------------------------|
-| rewritten_text   | 욕설을 정제한 대체 문장                  |
-| abusive_score    | 욕설 확률 (0.0 ~ 1.0 사이 부동소수점)     |
-| final_decision   | "1": 욕설 있음 / "0": 욕설 아님          |
-
----
-
-### 통계 및 필터링 사용량 확인
-
-Purgo는 내부적으로 **욕설 필터링 수행 횟수 및 로그**를 자동 수집합니다.  
-누적 필터링 수치는 아래 엔드포인트를 통해 확인할 수 있습니다:
-
-```bash
-GET /api/filter/count
-
-```
+| 필드명(1dep) | 필드명(2dep) | 설명 | 비고 |
+| --- | --- | --- | --- |
+| **fasttext** | detected_words | fasttext모델이 감지한 비속어를 보여줍니다. |  |
+|  | is_bad | fasttext의 비속어 탐지 결과입니다. | 필터링 여부는1(있음) 또는 0(없음) |
+| **kobert** | confidence | kobert모델이 측정한 비속어 정확성입니다. |  |
+|  | is_bad | kobert의 비속어 탐지 결과입니다. | 필터링 여부는1(있음) 또는 0(없음) |
+| **result** | original_text | 비속어로 탐지된 단어 문장(단어)입니다. |  |
+|  | rewritten_text | 비속어를 대체한 단어 문장(단어)입니다. |  |
+| **final_decision** |  | 최종 비속어 탐지여부를 보여줍니다. | 필터링 여부는 1(있음) 또는 0(없음) |
 
 
-> 응답 예시:
-```bash
-1529
-
-```
-
-| 항목 | 설명 |
-|------|------|
-| 누적 필터링 횟수 | 시스템 전체에서 필터링이 실제로 수행된 횟수 |
-| 집계 기준 | 욕설이 탐지되어 필터링 로직이 실행된 경우만 카운트 |
-| 내부 처리 | Redis 기반 실시간 카운트 + 필터 로그 Pub/Sub 방식 처리 |
-
-※ 사용자별 통계는 추후 제공 예정입니다.
-
----
-
-### **참고 사항**
-
-- `rewritten_text`는 사용자에게 노출 가능한 **순화 문장**입니다.
-- `abusive_score`는 내부 모델이 예측한 **욕설 가능성 확률**입니다.
-- `final_decision`은 필터링 여부를 나타내는 **결정값**입니다.
-- 인증 실패 시 `401`, 형식 오류 시 `400`, 요청 초과 시 `429`, 내부 오류 시 `500` 등의 상태코드가 반환됩니다.
