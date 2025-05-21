@@ -6,6 +6,7 @@ import DetailSecondSection from './DetailSecondSection';
 import DetailThreadSection from './DetailThreadSection';
 import Header from "../_component/Header/Header";
 import ApiKeyPopup from "../_component/ApiKeyPopup";
+import IntroContainer from '../_component/IntroContainer';
 
 const anchors: string[] = ['first', 'second', 'thread'];
 
@@ -19,7 +20,7 @@ const DetailPage: React.FC = () => {
 
   return (
       <>
-          <Header openPopup={openPopup} />
+          <Header openPopup={openPopup}/>
           <ReactFullpage
               licenseKey="OPEN-SOURCE-GPLV3-LICENSE"
               credits={{ enabled: false }}
@@ -45,6 +46,9 @@ const DetailPage: React.FC = () => {
                       {/* 3rd section */}
                       <div className="section">
                           <DetailThreadSection active={activeSection === 2} />
+                      </div>
+                      <div className="section">
+                          <IntroContainer active={activeSection === 3} />
                       </div>
                   </ReactFullpage.Wrapper>
               )}
