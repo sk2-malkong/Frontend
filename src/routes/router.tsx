@@ -22,7 +22,7 @@ import JwthashPage from "../pages/layout/index/docspages/views/Jwthash";
 import RequestPage from "../pages/layout/index/docspages/views/Request";
 import SecurityPage from "../pages/layout/index/docspages/views/Security";
 import DetailPage from 'src/pages/layout/index/detailpage/DetailPage';
-
+import Chat from '../pages/PurgoChat/pages/NicknamePage';
 
 const routes: RouteObject[] = [
   {
@@ -123,7 +123,11 @@ const routes: RouteObject[] = [
   {
     path: "/developers",
     element: <PdMain/>
-  }
+  },
+  {
+    path: "/chat",
+    element: <Chat/>
+  },
 ];
 
 const router = createBrowserRouter(routes);
