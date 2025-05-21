@@ -11,6 +11,8 @@ import {
   Legend as RechartsLegend, 
   Cell,   
 } from 'recharts';
+import userApi from 'src/pages/api/userApi';
+
 
 const GlobalAnimationStyle = createGlobalStyle`
   @keyframes barGrowUp {
@@ -548,7 +550,7 @@ const Path = styled.path<{ isHovered: boolean }>`
   filter: ${({ isHovered }) => (isHovered ? 'brightness(1.1)' : 'none')};
   cursor: pointer;
 `;
-const DetailThreadSection: React.FC<DetailThreadSectionProps> = ({ active, count = 3659 }) => {
+const DetailThreadSection: React.FC<DetailThreadSectionProps> = ({ active }) => {
   const [isActive, setIsActive] = useState(false);
   const [show, setShow] = useState(false);
   const [dropState, setDropState] = useState<'hidden' | 'fadingIn' | 'fadingOut'>('hidden');
@@ -556,6 +558,16 @@ const DetailThreadSection: React.FC<DetailThreadSectionProps> = ({ active, count
   const [leftActive, setLeftActive] = useState(false);
   const [rightActive, setRightActive] = useState(false);
  const [chartVisible, setChartVisible] = useState(false);
+ const [count, setCount] = useState(0); // 상태값 선언
+
+useEffect(() => {
+  const fetchCount = async () => {
+    const result = await userApi.PenaltyCountAll();
+    setCount(result);
+  };
+
+  fetchCount();
+}, []);
 
 
   // 점 애니메이션 사이클

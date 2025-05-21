@@ -19,6 +19,7 @@ import {
   Divider,
   DropWrapper,
 } from './detailstyle';
+import { Link } from 'react-router-dom';
 
 const Background = styled(BaseBackground)`
   &::before {
@@ -200,24 +201,28 @@ const indexMap: Record<DropKey, string> = {
           <Left>
             <DropWrapper active = {active}>
               <DropContainer key={active ? 'on' : 'off'}>
-                <TopCenterDrop
-                  small
-                  ref={topRef}
-                  onMouseEnter={handleEnter('top')}
-                  onMouseLeave={handleLeave('top')}
-                  style={{transform: 'translate(-50%, -90%)' }}
-                >
-                  <img src="/images/rocketchat-brands.svg" alt="chat" />
-                </TopCenterDrop>
-                <BottomLeftDrop
-                  small
-                  ref={leftRef}
-                  onMouseEnter={handleEnter('left')}
-                  onMouseLeave={handleLeave('left')}
-                  style={{transform: 'translate(-110%, 100%)' }}
-                >
-                  <img src="/images/address-card-solid.svg" alt="board" />
-                </BottomLeftDrop>
+                <Link to={"/chat"}>
+                  <TopCenterDrop
+                    small
+                    ref={topRef}
+                    onMouseEnter={handleEnter('top')}
+                    onMouseLeave={handleLeave('top')}
+                    style={{transform: 'translate(-50%, -90%)' }}
+                  >
+                    <img src="/images/rocketchat-brands.svg" alt="chat" />
+                  </TopCenterDrop>
+                </Link>
+                <Link to={"/post/main"}>
+                  <BottomLeftDrop
+                    small
+                    ref={leftRef}
+                    onMouseEnter={handleEnter('left')}
+                    onMouseLeave={handleLeave('left')}
+                    style={{transform: 'translate(-110%, 100%)' }}
+                  >
+                    <img src="/images/address-card-solid.svg" alt="board" />
+                  </BottomLeftDrop>
+                </Link>
                 <BottomRightDrop
                   small
                   ref={rightRef}
