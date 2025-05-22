@@ -34,6 +34,8 @@ const Main: React.FC = () => {
   const [posts, setPosts]               = useState<Post[]>([]);
   const [currentPage, setCurrentPage]   = useState(0);
   const [totalPages, setTotalPages]     = useState(1);
+  const [loading, setLoading]           = useState(true);
+  const [error, setError]               = useState<string | null>(null);
 
   useEffect(() => {
     AOS.init({ duration: 600 });
@@ -46,13 +48,34 @@ const Main: React.FC = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const data: PostListResponse = keyword
-          ? await postApi.search(keyword, currentPage)
-          : await postApi.postlist(currentPage);
-      setPosts(data.content);
-      setTotalPages(Math.ceil(data.totalElements / PAGE_SIZE));
+      try {
+        setLoading(true);
+        setError(null);
+
+        const data: PostListResponse = keyword
+            ? await postApi.search(keyword, currentPage)
+            : await postApi.postlist(currentPage);
+
+        // 안전한 데이터 체크
+        if (data && Array.isArray(data.content)) {
+          setPosts(data.content);
+          setTotalPages(Math.ceil(data.totalElements / PAGE_SIZE));
+        } else {
+          console.error('Invalid data structure:', data);
+          setPosts([]); // 빈 배열로 설정
+          setTotalPages(1);
+        }
+      } catch (error) {
+        console.error('Error fetching posts:', error);
+        setError('게시글을 불러오는 중 오류가 발생했습니다.');
+        setPosts([]); // 에러 시에도 빈 배열로 설정
+        setTotalPages(1);
+      } finally {
+        setLoading(false);
+      }
     };
-    fetchData().catch(console.error);
+
+    fetchData();
   }, [keyword, currentPage]);
 
   const bubbles: BubbleProps[] = Array.from({ length: 10 }).map(() => ({
@@ -61,6 +84,40 @@ const Main: React.FC = () => {
     duration: 6 + Math.random() * 8,
     delay: Math.random() * 4,
   }));
+
+  // 로딩 상태 처리
+  if (loading) {
+    return (
+        <S.MainWrapper>
+          {bubbles.map((b, idx) => (
+              <S.Bubble key={idx} {...b} />
+          ))}
+          <S.Header>
+            <S.Title>게시판</S.Title>
+          </S.Header>
+          <div style={{ textAlign: 'center', padding: '50px' }}>
+            로딩 중...
+          </div>
+        </S.MainWrapper>
+    );
+  }
+
+  // 에러 상태 처리
+  if (error) {
+    return (
+        <S.MainWrapper>
+          {bubbles.map((b, idx) => (
+              <S.Bubble key={idx} {...b} />
+          ))}
+          <S.Header>
+            <S.Title>게시판</S.Title>
+          </S.Header>
+          <div style={{ textAlign: 'center', padding: '50px', color: 'red' }}>
+            {error}
+          </div>
+        </S.MainWrapper>
+    );
+  }
 
   return (
       <S.MainWrapper>
@@ -86,7 +143,8 @@ const Main: React.FC = () => {
               </tr>
               </thead>
               <tbody>
-              {posts.map(post => (
+              {/* 안전한 map 호출 */}
+              {(posts && Array.isArray(posts) ? posts : []).map(post => (
                   <tr
                       key={post.postId}
                       onClick={() => navigate(`/post/post/${post.postId}`)}
@@ -97,15 +155,24 @@ const Main: React.FC = () => {
                       {post.title}
                     </S.Td>
                     <S.Td>{post.username}</S.Td>
-                    <S.Td>{post.createdAt.split('T')[0]}</S.Td>
+                    <S.Td>{post.createdAt?.split('T')[0] || ''}</S.Td>
                     <S.Td>{post.count}</S.Td>
                     <S.Td>{post.commentCount ?? 0}</S.Td>
                   </tr>
               ))}
+
+              {/* 게시글이 없을 때 메시지 */}
+              {(!posts || posts.length === 0) && (
+                  <tr>
+                    <S.Td colSpan={6} style={{ textAlign: 'center', padding: '50px' }}>
+                      게시글이 없습니다.
+                    </S.Td>
+                  </tr>
+              )}
               </tbody>
             </S.Table>
 
-            {posts.length > 0 && (
+            {posts && posts.length > 0 && (
                 <S.Pagination>
                   <button
                       disabled={currentPage === 0}
