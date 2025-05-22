@@ -22,7 +22,7 @@ interface ApiKeyPopupProps {
 const generateApiKey = async (userData: FormData): Promise<ApiResponse> => {
     try {
         // 백엔드에 POST 요청 보내기
-        const response = await fetch('http://3.37.74.62/issue-key', {
+        const response = await fetch('http://3.37.74.62:8001/api/issue-key', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
