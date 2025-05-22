@@ -782,6 +782,7 @@ const segments2: Segment[] = data2.map((d, i) => {
   <Card>
     <Content>
       <Title>오늘 가장 많이 사용한 비속어</Title>
+      <Text>Purgo 게시판에서 탐지된 비속어입니다.</Text>
     </Content>
     <GraphContainer>
       <CircleGraph active={isGraphActive}>
