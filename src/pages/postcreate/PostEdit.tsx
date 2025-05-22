@@ -41,7 +41,7 @@ const PostEdit: React.FC = () => {
 
         // 게시글 데이터 요청
         const response = await axios.get(
-          `http://localhost:8080/api/post/${id}?increaseView=false`,
+          `http://10.0.2.161:8080/api/post/${id}?increaseView=false`,
           config
         );
         const data = response.data;

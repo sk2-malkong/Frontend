@@ -2,7 +2,7 @@ import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import auth from './auth'; // refreshAccessToken 함수 가져오기
 
 const api = axios.create({
-  baseURL: 'http://localhost:8080/api',
+  baseURL: 'http://10.0.2.161:8080/api',
   withCredentials: true,
 });
 
