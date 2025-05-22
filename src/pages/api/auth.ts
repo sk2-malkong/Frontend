@@ -66,9 +66,9 @@ const register = async (data: RegisterRequest): Promise<any> => {
   return response.data;
 };
 
-// 회원가입 (signup)
+// 회원가입 (signup) 수정한 부분
 const signup = async ({ id, username, email, pw }: { id: string; username: string; email: string; pw: string }): Promise<any> => {
-  const res = await api.post("/auth/signup", { id, username, email, pw });
+  const res = await axios.post("http://43.203.14.194/api/auth/signup", { id, username, email, pw });
   return res.data;
 };
 
