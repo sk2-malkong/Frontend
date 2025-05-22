@@ -557,18 +557,47 @@ const DetailThreadSection: React.FC<DetailThreadSectionProps> = ({ active }) => 
   const [dots, setDots] = useState('');
   const [leftActive, setLeftActive] = useState(false);
   const [rightActive, setRightActive] = useState(false);
- const [chartVisible, setChartVisible] = useState(false);
- const [count, setCount] = useState(0); // 상태값 선언
+  const [chartVisible, setChartVisible] = useState(false);
+  const [count, setCount] = useState(0); // 상태값 선언
 
-useEffect(() => {
-  const fetchCount = async () => {
-    const result = await userApi.PenaltyCountAll();
-    setCount(result);
-  };
+  useEffect(() => {
+    const fetchCount = async () => {
+      const result = await userApi.PenaltyCountAll();
+      setCount(result);
+    };
 
-  fetchCount();
-}, []);
+    fetchCount();
+  }, []);
 
+  // 섹션 active 상태에 따른 자동 실행 로직
+  useEffect(() => {
+    let autoTriggerTimeout: NodeJS.Timeout;
+
+    if (active) {
+      // 섹션이 활성화되면 2초 후 애니메이션 시작
+      autoTriggerTimeout = setTimeout(() => {
+        setIsActive(true);
+        setShow(true);
+        setDropState('fadingIn');
+        setTimeout(() => setChartVisible(true), 500);
+      }, 1000);
+    } else {
+      // 섹션이 비활성화되면 모든 상태 초기화
+      setIsActive(false);
+      setShow(false);
+      setDropState('hidden');
+      setChartVisible(false);
+      setLeftActive(false);
+      setRightActive(false);
+      setIsGraphActive(false);
+    }
+
+    return () => {
+      if (autoTriggerTimeout) {
+        clearTimeout(autoTriggerTimeout);
+      }
+    };
+  }, [active]); // active prop이 변경될 때마다 실행
 
   // 점 애니메이션 사이클
   useEffect(() => {
@@ -581,7 +610,7 @@ useEffect(() => {
     return () => clearInterval(interval);
   }, []);
 
-  // 버튼 클릭 시 애니메이션 처리
+  // 버튼 클릭 시 애니메이션 처리 (이제 토글 기능)
   const handleClick = () => {
     setIsActive(!isActive);
     
@@ -600,8 +629,6 @@ useEffect(() => {
     }
   };
   
-
-
   const [isGraphActive, setIsGraphActive] = useState<boolean>(false);
 
 const data: DataSegment[] = [
