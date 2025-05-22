@@ -1,6 +1,6 @@
 import axios, { AxiosRequestConfig } from 'axios';
 
-const API_BASE = 'http://10.0.2.161:8080';
+const API_BASE = 'http://43.203.14.194';
 
 interface UpdatePostParams {
   title: string;
