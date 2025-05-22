@@ -157,7 +157,7 @@ const ProfileFixContainer: React.FC = () => {
 
                 // URL이 상대 경로인지 확인하고 필요하면 기본 URL 추가
                 if (profileImageUrl.startsWith('/')) {
-                    const baseURL = 'http://localhost:8080/api'; // axios 기본 URL을 직접 참조하는 대신 명시적으로 지정
+                    const baseURL = 'http://10.0.2.161:8080/api'; // axios 기본 URL을 직접 참조하는 대신 명시적으로 지정
                     profileImageUrl = `${baseURL}${profileImageUrl}`;
                     console.log('상대 경로를 절대 경로로 변환:', profileImageUrl);
                 }
