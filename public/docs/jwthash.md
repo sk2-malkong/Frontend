@@ -18,6 +18,12 @@
 
 ---
 
+### **Purgo API 작동 흐름도**
+
+![Purgo API 시퀀스 다이어그램](/images/purgo-sequence-diagram.png)
+
+---
+
 ### **언어별 예시 코드**
 
 <!-- LANGUAGE_TABS_HERE -->

@@ -62,7 +62,7 @@ const login = async (id: string, pw: string): Promise<any> => {
 
 // 회원가입
 const register = async (data: RegisterRequest): Promise<any> => {
-  const response = await axios.post("http://localhost:8080/api/auth/register", data);
+  const response = await axios.post("http://10.0.2.161:8080/api/auth/register", data);
   return response.data;
 };
 
