@@ -31,6 +31,12 @@
 ```bash
 📝 스크립트
 명령어	설명
+1. npm install
+2. npm install @fullpage/react-fullpage
+3. npm install recharts
+
+
+
 npm start	개발 서버 실행 (http://localhost:3000)
 npm run build	프로덕션 빌드 생성
 npm test	테스트 실행
@@ -48,10 +54,6 @@ git checkout FrontDev
 React + TypeScript
 
 스타일링: styled-components
-
-애니메이션:
-GSAP (ScrollTrigger)
-AOS
 CountUp (카운트 애니메이션)
 
 라우팅: react-router-dom
@@ -61,7 +63,5 @@ HTTP 클라이언트: axios
 번들러: Create React App (CRA)
 # 4. 개발 서버 실행
 npm start
-# 또는
-yarn start
 
 # 브라우저에서 http://localhost:3000 에 접속
