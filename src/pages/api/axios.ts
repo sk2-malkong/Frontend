@@ -2,6 +2,7 @@ import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import auth from './auth'; // refreshAccessToken 함수 가져오기
 
 const api = axios.create({
+// 'http://43.203.14.194/api' 원본 코드 'http://localhost:8080/api'
   baseURL: 'http://43.203.14.194/api',
   withCredentials: true,
 });

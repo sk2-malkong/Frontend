@@ -319,4 +319,14 @@ S.PageText = styled.span`
   word-wrap: break-word;
 `;
 
+S.EmptyMessage = styled.div`
+  color: #111111;
+  font-size: 2.25rem;
+  font-family: ${FONTS.semiBold.family};
+  font-weight: ${FONTS.semiBold.weight};
+  text-align: center;
+  padding: 5rem;
+  background: ${COLORS.white};
+`;
+
 export default S;

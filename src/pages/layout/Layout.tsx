@@ -16,7 +16,8 @@ const Layout: React.FC = () => {
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('email');
     alert('로그아웃 되었습니다.');
-    window.location.reload();
+    // 로그아웃 후 메인 페이지로 이동하도록 수정
+    navigate('/post/main');
   };
 
   const handleSearch = (): void => {
@@ -33,50 +34,50 @@ const Layout: React.FC = () => {
   };
 
   return (
-    <div>
-      <S.Background>
+      <div>
+        <S.Background>
+          {!isIntroPage && (
+              <>
+                <S.HeaderWrap>
+                  <S.LogoWrap onClick={() => { navigate('/post/main'); window.location.reload(); }}>
+                    <p>Purgo</p>
+                  </S.LogoWrap>
+
+                  <S.SearchBox>
+                    <S.SearchInput
+                        placeholder="검색어를 입력하세요"
+                        value={keyword}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => setKeyword(e.target.value)}
+                        onKeyDown={handleKeyPress}
+                    />
+                    <p onClick={handleSearch}>검색</p>
+                  </S.SearchBox>
+
+                  {isLoggedIn ? (
+                      <S.LoginButton onClick={handleLogout}>로그아웃</S.LoginButton>
+                  ) : (
+                      <S.LoginButton onClick={() => navigate('/login')}>로그인</S.LoginButton>
+                  )}
+                </S.HeaderWrap>
+                <S.Topbar />
+              </>
+          )}
+
+          <S.Main>
+            <Outlet />
+          </S.Main>
+        </S.Background>
+
         {!isIntroPage && (
-          <>
-            <S.HeaderWrap>
-              <S.LogoWrap onClick={() => { navigate('/post/main'); window.location.reload(); }}>
-                <p>Purgo</p>
-              </S.LogoWrap>
-
-              <S.SearchBox>
-                <S.SearchInput
-                  placeholder="검색어를 입력하세요"
-                  value={keyword}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) => setKeyword(e.target.value)}
-                  onKeyDown={handleKeyPress}
-                />
-                <p onClick={handleSearch}>검색</p>
-              </S.SearchBox>
-
-              {isLoggedIn ? (
-                <S.LoginButton onClick={handleLogout}>로그아웃</S.LoginButton>
-              ) : (
-                <S.LoginButton onClick={() => navigate('/login')}>로그인</S.LoginButton>
-              )}
-            </S.HeaderWrap>
-            <S.Topbar />
-          </>
+            <S.BubbleLogo
+                src="/images/purgo-logo.png"
+                alt="Bubble Logo"
+                onClick={() => navigate('/')}
+            />
         )}
 
-        <S.Main>
-          <Outlet />
-        </S.Main>
-      </S.Background>
-      
-      {!isIntroPage && (
-        <S.BubbleLogo
-          src="/images/purgo-logo.png"
-          alt="Bubble Logo"
-          onClick={() => navigate('/')}
-        />
-      )}
-
-      {!isIntroPage && <Footer />}
-    </div>
+        {!isIntroPage && <Footer />}
+      </div>
   );
 };
 
