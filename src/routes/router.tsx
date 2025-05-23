@@ -22,7 +22,7 @@ import JwthashPage from "../pages/layout/index/docspages/views/Jwthash";
 import RequestPage from "../pages/layout/index/docspages/views/Request";
 import SecurityPage from "../pages/layout/index/docspages/views/Security";
 import DetailPage from 'src/pages/layout/index/detailpage/DetailPage';
-// import Chat from '../pages/PurgoChat/pages/NicknamePage';
+import MyPostListContainer from '../pages/mypostlist/MyPostListContainer';
 
 const routes: RouteObject[] = [
   {
@@ -65,7 +65,11 @@ const routes: RouteObject[] = [
       {
         path: '/post/search',
         element: <Search/>
-      }
+      },
+      {
+        path: '/post/myposts',
+        element: <MyPostListContainer />,
+      },
     ]
   },
   {

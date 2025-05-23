@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-const S: { [key: string]: any } = {}; // 스타일 객체에 임시로 any 타입 부여 (필요 시 명확한 타입으로 대체 가능)
+const S: { [key: string]: any } = {};
 
 S.MainWrapper = styled.div`
   display: flex;
@@ -18,6 +18,13 @@ S.ContentLeft = styled.div`
   min-height: 1020px;
   display: flex;
   flex-direction: column;
+
+  h3 {
+    font-size: 20px;
+    font-weight: bold;
+    color: #222;
+    margin-bottom: 12px;
+  }
 `;
 
 S.SidebarRight = styled.aside`
@@ -52,7 +59,7 @@ S.UserAvatar = styled.div`
 
 S.Nickname = styled.p`
   font-weight: bold;
-  color: black;
+  color: #000;
 `;
 
 S.ActionButton = styled.button`
@@ -90,9 +97,10 @@ S.PostCard = styled.div`
   padding: 16px;
   background: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  cursor: pointer; 
 
   span {
-    color: #797979;
+    color: #222; 
   }
 
   .post-header {
@@ -100,7 +108,7 @@ S.PostCard = styled.div`
     align-items: center;
     gap: 8px;
     font-size: 12px;
-    color: #666;
+    color: #333; 
     margin-bottom: 8px;
   }
 
@@ -120,13 +128,13 @@ S.PostCard = styled.div`
   .title {
     font-size: 18px;
     font-weight: bold;
-    color: #222;
+    color: #111; 
     margin-bottom: 4px;
   }
 
   .content {
     font-size: 14px;
-    color: #555;
+    color: #222; 
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -149,7 +157,7 @@ S.Pagination = styled.div`
     background: none;
     border: none;
     font-size: 16px;
-    color: #5a5a5a;
+    color: #000; 
     cursor: pointer;
     width: 427px;
     height: 50px;
