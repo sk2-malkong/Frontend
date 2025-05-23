@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import LimitationLog from "./LimitationLog";
 import limitService from "../api/limitService";
-
+import S from "./style";
 // 욕설 로그 타입
 interface BadwordLog {
     originalWord: string;
@@ -57,7 +57,7 @@ const LimitationLogContainer: React.FC = () => {
     }
 
     if (!limitData || !limitData.logGroups || limitData.logGroups.length === 0) {
-        return <div>표시할 제한 내역이 없습니다.</div>;
+        return <S.EmptyMessage>이용제한 내역 없음</S.EmptyMessage>;
     }
 
     // 날짜 포맷 변환 함수 (2025-05-07T15:05:56 -> YY.MM.DD)
