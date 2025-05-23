@@ -78,7 +78,19 @@ const JoinContainer: React.FC = () => {
       setIdMessage(message);
       setIdChecked(true);
     } catch (err: any) {
-      setIdMessage(err.message);
+      console.log(err);
+      // 서버 응답에서 메시지 추출
+      let errorMessage = '아이디 중복확인 중 오류가 발생했습니다.';
+
+      if (err.response && err.response.data) {
+        // axios 에러 응답의 경우
+        errorMessage = err.response.data.message || err.response.data.error || err.response.data;
+      } else if (err.message) {
+        // 일반 에러 메시지
+        errorMessage = err.message;
+      }
+
+      setIdMessage(errorMessage);
       setIdChecked(false);
     }
   };
@@ -91,7 +103,19 @@ const JoinContainer: React.FC = () => {
       setNameMessage(message);
       setNameChecked(true);
     } catch (err: any) {
-      setNameMessage(err.message);
+      console.log(err);
+      // 서버 응답에서 메시지 추출
+      let errorMessage = '닉네임 중복확인 중 오류가 발생했습니다.';
+
+      if (err.response && err.response.data) {
+        // axios 에러 응답의 경우
+        errorMessage = err.response.data.message || err.response.data.error || err.response.data;
+      } else if (err.message) {
+        // 일반 에러 메시지
+        errorMessage = err.message;
+      }
+
+      setNameMessage(errorMessage);
       setNameChecked(false);
     }
   };
