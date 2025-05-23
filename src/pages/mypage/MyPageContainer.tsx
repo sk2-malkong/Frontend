@@ -81,6 +81,10 @@ const MyPageContainer: React.FC = () => {
     const handleNavigateToLimitLog = (): void => {
         navigate('/post/limitlog');
     };
+    
+    const handleNavigateToMyPosts = (): void => {
+        navigate('/post/myposts');
+    };
 
     return (
         <MyPage
@@ -90,6 +94,7 @@ const MyPageContainer: React.FC = () => {
             penaltyCount={penaltyCount}
             onEditProfile={handleEditProfile}
             onNavigateToLimitLog={handleNavigateToLimitLog}
+            onNavigateToMyPosts={handleNavigateToMyPosts}
         />
     );
 };
