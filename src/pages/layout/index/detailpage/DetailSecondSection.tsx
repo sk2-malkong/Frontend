@@ -203,7 +203,7 @@ const DetailSecondSection: React.FC<DetailSecondSectionProps> = ({ active })=> {
                       ref={topRef}
                       onMouseEnter={handleEnter('top')}
                       onMouseLeave={handleLeave('top')}
-                      onClick={() => window.location.href = 'http://localhost:3001'}
+                      onClick={() => window.location.href = 'http://43.202.183.36'}
                       style={{transform: 'translate(-50%, -90%)', cursor: 'pointer' }}
                   >
                     <img src="/images/rocketchat-brands.svg" alt="chat" />
