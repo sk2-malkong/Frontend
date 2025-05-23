@@ -41,9 +41,22 @@ const search = async (
   return res.data;
 };
 
+/**
+ * 내가 작성한 게시글 조회
+ */
+const getMyPosts = async (page = 0): Promise<PostListResponse> => {
+  const res = await api.get(`/post/my?page=${page}`, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+    },
+  });
+  return res.data;
+};
+
 const postApi = {
   postlist,
   search,
+  getMyPosts,
 };
 
 export default postApi;

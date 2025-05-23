@@ -400,6 +400,7 @@ const S = {
     padding: 0.625rem;
     position: relative;
     width: max-content;
+    cursor: pointer;
   `,
 
     // 텍스트 스타일 - 메뉴 항목
@@ -440,6 +441,7 @@ const S = {
     position: absolute;
     left: 0;
     top: 3.3rem;
+    cursor: pointer;
   `,
 
     // 로그아웃 버튼 프레임

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom'; // ✅ useNavigate 추가
+import { useNavigate } from 'react-router-dom'; // ✅ 추가
 import S from './style';
 import postApi from '../api/postlist';
 
@@ -12,65 +12,33 @@ interface Post {
   count: number;
 }
 
-interface SearchResponse {
+interface MyPostsResponse {
   content: Post[];
   totalElements: number;
 }
 
-const Search: React.FC = () => {
-  const location = useLocation();
-  const navigate = useNavigate(); // ✅ 네비게이션 훅
-
-  const [keyword, setKeyword] = useState<string>('');
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-  const [nickname, setNickname] = useState<string>('');
+const MyPostList: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [totalCount, setTotalCount] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const postsPerPage = 8;
+  const navigate = useNavigate(); // ✅ 추가
 
   const totalPages = Math.ceil(totalCount / postsPerPage);
 
   useEffect(() => {
-    const queryParams = new URLSearchParams(location.search);
-    const newKeyword = queryParams.get('keyword') || '';
-    setKeyword(newKeyword);
-    setCurrentPage(1);
-    console.log('🔁 keyword set from URL:', newKeyword);
-  }, [location.search]);
-
-  useEffect(() => {
-    const token = localStorage.getItem('accessToken');
-    const savedNickname = localStorage.getItem('username');
-    if (token) {
-      setIsLoggedIn(true);
-      setNickname(savedNickname || '사용자');
-    }
-  }, []);
-
-  useEffect(() => {
-    const fetchSearchedPosts = async () => {
-      if (!keyword || currentPage < 1) return;
-
+    const fetchMyPosts = async () => {
       try {
-        console.log('[검색 요청]', {
-          keyword,
-          currentPage,
-          backendPage: currentPage - 1,
-        });
-
-        const data: SearchResponse = await postApi.search(keyword, currentPage - 1);
+        const data: MyPostsResponse = await postApi.getMyPosts(currentPage - 1);
         setPosts(data.content);
         setTotalCount(data.totalElements);
       } catch (err) {
-        const error = err as Error;
-        console.error('[검색 실패]', error.message);
-        console.error('[에러 정보]', error);
+        console.error('[내 글 불러오기 실패]', err);
       }
     };
 
-    fetchSearchedPosts();
-  }, [keyword, currentPage]);
+    fetchMyPosts();
+  }, [currentPage]);
 
   const goToPage = (page: number) => {
     if (page === currentPage) {
@@ -81,14 +49,15 @@ const Search: React.FC = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  // ✅ 게시글 클릭 시 상세 페이지 이동
   const handleClickPost = (postId: number) => {
-    navigate(`/post/post/${postId}`); // ✅ 게시글 클릭 시 이동
+    navigate(`/post/post/${postId}`);
   };
 
   return (
     <S.MainWrapper>
       <S.ContentLeft>
-        <h3>검색된 글</h3>
+        <h3>내가 작성한 글</h3>
         <S.TotalCount>전체 게시글: {totalCount}</S.TotalCount>
 
         <S.PostListWrapper>
@@ -96,8 +65,8 @@ const Search: React.FC = () => {
             posts.map((post) => (
               <S.PostCard
                 key={post.postId}
-                onClick={() => handleClickPost(post.postId)} // ✅ 클릭 이벤트 추가
-                style={{ cursor: 'pointer' }} // ✅ 손가락 커서
+                onClick={() => handleClickPost(post.postId)} // ✅ 클릭 이벤트
+                style={{ cursor: 'pointer' }} // ✅ 커서 스타일
               >
                 <div className="post-header">
                   <div className="author-icon" />
@@ -141,19 +110,8 @@ const Search: React.FC = () => {
           </S.Pagination>
         )}
       </S.ContentLeft>
-
-      {isLoggedIn && (
-        <S.SidebarRight>
-          <S.UserAvatar />
-          <S.Nickname>{nickname}</S.Nickname>
-          <div>
-            <S.ActionButton>글쓰기</S.ActionButton>
-            <S.ActionButton>마이페이지</S.ActionButton>
-          </div>
-        </S.SidebarRight>
-      )}
     </S.MainWrapper>
   );
 };
 
-export default Search;
+export default MyPostList;
