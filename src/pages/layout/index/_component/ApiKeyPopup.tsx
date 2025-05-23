@@ -44,6 +44,63 @@ const generateApiKey = async (userData: FormData): Promise<ApiResponse> => {
     }
 };
 
+// 개선된 클립보드 복사 함수
+const copyToClipboard = async (text: string): Promise<boolean> => {
+    try {
+        // 최신 Clipboard API 시도
+        if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(text);
+            return true;
+        }
+
+        // 폴백 방법: document.execCommand 사용
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+        textArea.style.position = 'fixed';
+        textArea.style.left = '-999999px';
+        textArea.style.top = '-999999px';
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+
+        const successful = document.execCommand('copy');
+        document.body.removeChild(textArea);
+
+        if (successful) {
+            return true;
+        }
+
+        // 마지막 폴백: 선택 영역 생성
+        const range = document.createRange();
+        const selection = window.getSelection();
+        const mark = document.createElement('span');
+        mark.textContent = text;
+        const markStyle = mark.style as any;
+        markStyle.all = 'unset';
+        markStyle.position = 'fixed';
+        markStyle.top = '0';
+        markStyle.clip = 'rect(0, 0, 0, 0)';
+        markStyle.whiteSpace = 'pre';
+        markStyle.webkitUserSelect = 'text';
+        markStyle.MozUserSelect = 'text';
+        markStyle.msUserSelect = 'text';
+        markStyle.userSelect = 'text';
+
+        document.body.appendChild(mark);
+        range.selectNodeContents(mark);
+        selection?.removeAllRanges();
+        selection?.addRange(range);
+
+        const success = document.execCommand('copy');
+        document.body.removeChild(mark);
+
+        return success;
+    } catch (error) {
+        console.error('클립보드 복사 실패:', error);
+        return false;
+    }
+};
+
 // 스타일 컴포넌트 정의
 const PopupOverlay = styled.div`
     position: fixed;
@@ -126,19 +183,17 @@ const StyledWrapper = styled.div`
         border: 1px solid rgba(105, 105, 105, 0.397);
         border-radius: 10px;
         font-size: 14px;
-        color: #000000 !important; /* 더 높은 우선순위로 입력 텍스트 색상 적용 */
+        color: #000000 !important;
     }
 
-    /* 제품 사용 사유 텍스트 스타일 */
     .reason-title {
         display: block;
         margin-bottom: 5px;
         font-size: 0.9em;
-        color: #111111; /* 요청대로 색상 변경 */
+        color: #111111;
         font-weight: 500;
     }
 
-    /* 제품 사용 사유 텍스트 영역 스타일 */
     .reason {
         min-height: 100px;
         resize: vertical;
@@ -179,7 +234,6 @@ const StyledWrapper = styled.div`
         color: green;
     }
 
-    /* 이메일 필드가 blur 됐을 때는 초록색이 아닌 회색 유지 */
     .form label .input.email-blurred:not(:valid) + span {
         color: grey;
     }
@@ -231,20 +285,7 @@ const StyledWrapper = styled.div`
     .api-key-label {
         font-weight: 600;
         margin: 0;
-        color: #111111;
-    }
-
-    .api-key-container {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        margin-top: 10px;
-    }
-
-    .api-key-label {
-        font-weight: 600;
-        margin: 0;
-        color: #111111 !important; /* 중요도 증가 */
+        color: #111111 !important;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -252,7 +293,7 @@ const StyledWrapper = styled.div`
     }
 
     .api-key-label span {
-        color: #111111 !important; /* 명시적으로 span 요소에 색상 지정 */
+        color: #111111 !important;
     }
 
     .copy-button {
@@ -264,11 +305,20 @@ const StyledWrapper = styled.div`
         cursor: pointer;
         font-size: 12px;
         height: 30px;
-        flex-shrink: 0; /* 크기 고정 */
+        flex-shrink: 0;
+        transition: all 0.2s ease;
     }
 
     .copy-button:hover {
         background-color: rgb(56, 90, 194);
+    }
+
+    .copy-button.copied {
+        background-color: #27ae60;
+    }
+
+    .copy-button.copied:hover {
+        background-color: #219653;
     }
 
     .api-key-box {
@@ -277,19 +327,16 @@ const StyledWrapper = styled.div`
         border-radius: 10px;
         padding: 15px;
         font-family: monospace;
-        overflow-x: auto; /* 가로 스크롤 추가 */
-        white-space: nowrap; /* 텍스트가 줄바꿈되지 않도록 설정 */
+        overflow-x: auto;
+        white-space: nowrap;
         margin-bottom: 15px;
+        position: relative;
     }
 
     .api-key-box code {
-        color: #0066cc; /* API 키 글자 색상 - 파란색으로 변경 */
+        color: #0066cc;
         font-weight: 500;
-        overflow-x: visible; /* 코드 내용이 넘쳐도 숨기지 않음 */
-    }
-
-    .copy-button:hover {
-        background-color: rgb(56, 90, 194);
+        overflow-x: visible;
     }
 
     .api-key-notice {
@@ -304,6 +351,18 @@ const StyledWrapper = styled.div`
 
     .new-key:hover {
         background-color: #219653;
+    }
+
+    .copy-message {
+        color: #27ae60;
+        font-size: 12px;
+        margin-top: 5px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .copy-message.show {
+        opacity: 1;
     }
 
     @keyframes pulse {
@@ -327,6 +386,7 @@ const ApiKeyPopup: React.FC<ApiKeyPopupProps> = ({ isOpen, onClose }) => {
     });
     const [apiResponse, setApiResponse] = useState<ApiResponse | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [copyStates, setCopyStates] = useState<{[key: string]: boolean}>({});
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -346,11 +406,9 @@ const ApiKeyPopup: React.FC<ApiKeyPopupProps> = ({ isOpen, onClose }) => {
         setIsLoading(true);
 
         try {
-            // API 키 생성 함수 호출
             const response = await generateApiKey(formData);
             setApiResponse(response);
 
-            // 응답을 받으면 폼 필드를 숨기고 API 키 결과만 표시
             setFormData({
                 name: '',
                 email: '',
@@ -363,9 +421,25 @@ const ApiKeyPopup: React.FC<ApiKeyPopupProps> = ({ isOpen, onClose }) => {
         }
     };
 
-    const handleCopy = (text: string) => {
-        navigator.clipboard.writeText(text);
-        alert('클립보드에 복사되었습니다.');
+    const handleCopy = async (text: string, key: string) => {
+        try {
+            const success = await copyToClipboard(text);
+
+            if (success) {
+                // 복사 성공 피드백
+                setCopyStates(prev => ({ ...prev, [key]: true }));
+
+                // 2초 후 원래 상태로 복원
+                setTimeout(() => {
+                    setCopyStates(prev => ({ ...prev, [key]: false }));
+                }, 2000);
+            } else {
+                alert('복사에 실패했습니다. 수동으로 선택하여 복사해주세요.');
+            }
+        } catch (error) {
+            console.error('복사 오류:', error);
+            alert('복사에 실패했습니다. 수동으로 선택하여 복사해주세요.');
+        }
     };
 
     const handleReset = () => {
@@ -375,18 +449,17 @@ const ApiKeyPopup: React.FC<ApiKeyPopupProps> = ({ isOpen, onClose }) => {
             reason: ''
         });
         setApiResponse(null);
+        setCopyStates({});
     };
 
-    // 팝업창 닫기 함수 - 상태 초기화 추가
     const handleClose = () => {
-        // 폼 데이터와 API 키 상태 초기화
         setFormData({
             name: '',
             email: '',
             reason: ''
         });
         setApiResponse(null);
-        // 부모 컴포넌트의 onClose 함수 호출
+        setCopyStates({});
         onClose();
     };
 
@@ -453,10 +526,10 @@ const ApiKeyPopup: React.FC<ApiKeyPopupProps> = ({ isOpen, onClose }) => {
                                 <span style={{color: '#111111'}}>발급된 API 키</span>
                                 <button
                                     type="button"
-                                    className="copy-button"
-                                    onClick={() => handleCopy(apiResponse.api_key)}
+                                    className={`copy-button ${copyStates.apiKey ? 'copied' : ''}`}
+                                    onClick={() => handleCopy(apiResponse.api_key, 'apiKey')}
                                 >
-                                    복사
+                                    {copyStates.apiKey ? '복사됨!' : '복사'}
                                 </button>
                             </div>
                             <div className="api-key-box">
@@ -467,10 +540,10 @@ const ApiKeyPopup: React.FC<ApiKeyPopupProps> = ({ isOpen, onClose }) => {
                                 <span style={{color: '#111111'}}>JWT Secret</span>
                                 <button
                                     type="button"
-                                    className="copy-button"
-                                    onClick={() => handleCopy(apiResponse.jwt_secret)}
+                                    className={`copy-button ${copyStates.jwtSecret ? 'copied' : ''}`}
+                                    onClick={() => handleCopy(apiResponse.jwt_secret, 'jwtSecret')}
                                 >
-                                    복사
+                                    {copyStates.jwtSecret ? '복사됨!' : '복사'}
                                 </button>
                             </div>
                             <div className="api-key-box">
