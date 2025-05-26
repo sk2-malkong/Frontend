@@ -7,12 +7,20 @@ interface LoginRequest {
   password: string;
 }
 
+
 // 회원가입 요청 데이터 타입
 interface RegisterRequest {
   id: string;
   password: string;
   username: string;
   email: string;
+}
+interface BadWord {
+  word: string;
+  count: number;
+}
+interface AbuseTotal {
+  total_abuse_count: number;
 }
 
 // 사용자 프로필 타입
@@ -134,6 +142,20 @@ const checkName = async (username: string): Promise<string> => {
   return res.data.message || "사용 가능한 닉네임입니다.";
 }
 
+// 욕 종류별 count 목록 조회
+const countBadwords = async (): Promise<{ badwords: BadWord[] }> => {
+  const res = await axios.get("http://3.37.74.62:8001/badwords");
+  return res.data;
+};
+// 총합 욕
+const getAbuseTotal = async (): Promise<AbuseTotal> => {
+  const res = await axios.get("http://3.37.74.62:8001/abuse-total");
+  return res.data;
+};
+
+
+
+
 // ✅ 전체 auth 객체 export
 const auth = {
   login,
@@ -144,6 +166,8 @@ const auth = {
   resetPassword,
   checkId,
   checkName,
+  countBadwords,
+  getAbuseTotal
 };
 
 export default auth;
