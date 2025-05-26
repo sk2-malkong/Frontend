@@ -562,7 +562,8 @@ const DetailThreadSection: React.FC<DetailThreadSectionProps> = ({ active }) => 
 
   useEffect(() => {
     const fetchCount = async () => {
-      const result = await userApi.PenaltyCountAll();
+      const result = 100; // 박성진 api
+          // await userApi.PenaltyCountAll();
       setCount(result);
     };
 

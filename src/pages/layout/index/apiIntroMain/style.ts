@@ -530,7 +530,7 @@ const S = {
             background: linear-gradient(744deg, #4E71FF, #8DD8FF 60%, #BBFBFF);
             border-radius: 40%;
             //50
-            animation: wave 30s infinite linear;  
+            animation: wave 30s infinite linear;
             z-index: 0;
         }
 
@@ -603,6 +603,148 @@ const S = {
             margin-top: 0;
         }
     `,
+
+    // ===========================푸터 페이지 ===============================
+
+    /**
+     * 푸터 전체 영역 컴포넌트
+     * 페이지 하단에 위치하는 회사 정보 및 연락처 섹션입니다.
+     */
+    FooterWrapper: styled.footer`
+        background-color: #f8f9fa;
+        border-top: ${pxToRem(1)} solid #e9ecef;
+        padding: ${pxToRem(40)} 0 ${pxToRem(20)};
+        margin-top: ${pxToRem(80)};
+    `,
+
+    /**
+     * 푸터 내용 컨테이너
+     * 푸터 내부 요소들의 배치를 관리합니다.
+     */
+    FooterContent: styled.div`
+        display: flex;
+        justify-content: space-between; /* 양 끝에 배치 */
+        align-items: center; /* 세로 중앙 정렬 */
+        width: 100%; /* 전체 너비 사용 */
+        height: 100%; /* 부모(DivWrapper) 높이에 맞춤 */
+        padding: 0 ${pxToRem(20)}; /* 좌우 여백 */
+        max-width: none; /* max-width 제한 제거 */
+        margin: 0; /* margin 제거 */
+
+        @media (max-width: ${pxToRem(768)}) {
+            flex-direction: column;
+            gap: ${pxToRem(15)};
+            padding: ${pxToRem(10)} ${pxToRem(20)}; /* 모바일에서 상하 패딩 추가 */
+        }
+    `,
+
+    /**
+     * 회사 정보 섹션 컴포넌트
+     * 회사명을 표시하는 영역입니다.
+     */
+    CompanySection: styled.div`
+        flex: 1;
+    `,
+
+    /**
+     * 회사명 텍스트 컴포넌트
+     * 회사명을 표시하는 제목 텍스트입니다.
+     */
+    CompanyName: styled.h3`
+        font-size: ${pxToRem(24)};
+        font-weight: 700;
+        color: #333;
+        margin-bottom: ${pxToRem(12)};
+    `,
+
+    /**
+     * 연락처 섹션 컴포넌트
+     * 연락처 정보를 담는 영역입니다.
+     */
+    ContactSection: styled.div`
+        flex-shrink: 0;
+    `,
+
+    /**
+     * 연락처 제목 컴포넌트
+     * "연락처" 제목을 표시합니다.
+     */
+    ContactTitle: styled.h4`
+        font-size: ${pxToRem(18)};
+        font-weight: 600;
+        color: #333;
+        margin-bottom: ${pxToRem(16)};
+    `,
+
+    /**
+     * 연락처 목록 컨테이너
+     * 개별 연락처 항목들을 세로로 배치합니다.
+     */
+    ContactList: styled.div`
+        display: flex;
+        flex-direction: column;
+        gap: ${pxToRem(8)};
+    `,
+
+    /**
+     * 개별 연락처 항목 컴포넌트
+     * 라벨과 연락처 정보를 가로로 배치합니다.
+     */
+    ContactItem: styled.div`
+        display: flex;
+        align-items: center;
+        gap: ${pxToRem(8)};
+    `,
+
+    /**
+     * 연락처 라벨 컴포넌트
+     * "이메일:", "전화:" 등의 라벨을 표시합니다.
+     */
+    ContactLabel: styled.span`
+        font-size: ${pxToRem(14)};
+        color: #666;
+        min-width: ${pxToRem(50)};
+    `,
+
+    /**
+     * 연락처 링크 컴포넌트
+     * 클릭 가능한 이메일 및 전화번호 링크입니다.
+     */
+    ContactLink: styled.a`
+        font-size: ${pxToRem(14)};
+        color: #666;
+        text-decoration: none;
+        transition: color 0.2s ease;
+
+        &:hover {
+            color: #666;
+            text-decoration: underline;
+        }
+    `,
+
+    /**
+     * 푸터 하단 영역 컴포넌트
+     * 저작권 정보를 표시하는 하단 섹션입니다.
+     */
+    FooterBottom: styled.div`
+        max-width: ${pxToRem(1200)};
+        margin: 0 auto;
+        padding: ${pxToRem(20)} ${pxToRem(20)} 0;
+        border-top: ${pxToRem(1)} solid #e9ecef;
+        margin-top: ${pxToRem(30)};
+    `,
+
+    /**
+     * 저작권 텍스트 컴포넌트
+     * 저작권 정보를 표시하는 작은 텍스트입니다.
+     */
+    Copyright: styled.p`
+        font-size: ${pxToRem(14)};
+        color: #888;
+        text-align: center;
+        margin: 0;
+    `,
+
 };
 
 export default S;
