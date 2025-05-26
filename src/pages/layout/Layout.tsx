@@ -1,6 +1,5 @@
 import React, { useState, KeyboardEvent, ChangeEvent } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-import Footer from './footer/Footer';
 import S from './style';
 
 const Layout: React.FC = () => {
@@ -76,7 +75,6 @@ const Layout: React.FC = () => {
             />
         )}
 
-        {!isIntroPage && <Footer />}
       </div>
   );
 };
