@@ -32,16 +32,6 @@ const postPenaltyCount = async (): Promise<number> => {
   return response.data;
 };
 
-// 비속어 전체 사용  횟수
-const PenaltyCountAll = async (): Promise<number> => {
-  try {
-    const response = await api.get('/api/user/penalty/all');
-    return response.data.count || 0;
-  } catch (error) {
-    console.error('전체 비속어 사용 횟수 조회 실패:', error);
-    return 0;
-  }
-};
 /**
  * 프로필 이미지 업로드
  */
@@ -79,7 +69,6 @@ const userApi = {
   uploadProfileImage,
   updateProfile,
   withdrawUser,
-  PenaltyCountAll
 };
 
 export default userApi;
