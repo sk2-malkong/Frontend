@@ -2,7 +2,14 @@ import React, { useState, useEffect } from "react";
 import LimitationLog from "./LimitationLog";
 import limitService from "../api/limitService";
 import S from "./style";
-// 욕설 로그 타입
+
+// 원 응답에서 오는 로그 타입
+interface OriginalBadwordLog {
+    originalWord: string;
+    filteredWord: string;
+}
+
+// 렌더링에 사용할 로그 타입
 interface BadwordLog {
     originalWord: string;
     filteredWord: string;
@@ -16,10 +23,18 @@ interface LogGroup {
     endDate: string;
 }
 
-// 전체 API 응답 타입
+// 전체 가공 후 타입
 interface LimitData {
     isActive: boolean;
     logGroups: LogGroup[];
+}
+
+// 서비스에서 반환하는 원본 타입
+interface UserLimitInfo {
+    endDate: string | null;
+    badwordLogs: OriginalBadwordLog[];
+    isActive: boolean;
+    startDate: string | null;
 }
 
 const LimitationLogContainer: React.FC = () => {
@@ -32,10 +47,24 @@ const LimitationLogContainer: React.FC = () => {
             try {
                 setIsLoading(true);
 
-                // ❗ 오류 해결 핵심: 명시적 타입 단언 추가
-                const data = await limitService.postUserLimits() as LimitData;
+                const data: UserLimitInfo = await limitService.postUserLimits();
 
-                setLimitData(data);
+                // LimitData 형식으로 변환
+                const transformedData: LimitData = {
+                    isActive: data.isActive,
+                    logGroups: [
+                        {
+                            logs: data.badwordLogs.map(log => ({
+                                ...log,
+                                createdAt: new Date().toISOString() // 가짜 createdAt 추가
+                            })),
+                            startDate: data.startDate ?? '',
+                            endDate: data.endDate ?? ''
+                        }
+                    ]
+                };
+
+                setLimitData(transformedData);
                 setError(null);
             } catch (err) {
                 console.error("제한 내역을 불러오는 데 실패했습니다:", err);
@@ -56,11 +85,10 @@ const LimitationLogContainer: React.FC = () => {
         return <div>{error}</div>;
     }
 
-    if (!limitData || !limitData.logGroups || limitData.logGroups.length === 0) {
+    if (!limitData || limitData.logGroups.length === 0) {
         return <S.EmptyMessage>이용제한 내역 없음</S.EmptyMessage>;
     }
 
-    // 날짜 포맷 변환 함수 (2025-05-07T15:05:56 -> YY.MM.DD)
     const formatDate = (dateString: string): string => {
         const date = new Date(dateString);
         const year = date.getFullYear().toString().slice(2);
@@ -69,7 +97,6 @@ const LimitationLogContainer: React.FC = () => {
         return `${year}.${month}.${day}`;
     };
 
-    // 시간 포맷 변환 함수 (2025-05-07T15:05:56 -> HH:MM)
     const formatTime = (dateString: string): string => {
         const date = new Date(dateString);
         const hours = String(date.getHours()).padStart(2, '0');
