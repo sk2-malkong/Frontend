@@ -56,6 +56,11 @@ const appearDown = keyframes`
     opacity: 0;
   }
 `;
+const fadeOpacity = keyframes`
+  from { opacity: 0.3; }
+  to { opacity: 1; }
+`;
+
 
 const appearClear = keyframes`
   from {
@@ -125,6 +130,7 @@ export const Drop = styled.div<DropProps>`
   width: ${({ small }) => (small ? '330px' : '514px')};
   height: ${({ small }) => (small ? '330px' : '514px')};
   position: relative;
+  opacity: 0.3;
   box-shadow:
     inset 20px 20px 20px rgba(0, 0, 0, 0.1),
     25px 35px 20px rgba(0, 0, 0, 0.1),
@@ -137,10 +143,10 @@ export const Drop = styled.div<DropProps>`
   padding: 4rem;
   text-align: center;
   overflow: hidden;
-  animation: ${appearUp} 0.6s ease-out forwards;
-  animation: ${dropAnimation} 2s infinite alternate ease-in-out;
+  transition: transform 0.5s ease-in-out, box-shadow 0.5s ease-in-out;
+  filter: blur(8px);
+  animation:${appearClear} 0.6s ease-out both,${dropAnimation} 2s infinite alternate ease-in-out;
   border-radius: 38% 62% 46% 54% / 46% 51% 49% 54%;
-  transition: transform 0.3s ease;
 
   img {
     width: 50px;
@@ -152,12 +158,17 @@ export const Drop = styled.div<DropProps>`
     font-size: 74px;
     margin: 0;
   }
+
   &:active img,
   &:active svg {
     transform: scale(1.2);
   }
 
   /* 흰 점들 (pseudo-elements) */
+  &::before,
+  &::after {
+    transition: opacity 0.3s ease-in-out 0.1s;
+  }
   &::before {
     content: "";
     position: absolute;
@@ -179,10 +190,6 @@ export const Drop = styled.div<DropProps>`
     background: #fff;
     border-radius: 50%;
     opacity: 0.7;
-  }
-  &::before,
-  &::after {
-    transition: opacity 0.3s ease-in-out 0.1s;
   }
 `;
 
@@ -347,7 +354,7 @@ export const FloatingIcon = styled.svg`
 
 export const Title = styled.h2<{ visible?: boolean }>`
   position: relative;
-  font-size: 30px;
+  font-size: 40px;
   z-index: 3;
   color: black;
     ${({ visible }) =>
@@ -360,7 +367,7 @@ export const Title = styled.h2<{ visible?: boolean }>`
 export const Text = styled.p<{ visible?: boolean }>`
   position: relative;
   z-index: 3;
-  font-size: 16px;
+  font-size: 20px;
   color: #999;
   transform: ${({ visible = true }) => (visible ? 'translateY(0)' : 'translateY(20px)')};
   opacity: ${({ visible = true }) => (visible ? 1 : 0)};
