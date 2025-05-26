@@ -69,7 +69,6 @@ const userApi = {
   uploadProfileImage,
   updateProfile,
   withdrawUser,
-  // PenaltyCountAll
 };
 
 export default userApi;

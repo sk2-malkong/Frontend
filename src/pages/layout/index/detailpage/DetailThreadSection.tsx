@@ -12,6 +12,7 @@ import {
   Cell,   
 } from 'recharts';
 import userApi from 'src/pages/api/userApi';
+import auth from 'src/pages/api/auth';
 
 
 const GlobalAnimationStyle = createGlobalStyle`
@@ -41,6 +42,10 @@ const GlobalAnimationStyle = createGlobalStyle`
 interface DetailThreadSectionProps {
   active: boolean;
   count?: number;
+}
+interface BadWord {
+  word: string;
+  count: number;
 }
 const fadeText = keyframes`
   from { opacity: 0; }
@@ -120,11 +125,6 @@ const Section05 = styled.section.attrs({ id: 'section05' })`
 const StyledWrapper = styled.div`
   .count{
     font-size: 20px;
-  }
-
-  .title{
-    font-size: 40px;
-    margin-bottom: 20px;
   }
   .box {
     top: 60%;
@@ -211,6 +211,45 @@ const StyledWrapper = styled.div`
     transition: 2s;
     transform: translate(-50%, -75%);
   }
+  .box span .title,
+  .box span .count {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  /* 활성 상태: 탐지중 곡선 텍스트 중앙 정렬 */
+  .box.active .curve-text text {
+    font-size: 2.5em;
+  }
+  .box.active .curve-text {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  /* 활성 상태: 타이틀 나타날 때만 애니메이션 */
+  .box.active span .title {
+    font-size: 35px;
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, 0);
+    opacity: 1;
+    color: #e2e2e2;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+
+  /* 활성 상태: 카운트 숫자 나타날 때만 애니메이션 */
+  .box.active span .count {
+    font-size: 3em;
+    display: block;
+    margin-top: 0.5em;
+    opacity: 1;
+    transform: translateY(0);
+    font-weight: bold;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+
 
   .box i:after {
     border-radius: 40%;
@@ -358,7 +397,7 @@ const Parent = styled.div`
 `;
 
 const Card = styled.div`
-  width: 400px;
+  min-width: 400px;
   max-height: 400px;
   border-radius: 20px;
   background: white;
@@ -388,6 +427,10 @@ const Card = styled.div`
 const Content = styled.div`
   padding: 10px 0;
 `;
+const maskWord = (w: string): string => {
+  if (!w || w.length === 0) return '';
+  return w.charAt(0) + 'XX';
+};
 
 const Title = styled.span`
   display: block;
@@ -533,8 +576,9 @@ const GraphRow = styled.div`
   justify-content: space-between;   
   align-items: center;
   width: 100%;
-  padding: 0 20px;  
-  width: 95%;    
+  height: 100%;
+  padding: 0 20px;
+  width : 95% ;
   margin: 0 auto;  
 `;
 const FillWrapper = styled.div<{ show: boolean }>`
@@ -543,31 +587,28 @@ const FillWrapper = styled.div<{ show: boolean }>`
   pointer-events: ${({ show }) => (show ? 'auto' : 'none')};
 `;
 
-const Path = styled.path<{ isHovered: boolean }>`
-  transform-origin: center;
-  transition: transform 0.3s ease-in-out, filter 0.3s ease-in-out;
-  transform: ${({ isHovered }) => (isHovered ? 'scale(1.08)' : 'scale(1)')};
-  filter: ${({ isHovered }) => (isHovered ? 'brightness(1.1)' : 'none')};
-  cursor: pointer;
-`;
 const DetailThreadSection: React.FC<DetailThreadSectionProps> = ({ active }) => {
   const [isActive, setIsActive] = useState(false);
   const [show, setShow] = useState(false);
   const [dropState, setDropState] = useState<'hidden' | 'fadingIn' | 'fadingOut'>('hidden');
   const [dots, setDots] = useState('');
+  const [abuseTotal, setAbuseTotal] = useState(0);
   const [leftActive, setLeftActive] = useState(false);
   const [rightActive, setRightActive] = useState(false);
   const [chartVisible, setChartVisible] = useState(false);
   const [count, setCount] = useState(0); // 상태값 선언
+  const [badwords, setBadwords] = useState<BadWord[]>([]);
+  const [isGraphActive2, setIsGraphActive2] = useState(false);
 
   useEffect(() => {
-    const fetchCount = async () => {
-      const result = 100; // 박성진 api
-          // await userApi.PenaltyCountAll();
-      setCount(result);
-    };
-
-    fetchCount();
+    (async () => {
+      try {
+        const res = await auth.getAbuseTotal();
+        setCount(res.total_abuse_count);
+      } catch (err) {
+        console.error('AbuseTotal 조회 실패:', err);
+      }
+    })();
   }, []);
 
   // 섹션 active 상태에 따른 자동 실행 로직
@@ -638,206 +679,229 @@ const data: DataSegment[] = [
   { label: '재현율',    value: 92.30, color: '#00c37b' },
   { label: 'F1-score',  value: 90.63, color: '#00894d' }
 ];
-const data2: DataSegment[] = [
-  { label: '씨X',  value: 40, color: '#00f9cb' },
-  { label: '개XX', value: 33, color: '#08e260' },
-  { label: '미X',    value: 20, color: '#00c37b' },
-  { label: '그외..',  value: 7, color: '#00894d' }
-];
-  const total = data.reduce((sum, d) => sum + d.value, 0);
-  const total2 = data2.reduce((sum, d) => sum + d.value, 0);
+const colors = ['#00f9cb', '#08e260', '#00c37b', '#00894d', '#ffb400', '#ff6b6b'];
+ useEffect(() => {
+  const fetchBadwords = async () => {
+    try {
+      // 파라미터 없이 호출하고, 반환값의 badwords 배열을 바로 꺼냅니다.
+      const res = await auth.countBadwords();
+      setBadwords(res.badwords);
+      console.log(setBadwords)
+    } catch (err) {
+      console.error(err);
+    }
+  };
+  fetchBadwords();
+}, []);
 
-let startAngle = 0;
-const segments: Segment[] = data.map((d, i) => {
-  const pct = d.value / total;
-  const end = startAngle + pct * 2 * Math.PI;
-  const x1 = Math.cos(startAngle) * 50;
-  const y1 = Math.sin(startAngle) * 50;
-  const x2 = Math.cos(end) * 50;
-  const y2 = Math.sin(end) * 50;
-  const largeArc = pct > 0.5 ? 1 : 0;
-  const path = `M 0 0 L ${x1} ${y1} A 50 50 0 ${largeArc} 1 ${x2} ${y2} Z`;
-  startAngle = end;
-  return { path, color: d.color, zIndex: i };
-});
+// Dynamic bar chart data: 비속어 사용 횟수
+  const barData: DataSegment[] = badwords.map((bw, idx) => ({
+    label: maskWord(bw.word),
+    value: bw.count,
+    color: colors[idx % colors.length],
+  }));
+  const barTotal = barData.reduce((sum, d) => sum + d.value, 0);
 
-const startAngle2 = 0;
-const segments2: Segment[] = data2.map((d, i) => {
-  const pct = d.value / total2;
-  const end = startAngle + pct * 2 * Math.PI;
-  const x1 = Math.cos(startAngle) * 50;
-  const y1 = Math.sin(startAngle) * 50;
-  const x2 = Math.cos(end) * 50;
-  const y2 = Math.sin(end) * 50;
-  const largeArc = pct > 0.5 ? 1 : 0;
-  const path = `M 0 0 L ${x1} ${y1} A 50 50 0 ${largeArc} 1 ${x2} ${y2} Z`;
-  startAngle = end;
-  return { path, color: d.color, zIndex: i };
-});
+// Top 4 비속어만 골라 퍼센트 계산 (원형 그래프)
+  const top4 = [...badwords].sort((a, b) => b.count - a.count).slice(0, 4);
+  const circleData: DataSegment[] = top4.map((bw, idx) => ({
+    label: maskWord(bw.word),
+    value: top4.reduce((sum, d) => sum + d.count, 0) > 0
+      ? (bw.count / top4.reduce((sum, d) => sum + d.count, 0)) * 100
+      : 0,
+    color: colors[idx % colors.length],
+  }));
+
+const total = data.reduce((sum, d) => sum + d.value, 0);
+const computeSegments = (segments: DataSegment[]): Segment[] => {
+  const total = segments.reduce((sum, d) => sum + d.value, 0);
+  let startAngle = 0;
+
+  return segments.map((d, i) => {
+    const pct = d.value / (total || 1);
+    const end = startAngle + pct * 2 * Math.PI;
+    const x1 = Math.cos(startAngle) * 50;
+    const y1 = Math.sin(startAngle) * 50;
+    const x2 = Math.cos(end) * 50;
+    const y2 = Math.sin(end) * 50;
+    const largeArc = pct > 0.5 ? 1 : 0;
+    const path = `M 0 0 L ${x1} ${y1} A 50 50 0 ${largeArc} 1 ${x2} ${y2} Z`;
+    startAngle = end;
+    return { path, color: d.color, zIndex: i };
+  });
+};
+   const circleSegments = computeSegments(circleData);
 
   return (
-    <div>
-      <GlobalAnimationStyle />
-      <StyledWrapper>
-        <div className="ai">Purogo AI 성능
-            <Section05>
-      <a href="#next">
-        <span />
-      </a>
-        </Section05>
-        </div>
-        <button
-          className={`box ${isActive ? 'active' : ''}`}
-          onClick={handleClick}
-        >
-        <svg className="curve-text" viewBox="0 0 500 100">
-            <text>
-                탐지중
-              <tspan>{dots}</tspan>
-            </text>
-          </svg>
-           <span>
-            <h2 className='title'>탐지된 비속어 수</h2>
-              {isActive ? (
-              <CountUp className='count' end={count} duration={1} />
-            ) : (
-              <CountUp className='count' start={count} end={0} duration={1} />
-            )}
-           </span>
-          <i />
-          <div className="drop drop1" />
-          <div className="drop drop2" />
-          <div className="drop drop3" />
-        </button>
-          <div className="drop-wrapper">
-         <GraphRow>
-      <FillWrapper show={show}>
-        <Parent className='left' onClick={() => setLeftActive(prev => !prev)}>
-      <Card>
-        <Content>
-          <Title>성능지표 기반 분석</Title>
-          <Text>성능지표 비교</Text>
-        </Content>
-        <GraphContainer>
-          {/* Recharts BarChart */}
-          <ResponsiveContainer width="100%" height="100%">
-  <BarChart
-    data={data}
-    margin={{ top: 20, right: 20, left: 20, bottom: 60 }}
-    barSize={50}
-    barCategoryGap="20%"
-  >
-    <CartesianGrid strokeDasharray="3 3" />
-    <XAxis
-      dataKey="label"
-      interval={0}
-      padding={{ left: 20, right: 20 }}
-      tick={{ fontSize: 12 }}
-      tickMargin={10}
-      angle={-30}
-      textAnchor="end"
-    />
-    <YAxis
-      domain={[0, 100]}
-      ticks={[0, 50, 80, 100]}
-      tickFormatter={v => `${v}%`}
-      tick={{ fontSize: 12 }}
-    />
-    <RechartsLegend verticalAlign="top" height={20} />
-
-<Bar dataKey="value" fill='#00c37b' isAnimationActive={false}>
-  {data.map((entry, idx) => (
-    <Cell
-      key={`bar-${idx}`}
-      fill={entry.color}
-      className="bar-animate"
-      style={{
-        animationDelay: `${idx * 0.5}s`,
-      }}
-    />
-  ))}
-</Bar>
-  </BarChart>
-          </ResponsiveContainer>
-        </GraphContainer>
-        <Bottom>
-          <Legend>
-            {data.map((d, i) => (
-              <LegendItem key={i}>
-                <ColorDot color={d.color} />
-                <LegendText>{d.label}: {d.value}%</LegendText>
-              </LegendItem>
-            ))}
-          </Legend>
-          <ViewMore>
-            <Chevron xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-              <path d="m6 9 6 6 6-6" />
-            </Chevron>
-          </ViewMore>
-        </Bottom>
-      </Card>
-        </Parent>
-      </FillWrapper>
-       <FillWrapper show = {show}>
-<Parent className='right' onClick={() => setRightActive(!isGraphActive)}>
-  <Card>
-    <Content>
-      <Title>오늘 가장 많이 사용한 비속어</Title>
-      <Text>Purgo 게시판에서 탐지된 비속어입니다.</Text>
-    </Content>
-    <GraphContainer>
-      <CircleGraph active={isGraphActive}>
-        <Svg viewBox="-60 -60 120 120">
-          {segments2.map((seg, idx) => (
-            <SegmentPath
-              key={idx}
-              d={seg.path}
-              fill={seg.color}
-              style={{
-                transform: isGraphActive
-                  ? `translateZ(${(segments2.length - seg.zIndex) * 10}px)`
-                  : 'translateZ(0)',
-                transition: `transform 0.5s ease-in-out ${seg.zIndex * 0.1}s`
-              }}
-            />
-          ))}
-          <CenterCircle cx="0" cy="0" r="25" fill="white" />
-          <GraphText x="0" y="5" textAnchor="middle">Purgo</GraphText>
-        </Svg>
-        {[{ size:190, off:5, op:0.2 }, { size:210, off:15, op:0.15 }, { size:230, off:25, op:0.1 }].map((c, i) =>
-          <OverlayCircle
-            key={i}
-            size={c.size}
-            offset={c.off}
-            opacity={c.op}
-            style={isGraphActive ? { transform: 'translateZ(-30px)' } : undefined}
-          />
-        )}
-      </CircleGraph>
-    </GraphContainer>
-    <Bottom>
-      <Legend>
-        {data2.map((d, i) => (
-          <LegendItem key={i}>
-            <ColorDot color={d.color} />
-            <LegendText>{d.label}: {d.value}%</LegendText>
-          </LegendItem>
-        ))}
-      </Legend>
-      <ViewMore>
-        <Chevron xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-          <path d="m6 9 6 6 6-6" />
-        </Chevron>
-      </ViewMore>
-    </Bottom>
-  </Card>
-</Parent>
-       </FillWrapper>
-         </GraphRow>
-        </div>
-      </StyledWrapper>
+<div>
+  <GlobalAnimationStyle />
+  <StyledWrapper>
+    {/* AI 타이틀 영역 */}
+    <div className="ai">
+      Purogo AI 성능
+      <Section05>
+        <a href="#next">
+          <span />
+        </a>
+      </Section05>
     </div>
-    
+
+    {/* 탐지 버튼 */}
+    <button
+      className={`box ${isActive ? 'active' : ''}`}
+      onClick={handleClick}
+    >
+      <svg className="curve-text" viewBox="0 0 500 100">
+        <text>
+          탐지중<tspan>{dots}</tspan>
+        </text>
+      </svg>
+          <span>
+            <h2 className="title">탐지된 비속어 수</h2>
+            {isActive ? (
+              <CountUp className="count" end={count} duration={1} />
+            ) : (
+              <CountUp className="count" start={abuseTotal} end={0} duration={1} />
+            )}
+          </span>
+      <i />
+      <div className="drop drop1" />
+      <div className="drop drop2" />
+      <div className="drop drop3" />
+    </button>
+
+    {/* 그래프 래퍼 */}
+    <div className="drop-wrapper">
+      <GraphRow>
+        {/* 막대 그래프 섹션 */}
+        <FillWrapper show={show}>
+          <Parent
+            className="left"
+            onClick={() => setLeftActive(prev => !prev)}
+          >
+            <Card>
+              <Content>
+                <Title>성능지표 기반 분석</Title>
+                <Text>성능지표 비교</Text>
+              </Content>
+              <GraphContainer>
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={data}
+                    margin={{ top: 20, right: 20, left: 20, bottom: 60 }}
+                    barSize={50}
+                    barCategoryGap="20%"
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis
+                      dataKey="label"
+                      interval={0}
+                      padding={{ left: 20, right: 20 }}
+                      tick={{ fontSize: 12 }}
+                      tickMargin={10}
+                      angle={-30}
+                      textAnchor="end"
+                    />
+                    <YAxis
+                      domain={[0, 100]}
+                      ticks={[0, 50, 80, 100]}
+                      tickFormatter={v => `${v}%`}
+                      tick={{ fontSize: 12 }}
+                    />
+                    <RechartsLegend verticalAlign="top" height={20} />
+                    <Bar dataKey="value" fill="#00c37b" isAnimationActive={false}>
+                      {data.map((entry, idx) => (
+                        <Cell
+                          key={`bar-${idx}`}
+                          fill={entry.color}
+                          className="bar-animate"
+                          style={{ animationDelay: `${idx * 0.5}s` }}
+                        />
+                      ))}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              </GraphContainer>
+              <Bottom>
+                <Legend>
+                  {data.map((d, i) => (
+                    <LegendItem key={i}>
+                      <ColorDot color={d.color} />
+                      <LegendText>
+                        {d.label}: {d.value}%
+                      </LegendText>
+                    </LegendItem>
+                  ))}
+                </Legend>
+                <ViewMore>
+                  <Chevron xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="m6 9 6 6 6-6" />
+                  </Chevron>
+                </ViewMore>
+              </Bottom>
+            </Card>
+          </Parent>
+        </FillWrapper>
+
+        {/* 원형 그래프 섹션 */}
+        <FillWrapper show={show}>
+          <Parent>
+            <Card>
+              <Content>
+                <Title>오늘 가장 많이 사용한 비속어</Title>
+                <Text>Purgo 게시판에서 탐지된 비속어입니다.</Text>
+              </Content>
+              <GraphContainer>
+                <CircleGraph active={isGraphActive2}>
+                  <Svg viewBox="-60 -60 120 120">
+                    {circleSegments.map((seg, idx) => (
+                      <SegmentPath
+                        key={idx}
+                        d={seg.path}
+                        fill={seg.color}
+                        style={{
+                          transform: isGraphActive2
+                            ? `translateZ(${(circleSegments.length - seg.zIndex) * 10}px)`
+                            : 'translateZ(0)',
+                          transition: `transform 0.5s ease-in ${seg.zIndex * 0.1}s`
+                        }}
+                      />
+                    ))}
+                    <CenterCircle cx="0" cy="0" r="25" fill="white" />
+                    <GraphText x="0" y="5" textAnchor="middle">
+                      Purgo
+                    </GraphText>
+                  </Svg>
+                  {[{ size: 190, off: 5, op: 0.2 }, { size: 210, off: 15, op: 0.15 }, { size: 230, off: 25, op: 0.1 }].map((c, i) => (
+                    <OverlayCircle
+                      key={i}
+                      size={c.size}
+                      offset={c.off}
+                      opacity={c.op}
+                      style={isGraphActive2 ? { transform: 'translateZ(-30px)' } : undefined}
+                    />
+                  ))}
+                </CircleGraph>
+              </GraphContainer>
+              <Bottom>
+                <Legend>
+                  {circleData.map((d, i) => (
+                    <LegendItem key={i}>
+                      <ColorDot color={d.color} />
+                      <LegendText>
+                        {d.label}: {d.value.toFixed(1)}%
+                      </LegendText>
+                    </LegendItem>
+                  ))}
+                </Legend>
+              </Bottom>
+            </Card>
+          </Parent>
+        </FillWrapper>
+      </GraphRow>
+    </div>
+  </StyledWrapper>
+</div>
   );
 };
 
