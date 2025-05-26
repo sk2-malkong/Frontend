@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import * as S from './style';
 import { createComment } from '../api/comment';
 import auth from '../api/auth';
-import { isUserRestricted } from '../../utils/penalty'; // ✅ 경로 수정
+import { isUserRestricted } from '../../utils/penalty'; // 경로 수정
 
 /**
  * CommentInput
@@ -14,7 +14,7 @@ import { isUserRestricted } from '../../utils/penalty'; // ✅ 경로 수정
 interface CommentInputProps {
   onSubmit: () => void;
   postId: number;
-  isRestricted?: boolean; // ✅ 부모 컴포넌트에서 제한 여부 전달받음
+  isRestricted?: boolean; // 부모 컴포넌트에서 제한 여부 전달받음
 }
 
 const CommentInput: React.FC<CommentInputProps> = ({
@@ -46,7 +46,7 @@ const CommentInput: React.FC<CommentInputProps> = ({
 
     try {
       await createComment(postId, trimmed);
-      console.log('✅ 댓글 등록 성공');
+      console.log(' 댓글 등록 성공');
       setComment('');
       if (onSubmit) onSubmit();
     } catch (error) {
@@ -79,4 +79,3 @@ const CommentInput: React.FC<CommentInputProps> = ({
 };
 
 export default CommentInput;
-
