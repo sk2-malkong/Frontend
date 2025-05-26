@@ -60,15 +60,9 @@ const login = async (id: string, pw: string): Promise<any> => {
   }
 };
 
-// 회원가입
-const register = async (data: RegisterRequest): Promise<any> => {
-  const response = await axios.post("http://43.203.14.194/api/auth/register", data);
-  return response.data;
-};
-
-// 회원가입 (signup) 수정한 부분
+// 회원가입 (signup) 수정한 부분 api 수정
 const signup = async ({ id, username, email, pw }: { id: string; username: string; email: string; pw: string }): Promise<any> => {
-  const res = await axios.post("http://43.203.14.194/api/auth/signup", { id, username, email, pw });
+  const res = await api.post("/auth/signup", { id, username, email, pw });
   return res.data;
 };
 
@@ -106,15 +100,15 @@ const logout = async (): Promise<void> => {
 };
 
 // 토큰 재발급
-const refreshAccessToken = async (): Promise<string> => {
-  const refreshToken = localStorage.getItem("refreshToken");
-  const response = await api.post("/auth/refresh", { refreshToken });
-  const newAccessToken = response.headers["access-token"]?.replace("Bearer ", "");
-  const newRefreshToken = response.headers["refresh-token"];
-  if (newAccessToken) localStorage.setItem("accessToken", newAccessToken);
-  if (newRefreshToken) localStorage.setItem("refreshToken", newRefreshToken);
-  return newAccessToken!;
-};
+// const refreshAccessToken = async (): Promise<string> => {
+//   const refreshToken = localStorage.getItem("refreshToken");
+//   const response = await api.post("/auth/refresh", { refreshToken });
+//   const newAccessToken = response.headers["access-token"]?.replace("Bearer ", "");
+//   const newRefreshToken = response.headers["refresh-token"];
+//   if (newAccessToken) localStorage.setItem("accessToken", newAccessToken);
+//   if (newRefreshToken) localStorage.setItem("refreshToken", newRefreshToken);
+//   return newAccessToken!;
+// };
 
 // 아이디 찾기
 const findId = async (email: string): Promise<any> => {
@@ -143,11 +137,9 @@ const checkName = async (username: string): Promise<string> => {
 // ✅ 전체 auth 객체 export
 const auth = {
   login,
-  register,
   signup,
   profile,
   logout,
-  refreshAccessToken,
   findId,
   resetPassword,
   checkId,
