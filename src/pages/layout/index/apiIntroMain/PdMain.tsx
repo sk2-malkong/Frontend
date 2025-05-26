@@ -142,7 +142,25 @@ const ApiKeyIntroSection = () => {
  */
 const Footer = () => (
     <S.DivWrapper>
-        <S.TextWrapper5>푸터 페이지</S.TextWrapper5>
+        <S.FooterContent>
+            <S.ContactList>
+                <S.ContactItem>
+                    <S.ContactLabel>이메일:</S.ContactLabel>
+                    <S.ContactLink href="mailto:purgo@gmail.com">
+                        purgo@gmail.com
+                    </S.ContactLink>
+                </S.ContactItem>
+                <S.ContactItem>
+                    <S.ContactLabel>전화:</S.ContactLabel>
+                    <S.ContactLink href="tel:02-123-1234">
+                        02-123-1234
+                    </S.ContactLink>
+                </S.ContactItem>
+            </S.ContactList>
+            <S.Copyright>
+                © 2025 주식회사 purgo. All rights reserved.
+            </S.Copyright>
+        </S.FooterContent>
     </S.DivWrapper>
 );
 

@@ -203,6 +203,7 @@ const DetailSecondSection: React.FC<DetailSecondSectionProps> = ({ active })=> {
                       ref={topRef}
                       onMouseEnter={handleEnter('top')}
                       onMouseLeave={handleLeave('top')}
+                      // chat 주소 변경
                       onClick={() => window.location.href = 'http://43.202.183.36'}
                       style={{transform: 'translate(-50%, -90%)', cursor: 'pointer' }}
                   >
