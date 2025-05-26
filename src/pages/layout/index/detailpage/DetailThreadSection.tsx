@@ -427,10 +427,6 @@ const Card = styled.div`
 const Content = styled.div`
   padding: 10px 0;
 `;
-const maskWord = (w: string): string => {
-  if (!w || w.length === 0) return '';
-  return w.charAt(0) + 'XX';
-};
 
 const Title = styled.span`
   display: block;
@@ -599,6 +595,8 @@ const DetailThreadSection: React.FC<DetailThreadSectionProps> = ({ active }) => 
   const [count, setCount] = useState(0); // 상태값 선언
   const [badwords, setBadwords] = useState<BadWord[]>([]);
   const [isGraphActive2, setIsGraphActive2] = useState(false);
+  const [error, setError] = useState<string>('');
+  const maskWord = (w: string) => w.charAt(0) + 'XX';
 
   useEffect(() => {
     (async () => {
@@ -607,6 +605,7 @@ const DetailThreadSection: React.FC<DetailThreadSectionProps> = ({ active }) => 
         setCount(res.total_abuse_count);
       } catch (err) {
         console.error('AbuseTotal 조회 실패:', err);
+        setError('데이터를 불러오는 데 실패했습니다.');
       }
     })();
   }, []);
