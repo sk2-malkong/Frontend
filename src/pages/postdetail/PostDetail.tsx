@@ -36,7 +36,6 @@ const PostDetail: React.FC<PostDetailProps> = ({ post }) => {
   const [restrictionMessage, setRestrictionMessage] = useState<string | null>(null);
 
   // 현재 로그인된 사용자 정보 불러오기
-  // ✅ 제한 여부 최신화 함수
   const refreshProfile = async () => {
     try {
       const profile = await auth.profile();
@@ -71,15 +70,17 @@ const PostDetail: React.FC<PostDetailProps> = ({ post }) => {
 
   useEffect(() => {
     refreshProfile();
+
+    // 60초마다 제한 상태 자동 갱신
+    const interval = setInterval(() => {
+      refreshProfile();
+    }, 60000);
+
+    return () => clearInterval(interval);
   }, []);
 
   const isAuthor = currentUser?.username === post.author;
 
-  /**
-   * 글 수정 버튼 클릭
-   * - 제한 조건 만족 시: 팝업 띄우고 차단
-   * - 아니면 수정 페이지로 이동
-   */
   const handleEdit = () => {
     if (isRestricted) {
       alert('❌ 욕설 5회 사용으로 글 수정이 제한됩니다.');
@@ -106,7 +107,6 @@ const PostDetail: React.FC<PostDetailProps> = ({ post }) => {
   const handleRefreshComments = () => {
     setRefreshTrigger(prev => prev + 1);
   };
-
 
   return (
     <S.Container>
@@ -152,7 +152,7 @@ const PostDetail: React.FC<PostDetailProps> = ({ post }) => {
             />
           </S.ContentWrapper>
 
-          {/* ✅ 댓글 작성 제한 문구 */}
+          {/* 댓글 작성 제한 문구 */}
           {isRestricted && restrictionMessage && (
             <S.RestrictionNotice>{restrictionMessage}</S.RestrictionNotice>
           )}
@@ -160,10 +160,11 @@ const PostDetail: React.FC<PostDetailProps> = ({ post }) => {
           {/* 댓글 입력창 */}
           <CommentInput
             onSubmit={() => {
-              handleRefreshComments();  // 댓글 목록 갱신
-              refreshProfile();         // ✅ 제한 상태 최신화
+              handleRefreshComments();
+              refreshProfile();
             }}
             postId={post.id}
+            isRestricted={isRestricted} 
           />
 
         </S.Card>
