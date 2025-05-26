@@ -43,8 +43,8 @@ const DetailSecondSection: React.FC<DetailSecondSectionProps> = ({ active })=> {
 
   const contentMap: Record<DropKey, { title: string; text: string }> = {
     none: {
-      title: 'Purgo API는 다양한 소셜 환경에서 사용할 수 있습니다.',
-      text: '직접 체험해 볼 수 있습니다.'
+      title: '다양한 소셜 환경에서 사용할 수 있습니다.',
+      text: '물방울을 눌러 직접 체험해보세요.'
     },
     top: {
       title: '실시간 채팅 환경에서 체험해 보세요.',
