@@ -31,6 +31,7 @@
     "react-datepicker": "^7.6.0",
     "react-daum-postcode": "^3.2.0",
     "react-dom": "18.3.1",
+    "react-fullpage": "^0.1.19",
     "react-hook-form": "^7.54.1",
     "react-markdown": "^10.1.0",
     "react-modal": "^3.16.3",
