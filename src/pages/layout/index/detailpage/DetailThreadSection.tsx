@@ -596,7 +596,11 @@ const DetailThreadSection: React.FC<DetailThreadSectionProps> = ({ active }) => 
   const [badwords, setBadwords] = useState<BadWord[]>([]);
   const [isGraphActive2, setIsGraphActive2] = useState(false);
   const [error, setError] = useState<string>('');
-  const maskWord = (w: string) => w.charAt(0) + 'XX';
+  const maskWord = (w: string): string => {
+    if (w.length <= 1) return w;
+    return w.charAt(0) + 'X'.repeat(w.length - 1);
+  };
+
 
   useEffect(() => {
     (async () => {
