@@ -9,12 +9,6 @@ import auth from '../api/auth';
 import { deletePost } from '../api/postdetail';
 import { isUserRestricted } from '../../utils/penalty';
 
-/**
- * PostDetail
- * 
- * - 게시글 상세 페이지 렌더링
- * - 게시글 정보 + 댓글 목록 + 댓글 입력창 표시
- */
 interface Post {
   id: number;
   author: string;
@@ -31,22 +25,20 @@ interface PostDetailProps {
 const PostDetail: React.FC<PostDetailProps> = ({ post }) => {
   const navigate = useNavigate();
   const [currentUser, setCurrentUser] = useState<{ username: string; badWordCount: number } | null>(null);
-  const [refreshTrigger, setRefreshTrigger] = useState<number>(0); // 댓글 새로고침용 트리거
+  const [refreshTrigger, setRefreshTrigger] = useState<number>(0);
 
   const [isRestricted, setIsRestricted] = useState<boolean>(false);
   const [restrictionMessage, setRestrictionMessage] = useState<string | null>(null);
 
-  // 현재 로그인된 사용자 정보 불러오기
   const refreshProfile = async () => {
     try {
       const profile = await auth.profile();
 
       if (profile.username) {
-        localStorage.setItem("username", profile.username);
+        localStorage.setItem('username', profile.username);
       }
-
       if (profile.endDate) {
-        localStorage.setItem("penaltyEndDate", profile.endDate);
+        localStorage.setItem('penaltyEndDate', profile.endDate);
       }
 
       const restricted = isUserRestricted(profile.isActive, profile.endDate ?? undefined);
@@ -64,29 +56,24 @@ const PostDetail: React.FC<PostDetailProps> = ({ post }) => {
         username: profile.username,
         badWordCount: 0,
       });
-
     } catch (error: unknown) {
-      if (axios.isAxiosError(error) && error.response?.status === 403) {
-        // 비회원 상태이므로 조용히 넘어감
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 403) {
+        // 비회원이므로 상태 초기화만 하고 로그는 남기지 않음
         setCurrentUser(null);
         setIsRestricted(false);
-        setRestrictionMessage(null);
-      } else {
-        // 진짜 문제일 때만 로그 출력
-        console.error('프로필 조회 실패:', error);
+        setRestrictionMessage(null);  
+        } else {
+          console.error('프로필 조회 실패:', error);
+        }
+      } else { 
+        console.error('❌ 알 수 없는 에러:', error);
       }
     }
   };
 
   useEffect(() => {
-    refreshProfile();
-
-    // 5분마다 제한 상태 자동 갱신
-    const interval = setInterval(() => {
-      refreshProfile();
-    }, 300000);
-
-    return () => clearInterval(interval);
+    refreshProfile(); // 최초 1회만
   }, []);
 
   const isAuthor = currentUser?.username === post.author;
@@ -96,7 +83,6 @@ const PostDetail: React.FC<PostDetailProps> = ({ post }) => {
       alert('❌ 욕설 5회 사용으로 글 수정이 제한됩니다.');
       return;
     }
-
     navigate(`/post/edit/${post.id}`);
   };
 
@@ -123,8 +109,6 @@ const PostDetail: React.FC<PostDetailProps> = ({ post }) => {
       <S.InnerWrapper>
         <S.SectionTitle>자유게시판</S.SectionTitle>
         <S.Card>
-
-          {/* 게시글 본문 + 댓글 목록 */}
           <S.ContentWrapper>
             <S.Header>
               <S.HeaderInner>
@@ -135,8 +119,6 @@ const PostDetail: React.FC<PostDetailProps> = ({ post }) => {
                     <S.DateText>{post.date}</S.DateText>
                   </div>
                 </S.AuthorInfo>
-
-                {/* 글 작성자만 수정/삭제 버튼 표시 */}
                 {isAuthor && (
                   <S.ControlButtons>
                     <span onClick={handleEdit}>수정</span>
@@ -153,7 +135,6 @@ const PostDetail: React.FC<PostDetailProps> = ({ post }) => {
 
             <S.Divider />
 
-            {/* 댓글 목록 */}
             <CommentList
               postId={post.id}
               currentUser={currentUser?.username || null}
@@ -162,21 +143,18 @@ const PostDetail: React.FC<PostDetailProps> = ({ post }) => {
             />
           </S.ContentWrapper>
 
-          {/* 댓글 작성 제한 문구 */}
           {isRestricted && restrictionMessage && (
             <S.RestrictionNotice>{restrictionMessage}</S.RestrictionNotice>
           )}
 
-          {/* 댓글 입력창 */}
           <CommentInput
             onSubmit={() => {
               handleRefreshComments();
-              refreshProfile();
+              refreshProfile(); // 댓글 작성 후 상태 갱신용
             }}
             postId={post.id}
-            isRestricted={isRestricted} 
+            isRestricted={isRestricted}
           />
-
         </S.Card>
       </S.InnerWrapper>
     </S.Container>
