@@ -13,6 +13,9 @@ const Layout: React.FC = () => {
 
   // HTTP 환경 대응 자동 로그아웃 기능
   useEffect(() => {
+    // 새로고침 감지를 위한 플래그
+    const isRefreshRef = useRef<boolean>(false);
+
     // 로그아웃 처리 함수
     const performLogout = (): void => {
       if (logoutProcessedRef.current || !localStorage.getItem('accessToken')) {
@@ -48,20 +51,17 @@ const Layout: React.FC = () => {
           withCredentials: true,
         });
       } catch (error) {
-        // axios는 4xx, 5xx도 에러로 처리하므로 더 세밀한 처리 가능
-        if (error && typeof error === 'object') {
-          const axiosError = error as any;
-          if (axiosError.code === 'ECONNABORTED') {
-            console.warn('Auto logout request timeout');
-          } else if (axiosError.response) {
-            console.warn('Auto logout server error:', axiosError.response.status);
-          } else if (axiosError.message) {
-            console.warn('Auto logout network error:', axiosError.message);
-          } else {
-            console.warn('Auto logout unknown error:', error);
-          }
+        // TypeScript 안전한 에러 처리
+        if (error && typeof error === 'object' && 'code' in error && error.code === 'ECONNABORTED') {
+          console.warn('Auto logout request timeout');
+        } else if (error && typeof error === 'object' && 'response' in error && error.response) {
+          const responseError = error as { response: { status: number } };
+          console.warn('Auto logout server error:', responseError.response.status);
+        } else if (error && typeof error === 'object' && 'message' in error) {
+          const messageError = error as { message: string };
+          console.warn('Auto logout network error:', messageError.message);
         } else {
-          console.warn('Auto logout error:', error);
+          console.warn('Auto logout error:', String(error));
         }
       }
     };
@@ -102,15 +102,32 @@ const Layout: React.FC = () => {
     };
 
     // pagehide 이벤트 핸들러 (iOS Safari 대응)
-    const handlePageHide = (e: PageTransitionEvent): void => {
+    const handlePageHide = (): void => {
       if (localStorage.getItem('accessToken')) {
         performLogout();
         sendLogoutRequest();
       }
     };
 
+    // 키보드 단축키로 새로고침 감지
+    const handleKeyDown = (e: globalThis.KeyboardEvent): void => {
+      // Ctrl+R, Cmd+R, F5 등 새로고침 키 감지
+      if (
+          (e.ctrlKey && e.key === 'r') ||
+          (e.metaKey && e.key === 'r') ||
+          e.key === 'F5'
+      ) {
+        isRefreshRef.current = true;
+        // 100ms 후에 플래그 리셋 (새로고침이 아닌 경우 대비)
+        setTimeout(() => {
+          isRefreshRef.current = false;
+        }, 100);
+      }
+    };
+
     // 이벤트 리스너 등록
     window.addEventListener('beforeunload', handleBeforeUnload);
+    window.addEventListener('keydown', handleKeyDown);
     document.addEventListener('visibilitychange', handleVisibilityChange);
     window.addEventListener('pagehide', handlePageHide);
 
@@ -139,6 +156,7 @@ const Layout: React.FC = () => {
     // 컴포넌트 언마운트시 정리
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener('keydown', handleKeyDown);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       window.removeEventListener('pagehide', handlePageHide);
       window.removeEventListener('storage', handleStorageChange);
