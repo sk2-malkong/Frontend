@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as S from './style';
+import axios from 'axios';
 import CommentList from './CommentList';
 import CommentInput from './CommentInput';
 import profileImg from './profile.svg';
@@ -63,18 +64,27 @@ const PostDetail: React.FC<PostDetailProps> = ({ post }) => {
         username: profile.username,
         badWordCount: 0,
       });
-    } catch (error) {
-      console.error('프로필 조회 실패:', (error as Error).message);
+
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error) && error.response?.status === 403) {
+        // 비회원 상태이므로 조용히 넘어감
+        setCurrentUser(null);
+        setIsRestricted(false);
+        setRestrictionMessage(null);
+      } else {
+        // 진짜 문제일 때만 로그 출력
+        console.error('프로필 조회 실패:', error);
+      }
     }
   };
 
   useEffect(() => {
     refreshProfile();
 
-    // 60초마다 제한 상태 자동 갱신
+    // 5분마다 제한 상태 자동 갱신
     const interval = setInterval(() => {
       refreshProfile();
-    }, 60000);
+    }, 300000);
 
     return () => clearInterval(interval);
   }, []);
