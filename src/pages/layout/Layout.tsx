@@ -10,7 +10,9 @@ const Layout: React.FC = () => {
 
   const [keyword, setKeyword] = useState<string>('');
   const logoutProcessedRef = useRef<boolean>(false);
+  const isRefreshRef = useRef<boolean>(false);
 
+  // HTTP 환경 대응 자동 로그아웃 기능
   useEffect(() => {
     // 로그아웃 처리 함수
     const performLogout = (): void => {
@@ -18,248 +20,169 @@ const Layout: React.FC = () => {
         return;
       }
 
-      console.log('자동 로그아웃 실행');
       logoutProcessedRef.current = true;
 
+      // 로컬 스토리지 정리 (동기적으로 즉시 실행)
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
       localStorage.removeItem('email');
 
+      // 세션 스토리지에 로그아웃 플래그 설정 (다른 탭에서 감지용)
       sessionStorage.setItem('auto_logout', Date.now().toString());
     };
 
-    // Beacon으로 서버에 로그아웃 알림
-    const sendBeaconLogout = (): void => {
-      if (navigator.sendBeacon) {
-        try {
-          const beaconData = JSON.stringify({
-            action: 'auto_logout_beacon',
-            timestamp: new Date().toISOString(),
-            protocol: window.location.protocol,
-            userAgent: navigator.userAgent
-          });
+    // 서버 로그아웃 요청 (비동기, 실패해도 무관)
+    const sendLogoutRequest = async (): Promise<void> => {
+      try {
+        // axios 사용 (더 간편한 설정과 에러 처리)
+        const axios = (await import('axios')).default;
 
-          const beaconUrl = `${window.location.origin}/api/logout`;
-          navigator.sendBeacon(beaconUrl, beaconData);
-          console.log('Beacon 로그아웃 요청 전송');
-        } catch (error) {
-          console.warn('Beacon request failed:', error);
-        }
-      }
-    };
-
-    // Mac 환경 감지
-    const isMac = navigator.platform.toLowerCase().includes('mac') ||
-        navigator.userAgent.toLowerCase().includes('mac');
-
-    // 새로고침 감지를 위한 플래그들
-    let isRefreshAction = false;
-    let beforeUnloadTriggered = false;
-
-    // 새로고침 키 감지 (Mac 환경 고려)
-    const handleKeyDown = (e: KeyboardEvent): void => {
-      // Mac: Cmd+R, Windows/Linux: Ctrl+R, F5
-      const isRefreshKey = (isMac && e.metaKey && e.key === 'r') ||
-          (!isMac && e.ctrlKey && e.key === 'r') ||
-          (e.key === 'F5');
-
-      if (isRefreshKey) {
-        console.log('새로고침 키 감지됨 (Mac 환경 고려)');
-        isRefreshAction = true;
-        sessionStorage.setItem('refresh_key_pressed', 'true');
-      }
-    };
-
-    // beforeunload 이벤트 - 새로고침과 탭 종료 구분의 시작점
-    const handleBeforeUnload = (e: BeforeUnloadEvent): void => {
-      if (!localStorage.getItem('accessToken')) return;
-
-      console.log('beforeunload 이벤트 발생');
-      beforeUnloadTriggered = true;
-
-      // 새로고침 키가 눌린 경우 로그아웃 방지
-      if (isRefreshAction) {
-        console.log('새로고침 키 감지로 로그아웃 방지');
-        return;
-      }
-
-      // beforeunload 발생 플래그 설정
-      sessionStorage.setItem('beforeunload_fired', Date.now().toString());
-    };
-
-    // pagehide 이벤트 - 실제 탭 종료 처리
-    const handlePageHide = (e: PageTransitionEvent): void => {
-      console.log('pagehide 이벤트 발생, persisted:', e.persisted);
-
-      if (!localStorage.getItem('accessToken')) return;
-
-      // 새로고침 키가 눌린 경우 로그아웃 방지
-      if (isRefreshAction) {
-        console.log('새로고침 액션으로 pagehide 로그아웃 방지');
-        return;
-      }
-
-      // bfcache에 저장되는 경우 (새로고침 등) 로그아웃 안함
-      if (e.persisted) {
-        console.log('bfcache 저장 - 새로고침으로 판단하여 로그아웃 안함');
-        return;
-      }
-
-      // beforeunload가 발생한 후 pagehide가 발생한 경우 (새로고침 가능성)
-      const beforeUnloadTime = sessionStorage.getItem('beforeunload_fired');
-      if (beforeUnloadTime && beforeUnloadTriggered) {
-        const timeDiff = Date.now() - parseInt(beforeUnloadTime);
-
-        // Mac Safari에서는 새로고침 시 beforeunload → pagehide 순서로 빠르게 발생
-        if (timeDiff < 100) { // 100ms 이내면 새로고침으로 판단
-          console.log('Mac 환경: beforeunload 후 빠른 pagehide - 새로고침으로 판단');
-          return;
-        }
-      }
-
-      // beforeunload 없이 pagehide만 발생한 경우 또는 충분한 시간 차이가 있는 경우
-      console.log('확실한 탭 종료 감지 - 로그아웃 실행');
-      performLogout();
-      sendBeaconLogout();
-    };
-
-    // 페이지 로드 시 새로고침 여부 확인
-    const handlePageShow = (): void => {
-      console.log('페이지 로드됨');
-
-      // 새로고침 키 플래그 확인
-      const refreshKeyPressed = sessionStorage.getItem('refresh_key_pressed');
-      if (refreshKeyPressed) {
-        console.log('새로고침 키로 인한 페이지 로드 감지');
-        sessionStorage.removeItem('refresh_key_pressed');
-        sessionStorage.removeItem('beforeunload_fired');
-        isRefreshAction = true;
-        beforeUnloadTriggered = false;
-
-        // 자동 로그아웃 플래그도 제거
-        const autoLogout = sessionStorage.getItem('auto_logout');
-        if (autoLogout) {
-          sessionStorage.removeItem('auto_logout');
-          console.log('새로고침으로 인한 자동 로그아웃 취소');
-        }
-        return;
-      }
-
-      // Performance API로 새로고침 감지 (Mac 환경에서도 동작)
-      if (performance.navigation && performance.navigation.type === 1) {
-        console.log('Performance API로 새로고침 감지됨');
-        sessionStorage.removeItem('beforeunload_fired');
-        isRefreshAction = true;
-        beforeUnloadTriggered = false;
-        return;
-      }
-
-      // Navigation Timing API로 새로고침 감지
-      const navigationEntries = performance.getEntriesByType('navigation') as PerformanceNavigationTiming[];
-      if (navigationEntries.length > 0 && navigationEntries[0].type === 'reload') {
-        console.log('Navigation Timing API로 새로고침 감지됨');
-        sessionStorage.removeItem('beforeunload_fired');
-        isRefreshAction = true;
-        beforeUnloadTriggered = false;
-        return;
-      }
-
-      // beforeunload 플래그가 있으면 새로고침으로 판단
-      const beforeUnloadTime = sessionStorage.getItem('beforeunload_fired');
-      if (beforeUnloadTime) {
-        const timeDiff = Date.now() - parseInt(beforeUnloadTime);
-        if (timeDiff < 2000) { // 2초 이내면 새로고침
-          console.log('beforeunload 플래그 기반 새로고침 감지');
-          sessionStorage.removeItem('beforeunload_fired');
-          isRefreshAction = true;
-          beforeUnloadTriggered = false;
-
-          // 자동 로그아웃 플래그도 제거
-          const autoLogout = sessionStorage.getItem('auto_logout');
-          if (autoLogout) {
-            sessionStorage.removeItem('auto_logout');
-            console.log('새로고침으로 인한 자동 로그아웃 취소');
+        await axios.post('/api/logout', {
+          action: 'auto_logout',
+          timestamp: new Date().toISOString()
+        }, {
+          timeout: 500, // 500ms 타임아웃
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          // HTTP 환경에서도 안정적으로 동작
+          withCredentials: true,
+        });
+      } catch (error) {
+        // axios는 4xx, 5xx도 에러로 처리하므로 더 세밀한 처리 가능
+        if (error && typeof error === 'object') {
+          const axiosError = error as any;
+          if (axiosError.code === 'ECONNABORTED') {
+            console.warn('Auto logout request timeout');
+          } else if (axiosError.response) {
+            console.warn('Auto logout server error:', axiosError.response.status);
+          } else if (axiosError.message) {
+            console.warn('Auto logout network error:', axiosError.message);
+          } else {
+            console.warn('Auto logout unknown error:', error);
           }
-          return;
+        } else {
+          console.warn('Auto logout error:', error);
         }
       }
-
-      console.log('정상 페이지 로드 또는 탭 종료 후 재접속');
-      isRefreshAction = false;
-      beforeUnloadTriggered = false;
     };
 
-    // unload 이벤트 - 최종 백업 (Mac에서 중요)
-    const handleUnload = (): void => {
-      if (!localStorage.getItem('accessToken') || isRefreshAction) return;
-
-      console.log('unload 이벤트 - 최종 로그아웃 처리');
-      performLogout();
-      sendBeaconLogout();
+    // 새로고침 감지를 위한 플래그 설정
+    const setRefreshFlag = (): void => {
+      isRefreshRef.current = true;
+      // 짧은 시간 후 플래그 해제 (새로고침이 아닌 경우 대비)
+      setTimeout(() => {
+        isRefreshRef.current = false;
+      }, 100);
     };
 
-    // visibilitychange 이벤트 - Mac에서 추가 안정성
-    const handleVisibilityChange = (): void => {
-      if (document.hidden) {
-        console.log('페이지가 백그라운드로 이동');
-      } else {
-        console.log('페이지가 포그라운드로 이동');
-        // 페이지가 다시 보이면 플래그 리셋
-        beforeUnloadTriggered = false;
+    // beforeunload 이벤트 핸들러 (새로고침 시에는 로그아웃하지 않음)
+    const handleBeforeUnload = (e: BeforeUnloadEvent): void => {
+      // 새로고침 감지 시도
+      const navigation = (performance as any).getEntriesByType?.('navigation')?.[0];
+      const isRefresh = navigation?.type === 'reload' ||
+          e.returnValue !== undefined ||
+          isRefreshRef.current;
+
+      // 새로고침이 아닌 경우에만 로그아웃 처리
+      if (!isRefresh && localStorage.getItem('accessToken')) {
+        performLogout();
+
+        // 비동기 서버 요청 (백그라운드에서 실행)
+        sendLogoutRequest();
+
+        // navigator.sendBeacon 백업 (지원되는 경우)
+        if (navigator.sendBeacon) {
+          try {
+            navigator.sendBeacon('/api/logout', JSON.stringify({
+              action: 'auto_logout_beacon',
+              timestamp: new Date().toISOString()
+            }));
+          } catch (error) {
+            console.warn('Beacon request failed:', error);
+          }
+        }
       }
     };
 
-    // 다른 탭에서의 로그아웃 감지
-    const handleStorageChange = (e: StorageEvent): void => {
-      if (e.key === 'accessToken' && !e.newValue && e.oldValue) {
-        console.log('다른 탭에서 로그아웃 감지');
-        window.location.reload();
+    // 키보드 이벤트로 새로고침 감지
+    const handleKeyDown = (e: KeyboardEvent): void => {
+      // F5 또는 Ctrl+R 감지
+      if (e.key === 'F5' || (e.ctrlKey && e.key === 'r') || (e.metaKey && e.key === 'r')) {
+        setRefreshFlag();
+      }
+    };
+
+    // visibilitychange 이벤트 핸들러 (모바일 대응, 새로고침 제외)
+    const handleVisibilityChange = (): void => {
+      if (document.visibilityState === 'hidden' &&
+          !isRefreshRef.current &&
+          localStorage.getItem('accessToken')) {
+        // 페이지가 숨겨질 때도 로그아웃 처리 (모바일 브라우저 대응, 새로고침 제외)
+        setTimeout(() => {
+          if (document.visibilityState === 'hidden' && !isRefreshRef.current) {
+            performLogout();
+            sendLogoutRequest();
+          }
+        }, 100);
+      }
+    };
+
+    // pagehide 이벤트 핸들러 (iOS Safari 대응, 새로고침 제외)
+    const handlePageHide = (e: PageTransitionEvent): void => {
+      // persisted가 true면 브라우저 캐시에 저장되는 경우 (뒤로가기 등)
+      // 이 경우는 로그아웃하지 않음
+      if (!e.persisted && !isRefreshRef.current && localStorage.getItem('accessToken')) {
+        performLogout();
+        sendLogoutRequest();
       }
     };
 
     // 이벤트 리스너 등록
     window.addEventListener('beforeunload', handleBeforeUnload);
-    window.addEventListener('pagehide', handlePageHide);
-    window.addEventListener('pageshow', handlePageShow);
-    window.addEventListener('unload', handleUnload);
-    window.addEventListener('keydown', handleKeyDown as any);
-    window.addEventListener('storage', handleStorageChange);
+    document.addEventListener('keydown', handleKeyDown as any);
     document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('pagehide', handlePageHide);
 
-    // 페이지 로드 시 즉시 체크
-    handlePageShow();
+    // 다른 탭에서의 로그아웃 감지
+    const handleStorageChange = (e: StorageEvent): void => {
+      if (e.key === 'accessToken' && !e.newValue && e.oldValue) {
+        // 다른 탭에서 로그아웃됨
+        window.location.reload();
+      }
+    };
 
-    // 자동 로그아웃 플래그 체크
+    window.addEventListener('storage', handleStorageChange);
+
+    // 세션 스토리지 변경 감지 (같은 탭에서의 자동 로그아웃)
     const checkAutoLogout = (): void => {
       const autoLogoutFlag = sessionStorage.getItem('auto_logout');
-      if (autoLogoutFlag && !logoutProcessedRef.current && !isRefreshAction) {
+      if (autoLogoutFlag && !logoutProcessedRef.current) {
         sessionStorage.removeItem('auto_logout');
-        console.log('자동 로그아웃 플래그 감지 - 메인 페이지로 이동');
+        // 자동 로그아웃 후 메인 페이지로 리다이렉트
         navigate('/post/main');
       }
     };
 
-    const intervalId = setInterval(checkAutoLogout, 200);
+    const intervalId = setInterval(checkAutoLogout, 100);
 
-    // cleanup
+    // 컴포넌트 언마운트시 정리
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
-      window.removeEventListener('pagehide', handlePageHide);
-      window.removeEventListener('pageshow', handlePageShow);
-      window.removeEventListener('unload', handleUnload);
-      window.removeEventListener('keydown', handleKeyDown as any);
-      window.removeEventListener('storage', handleStorageChange);
+      document.removeEventListener('keydown', handleKeyDown as any);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('pagehide', handlePageHide);
+      window.removeEventListener('storage', handleStorageChange);
       clearInterval(intervalId);
     };
-  }, [navigate]);
+  }, []); // 빈 의존성 배열로 한번만 실행
 
-  // 수동 로그아웃 처리 (유지)
   const handleLogout = (): void => {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('email');
     alert('로그아웃 되었습니다.');
+    // 로그아웃 후 메인 페이지로 이동하도록 수정
     navigate('/post/main');
   };
 
@@ -318,6 +241,7 @@ const Layout: React.FC = () => {
                 onClick={() => navigate('/')}
             />
         )}
+
       </div>
   );
 };
