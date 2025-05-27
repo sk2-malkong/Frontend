@@ -397,7 +397,7 @@ const Parent = styled.div`
 `;
 
 const Card = styled.div`
-  min-width: 400px;
+  max-width: 400px;
   max-height: 400px;
   border-radius: 20px;
   background: white;
@@ -683,13 +683,12 @@ const data: DataSegment[] = [
   { label: 'F1-score',  value: 90.63, color: '#00894d' }
 ];
 const colors = ['#00f9cb', '#08e260', '#00c37b', '#00894d', '#ffb400', '#ff6b6b'];
- useEffect(() => {
+
+useEffect(() => {
   const fetchBadwords = async () => {
     try {
-      // 파라미터 없이 호출하고, 반환값의 badwords 배열을 바로 꺼냅니다.
       const res = await auth.countBadwords();
       setBadwords(res.badwords);
-      console.log(setBadwords)
     } catch (err) {
       console.error(err);
     }
@@ -697,25 +696,37 @@ const colors = ['#00f9cb', '#08e260', '#00c37b', '#00894d', '#ffb400', '#ff6b6b'
   fetchBadwords();
 }, []);
 
-// Dynamic bar chart data: 비속어 사용 횟수
-  const barData: DataSegment[] = badwords.map((bw, idx) => ({
-    label: maskWord(bw.word),
-    value: bw.count,
-    color: colors[idx % colors.length],
-  }));
-  const barTotal = barData.reduce((sum, d) => sum + d.value, 0);
+// 막대 그래프 데이터
+const barData: DataSegment[] = badwords.map((bw, idx) => ({
+  label: maskWord(bw.word),
+  value: bw.count,
+  color: colors[idx % colors.length],
+}));
+const barTotal = barData.reduce((sum, d) => sum + d.value, 0);
 
-// Top 4 비속어만 골라 퍼센트 계산 (원형 그래프)
-  const top4 = [...badwords].sort((a, b) => b.count - a.count).slice(0, 4);
-  const circleData: DataSegment[] = top4.map((bw, idx) => ({
-    label: maskWord(bw.word),
-    value: top4.reduce((sum, d) => sum + d.count, 0) > 0
-      ? (bw.count / top4.reduce((sum, d) => sum + d.count, 0)) * 100
-      : 0,
-    color: colors[idx % colors.length],
-  }));
+// 원형 그래프용 Top 4 + 그 외 구성
+const sorted = [...badwords].sort((a, b) => b.count - a.count);
+const top4 = sorted.slice(0, 4);
+const etc = sorted.slice(4);
 
-const total = data.reduce((sum, d) => sum + d.value, 0);
+const top4Count = top4.reduce((sum, d) => sum + d.count, 0);
+const etcCount = etc.reduce((sum, d) => sum + d.count, 0);
+const totalTopEtc = top4Count + etcCount;
+
+const circleData: DataSegment[] = [
+  ...top4.map((bw, idx) => ({
+    label: maskWord(bw.word),
+    value: totalTopEtc > 0 ? (bw.count / totalTopEtc) * 100 : 0,
+    color: colors[idx % colors.length],
+  })),
+  {
+    label: '그 외 단어',
+    value: totalTopEtc > 0 ? (etcCount / totalTopEtc) * 100 : 0,
+    color: '#ffb400',
+  },
+];
+
+// 원형 그래프 세그먼트 계산
 const computeSegments = (segments: DataSegment[]): Segment[] => {
   const total = segments.reduce((sum, d) => sum + d.value, 0);
   let startAngle = 0;
@@ -733,7 +744,9 @@ const computeSegments = (segments: DataSegment[]): Segment[] => {
     return { path, color: d.color, zIndex: i };
   });
 };
-   const circleSegments = computeSegments(circleData);
+
+const circleSegments = computeSegments(circleData);
+
 
   return (
 <div>
@@ -871,9 +884,15 @@ const computeSegments = (segments: DataSegment[]): Segment[] => {
                       />
                     ))}
                     <CenterCircle cx="0" cy="0" r="25" fill="white" />
-                    <GraphText x="0" y="5" textAnchor="middle">
-                      Purgo
-                    </GraphText>
+{circleData.length === 0 ? (
+  <GraphText x="0" y="5" textAnchor="middle" fontSize="6">
+    데이터 없음
+  </GraphText>
+) : (
+  <GraphText x="0" y="5" textAnchor="middle">
+    Purgo
+  </GraphText>
+)}
                   </Svg>
                   {[{ size: 190, off: 5, op: 0.2 }, { size: 210, off: 15, op: 0.15 }, { size: 230, off: 25, op: 0.1 }].map((c, i) => (
                     <OverlayCircle
@@ -887,16 +906,19 @@ const computeSegments = (segments: DataSegment[]): Segment[] => {
                 </CircleGraph>
               </GraphContainer>
               <Bottom>
-                <Legend>
-                  {circleData.map((d, i) => (
-                    <LegendItem key={i}>
-                      <ColorDot color={d.color} />
-                      <LegendText>
-                        {d.label}: {d.value.toFixed(1)}%
-                      </LegendText>
-                    </LegendItem>
-                  ))}
-                </Legend>
+              <Legend>
+             {circleData
+               .filter(d => d.value > 0) // ← 0%는 제거
+               .sort((a, b) => b.value - a.value)
+               .map((d, i) => (
+                 <LegendItem key={i}>
+                   <ColorDot color={d.color} />
+                   <LegendText>
+                     {d.label}: {d.value.toFixed(1)}%
+                   </LegendText>
+                 </LegendItem>
+               ))}
+           </Legend>
               </Bottom>
             </Card>
           </Parent>
