@@ -89,7 +89,6 @@ UI 효과: fullPage.js (GPLv3 조건하 사용), GSAP 일부 활용 가능
 
 사용자 키 발급 및 관리
 
-섹션별 scroll-snap 기반 자연스러운 페이지 이동
 
 # 🧼 Purgo: AI Profanity Filtering Web App
 
