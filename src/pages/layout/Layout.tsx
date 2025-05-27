@@ -10,6 +10,7 @@ const Layout: React.FC = () => {
 
   const [keyword, setKeyword] = useState<string>('');
   const logoutProcessedRef = useRef<boolean>(false);
+  const isRefreshRef = useRef<boolean>(false);
 
   // HTTP 환경 대응 자동 로그아웃 기능
   useEffect(() => {
@@ -66,9 +67,25 @@ const Layout: React.FC = () => {
       }
     };
 
-    // beforeunload 이벤트 핸들러
+    // 새로고침 감지를 위한 플래그 설정
+    const setRefreshFlag = (): void => {
+      isRefreshRef.current = true;
+      // 짧은 시간 후 플래그 해제 (새로고침이 아닌 경우 대비)
+      setTimeout(() => {
+        isRefreshRef.current = false;
+      }, 100);
+    };
+
+    // beforeunload 이벤트 핸들러 (새로고침 시에는 로그아웃하지 않음)
     const handleBeforeUnload = (e: BeforeUnloadEvent): void => {
-      if (localStorage.getItem('accessToken')) {
+      // 새로고침 감지 시도
+      const navigation = (performance as any).getEntriesByType?.('navigation')?.[0];
+      const isRefresh = navigation?.type === 'reload' ||
+          e.returnValue !== undefined ||
+          isRefreshRef.current;
+
+      // 새로고침이 아닌 경우에만 로그아웃 처리
+      if (!isRefresh && localStorage.getItem('accessToken')) {
         performLogout();
 
         // 비동기 서버 요청 (백그라운드에서 실행)
@@ -88,12 +105,22 @@ const Layout: React.FC = () => {
       }
     };
 
-    // visibilitychange 이벤트 핸들러 (모바일 대응)
+    // 키보드 이벤트로 새로고침 감지
+    const handleKeyDown = (e: KeyboardEvent): void => {
+      // F5 또는 Ctrl+R 감지
+      if (e.key === 'F5' || (e.ctrlKey && e.key === 'r') || (e.metaKey && e.key === 'r')) {
+        setRefreshFlag();
+      }
+    };
+
+    // visibilitychange 이벤트 핸들러 (모바일 대응, 새로고침 제외)
     const handleVisibilityChange = (): void => {
-      if (document.visibilityState === 'hidden' && localStorage.getItem('accessToken')) {
-        // 페이지가 숨겨질 때도 로그아웃 처리 (모바일 브라우저 대응)
+      if (document.visibilityState === 'hidden' &&
+          !isRefreshRef.current &&
+          localStorage.getItem('accessToken')) {
+        // 페이지가 숨겨질 때도 로그아웃 처리 (모바일 브라우저 대응, 새로고침 제외)
         setTimeout(() => {
-          if (document.visibilityState === 'hidden') {
+          if (document.visibilityState === 'hidden' && !isRefreshRef.current) {
             performLogout();
             sendLogoutRequest();
           }
@@ -101,9 +128,11 @@ const Layout: React.FC = () => {
       }
     };
 
-    // pagehide 이벤트 핸들러 (iOS Safari 대응)
+    // pagehide 이벤트 핸들러 (iOS Safari 대응, 새로고침 제외)
     const handlePageHide = (e: PageTransitionEvent): void => {
-      if (localStorage.getItem('accessToken')) {
+      // persisted가 true면 브라우저 캐시에 저장되는 경우 (뒤로가기 등)
+      // 이 경우는 로그아웃하지 않음
+      if (!e.persisted && !isRefreshRef.current && localStorage.getItem('accessToken')) {
         performLogout();
         sendLogoutRequest();
       }
@@ -111,6 +140,7 @@ const Layout: React.FC = () => {
 
     // 이벤트 리스너 등록
     window.addEventListener('beforeunload', handleBeforeUnload);
+    document.addEventListener('keydown', handleKeyDown as any);
     document.addEventListener('visibilitychange', handleVisibilityChange);
     window.addEventListener('pagehide', handlePageHide);
 
@@ -139,6 +169,7 @@ const Layout: React.FC = () => {
     // 컴포넌트 언마운트시 정리
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
+      document.removeEventListener('keydown', handleKeyDown as any);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       window.removeEventListener('pagehide', handlePageHide);
       window.removeEventListener('storage', handleStorageChange);
