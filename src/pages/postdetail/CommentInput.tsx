@@ -2,8 +2,6 @@ import React, { useState, useEffect, KeyboardEvent, ChangeEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as S from './style';
 import { createComment } from '../api/comment';
-import auth from '../api/auth';
-import { isUserRestricted } from '../../utils/penalty'; // 경로 수정
 
 /**
  * CommentInput
