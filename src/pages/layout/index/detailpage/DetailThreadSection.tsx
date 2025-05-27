@@ -397,7 +397,7 @@ const Parent = styled.div`
 `;
 
 const Card = styled.div`
-  min-width: 400px;
+  max-width: 400px;
   max-height: 400px;
   border-radius: 20px;
   background: white;
