@@ -2,7 +2,7 @@ import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 
 const api = axios.create({
     //베이스 주소'http://43.203.14.194/api','http://localhost:8080/api'
-    baseURL: 'http://43.203.14.194/api',
+    baseURL: 'http://localhost:8080/api',
     withCredentials: true,
 });
 
@@ -81,7 +81,7 @@ api.interceptors.response.use(
         const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
 
         // 401 에러이고, 이미 재시도하지 않은 요청인 경우
-        if (error.response?.status === 401 && !originalRequest._retry) {
+        if ((error.response?.status === 401 || error.response?.status === 403) && !originalRequest._retry) {
             // 이미 토큰 갱신 중인 경우
             if (isRefreshing) {
                 // 대기열에 추가하고 토큰 갱신 완료를 기다림
