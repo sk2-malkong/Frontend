@@ -2,7 +2,7 @@ import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 
 const api = axios.create({
     //베이스 주소'http://43.203.14.194/api','http://localhost:8080/api'
-    baseURL: 'http://localhost:8080/api',
+    baseURL: 'http://43.203.14.194/api',
     withCredentials: true,
 });
 
