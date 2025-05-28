@@ -1,4 +1,3 @@
-// src/components/DetailSecondSection.tsx
 import React, { useState, useRef, useEffect } from 'react';
 import styled  from 'styled-components';
 import {
@@ -40,7 +39,17 @@ const DetailSecondSection: React.FC<DetailSecondSectionProps> = ({ active })=> {
   const [initialPosition, setInitialPosition] = useState<ExpandPosition | undefined>(undefined);
   const [mouseTracking, setMouseTracking] = useState(false);
   const hoverTimers = useRef<Partial<Record<DropKey, number>>>({});
-
+  const hoverKey = useRef<number>(0); // ✅ 가장 최신 hover를 추적하기 위한 키
+  useEffect(() => {
+    if (active) {
+      setActiveDrop('none');
+      setDisplayDrop('none');
+      setShowContent(true);
+      setInitialPosition(undefined);
+      setExpandPosition(undefined);
+      setMouseTracking(false);
+    }
+  }, [active]);
   const contentMap: Record<DropKey, { title: string; text: string }> = {
     none: {
       title: '다양한 소셜 환경에서 사용할 수 있습니다.',
@@ -168,19 +177,21 @@ const DetailSecondSection: React.FC<DetailSecondSectionProps> = ({ active })=> {
 
     // 애니메이션 프레임으로 추적 시작
     requestAnimationFrame(trackMovement);
+    const currentHoverId = Date.now();
+    hoverKey.current = currentHoverId;
 
     // 기존 타이머 제거 후 새 타이머 설정
     clearTimeout(hoverTimers.current[key]);
     hoverTimers.current[key] = window.setTimeout(() => {
+      if (hoverKey.current !== currentHoverId) return; 
       setActiveDrop(key);
-    }, 500);
+    }, 100);
   };
 
   const handleLeave = (key: DropKey) => () => {
     setMouseTracking(false);
     clearTimeout(hoverTimers.current[key]);
     setActiveDrop('none');
-    // expandPosition은 초기화하지 않음 - 원래 위치로 돌아가게 함
   };
   const visibleLabel = showContent && displayDrop !== 'none';
 
