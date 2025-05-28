@@ -34,6 +34,12 @@ const LogoWrapper = styled.div`
 
   cursor: pointer;
 
+  h2 {
+      font-size: 50px;
+      font-weight: bold;
+      color: black;
+  }
+
   img {
     width: 145px;
     height: 110px;

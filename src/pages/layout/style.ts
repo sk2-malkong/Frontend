@@ -16,7 +16,7 @@ const dropPos = keyframes`
 const S = {
   Background: styled.div`
     width: 100%;
-    min-height: 100%;
+    height: 100%;
     position: relative;
     background-color: white;
     overflow-x: hidden;
@@ -108,7 +108,7 @@ const S = {
 
   Main: styled.main`
     width: 100%;
-    height: 100%;
+    min-height: 100vh;
     background-color: white;
     overflow: hidden;
 
@@ -133,19 +133,23 @@ const S = {
       background-color: #447acc;
     }
   `,
-    BubbleLogo: styled.img`
-    position: fixed;
-    bottom: 20px;
-    left: 20px;
-    width: 80px;
-    height: 80px;
-    z-index: 1000;
-    cursor: pointer;
-    animation: ${dropPos} 2s ease-out forwards;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    &:hover {
-      transform: translateY(-15px) scale(1.15);
-}
+  PurgoLink : styled.a`
+  position: fixed;
+  bottom: 1rem;              
+  left: 1rem;                
+  padding: 0.5rem 1rem;      
+  background-color: #ffffff;  
+  color: #2563eb;         
+  font-weight: 700;         
+  border-radius: 9999px;      
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition: background-color 0.2s ease-in-out; 
+  cursor: pointer;
+  z-index: 50;               
+
+  &:hover {
+    background-color: #dbeafe; 
+  }
   `,
 };
 
