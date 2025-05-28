@@ -1,4 +1,3 @@
-// src/pages/layout/index/detailpage/DetailPage.tsx
 import React, { useState } from 'react';
 import ReactFullpage from '@fullpage/react-fullpage';
 import DetailFirstSection from './DetailFirstSection';
