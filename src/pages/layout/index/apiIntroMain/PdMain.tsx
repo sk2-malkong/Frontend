@@ -81,6 +81,7 @@ const MiddleSection = () => (
 /**
  * ProductIntroSection 컴포넌트
  * 클릭 시 /detail 페이지로 이동하는 기능 추가
+ * 파일 아이콘으로 변경됨
  */
 const ProductIntroSection = () => {
     const [isHovered, setIsHovered] = useState(false);
@@ -104,13 +105,14 @@ const ProductIntroSection = () => {
                     제품 특징을 알려줄게요.
                 </S.TextWrapper3>
             </S.TitleContainer>
-            <LockIcon isHovered={isHovered} />
+            <FileIcon />
         </S.Overlap3>
     );
 };
 
 /**
  * ApiKeyIntroSection 컴포넌트
+ * 자물쇠 아이콘으로 변경됨
  */
 const ApiKeyIntroSection = () => {
     const [isHovered, setIsHovered] = useState(false);
@@ -132,7 +134,7 @@ const ApiKeyIntroSection = () => {
                     API 키에 대한 자세한 사용법입니다.
                 </S.TextWrapper3>
             </S.TitleContainer>
-            <FileIcon />
+            <LockIcon isHovered={isHovered} />
         </S.Overlap2>
     );
 };
