@@ -20,7 +20,8 @@
 
 ### **Purgo API 작동 흐름도**
 
-![Purgo API 시퀀스 다이어그램](/images/purgo-sequence-diagram.png)
+
+![Purgo API 시퀀스 다이어그램](/images/purgo-sequence-diagram.svg)
 
 ---
 
