@@ -79,14 +79,29 @@ const DetailSecondSection: React.FC<DetailSecondSectionProps> = ({ active })=> {
   }, []);
 
   useEffect(() => {
-    if (activeDrop !== displayDrop) {
-      setShowContent(false);
-      const t = window.setTimeout(() => {
-        setDisplayDrop(activeDrop);
-        setShowContent(true);
-      }, 550);
-      return () => clearTimeout(t);
+    // 1) activeDrop이 none 이면 즉시 기본 컨텐츠로 복귀
+    if (activeDrop === 'none') {
+      setDisplayDrop('none');
+      setShowContent(true);
+      return; // 이번 effect는 여기서 끝
     }
+
+    // 2) 바뀐 것이 displayDrop과 같으면 애니메이션 없이 표시
+    if (activeDrop === displayDrop) {
+      setShowContent(true);
+      return;
+    }
+
+    // 3) 그 외에는 fade-out 후 fade-in (원래 로직)
+    setShowContent(false);
+    const timeoutId = window.setTimeout(() => {
+      setDisplayDrop(activeDrop);
+      setShowContent(true);
+    }, 500);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
   }, [activeDrop, displayDrop]);
   const dropColors = {
     top: '#fef01b',     // 채팅 아이콘: 빨간색 계열
@@ -185,7 +200,7 @@ const DetailSecondSection: React.FC<DetailSecondSectionProps> = ({ active })=> {
     hoverTimers.current[key] = window.setTimeout(() => {
       if (hoverKey.current !== currentHoverId) return; 
       setActiveDrop(key);
-    }, 100);
+    }, 50);
   };
 
   const handleLeave = (key: DropKey) => () => {
@@ -293,16 +308,22 @@ const DetailSecondSection: React.FC<DetailSecondSectionProps> = ({ active })=> {
                     <path d="M16,6l-13,0c-0.552,0 -1,0.448 -1,1l0,22c0,0.552 0.448,1 1,1l22,0c0.552,0 1,-0.448 1,-1l0,-13c0,-0.552 -0.448,-1 -1,-1c-0.552,-0 -1,0.448 -1,1l0,12c0,0 -20,0 -20,0c0,0 0,-20 0,-20c-0,0 12,0 12,0c0.552,0 1,-0.448 1,-1c0,-0.552 -0.448,-1 -1,-1Zm-9,19l14,-0c0.552,0 1,-0.448 1,-1c0,-0.552 -0.448,-1 -1,-1l-14,0c-0.552,0 -1,0.448 -1,1c0,0.552 0.448,1 1,1Zm-0,-4l4,0c0.552,-0 1,-0.448 1,-1c-0,-0.552 -0.448,-1 -1,-1l-4,0c-0.552,-0 -1,0.448 -1,1c-0,0.552 0.448,1 1,1Zm22.707,-13.293c0.391,-0.39 0.391,-1.024 0,-1.414l-4,-4c-0.39,-0.391 -1.024,-0.391 -1.414,-0l-10,10c-0.14,0.139 -0.235,0.317 -0.274,0.511l-1,5c-0.065,0.328 0.037,0.667 0.274,0.903c0.236,0.237 0.575,0.339 0.903,0.274l5,-1c0.194,-0.039 0.372,-0.134 0.511,-0.274l10,-10Zm-22.707,9.293l4,0c0.552,0 1,-0.448 1,-1c0,-0.552 -0.448,-1 -1,-1l-4,0c-0.552,0 -1,0.448 -1,1c0,0.552 0.448,1 1,1Zm0,-4l5,-0c0.552,0 1,-0.448 1,-1c0,-0.552 -0.448,-1 -1,-1l-5,-0c-0.552,0 -1,0.448 -1,1c0,0.552 0.448,1 1,1Z" fill='#33CC99'/>
                   </FloatingIcon>
               )}
-              <div className='count'>
-                {displayDrop !== 'none' && (
-                    <>
-                      <NumberLabel visible={visibleLabel}>
-                        {indexMap[displayDrop]}
-                      </NumberLabel>
-                      <Divider visible={visibleLabel} />
-                    </>
-                )}
-              </div>
+<div className="count">
+  {displayDrop === 'none' ? (
+    // displayDrop이 'none'일 때 보여줄 div
+    <div className="count-placeholder">
+      {/* 여기에 원하는 내용 혹은 빈 공간용 스타일을 넣으세요 */}
+    </div>
+  ) : (
+    // 그 외에는 기존 NumberLabel + Divider
+    <>
+      <NumberLabel visible={visibleLabel}>
+        {indexMap[displayDrop]}
+      </NumberLabel>
+      <Divider visible={visibleLabel} />
+    </>
+  )}
+</div>
               <Title  visible={showContent}>{contentMap[displayDrop].title}</Title>
               <Text visible={showContent}> {contentMap[displayDrop].text}</Text>
             </Right>

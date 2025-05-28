@@ -42,7 +42,7 @@ const JoinContainer: React.FC = () => {
       return;
     }
     if (data.pw !== data.pwConfirm) {
-      alert('❌ 비밀번호가 일치하지 않습니다.');
+      alert('비밀번호가 일치하지 않습니다.');
       return;
     }
 
@@ -64,7 +64,7 @@ const JoinContainer: React.FC = () => {
     setValue('pwConfirm', value);
     const pw = getValues('pw');
     if (pw && value) {
-      setMatchMessage(pw === value ? '✅ 비밀번호가 일치합니다.' : '❌ 비밀번호가 일치하지 않습니다.');
+      setMatchMessage(pw === value ? '비밀번호가 일치합니다.' : '비밀번호가 일치하지 않습니다.');
     } else {
       setMatchMessage('');
     }
@@ -124,7 +124,7 @@ const JoinContainer: React.FC = () => {
       <S.JoinPageWrapper>
         <S.JoinContent>
           <S.LogoWrapper onClick={() => { navigate('/post/main'); window.location.reload(); }}>
-            <img src="../logo/logo3.png" alt="로고" />
+            <h2>Purgo</h2>
           </S.LogoWrapper>
 
           <S.JoinBox>
@@ -186,7 +186,7 @@ const JoinContainer: React.FC = () => {
                     }}
                 />
                 {/* styled-component 대신 일반 p 태그 사용 */}
-                <p style={{ fontSize: '12px', color: errors.pw ? '#666' : 'green', marginTop: '5px' }}>
+                <p style={{ fontSize: '14px', color: errors.pw ? '#666' : '#666', marginTop: '5px' }}>
                   영문, 숫자, 특수문자 조합 8자 이상 입력
                 </p>
                 {errors.pw && <S.ErrorMessage>{errors.pw.message}</S.ErrorMessage>}
@@ -199,13 +199,12 @@ const JoinContainer: React.FC = () => {
                     placeholder="비밀번호 확인"
                     {...register('pwConfirm', { required: '비밀번호 확인을 입력해주세요.' })}
                     onChange={handleConfirmPasswordChange}
-                    // styled-component 속성 대신 일반 style 사용
                     style={{ borderColor: errors.pwConfirm ? 'red' : '#ddd' }}
                 />
                 {errors.pwConfirm && <S.ErrorMessage>{errors.pwConfirm.message}</S.ErrorMessage>}
                 {matchMessage && (
                     // styled-component 대신 일반 p 태그 사용
-                    <p style={{ color: matchMessage.includes('✅') ? 'green' : 'red', fontSize: '14px', marginTop: '5px' }}>
+                    <p style={{ color: matchMessage.includes('일치합니다') ? 'green' : 'red', fontSize: '14px', marginTop: '5px' }}>
                       {matchMessage}
                     </p>
                 )}

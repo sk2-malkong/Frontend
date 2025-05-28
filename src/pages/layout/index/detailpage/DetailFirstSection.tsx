@@ -22,15 +22,16 @@ const DetailFirstSection: React.FC = () => {
       <GlobalStyle />
       <Background>
         <Drop>
-          <h2 style={{ marginBottom: '1rem', color: '#fff', zIndex: 1, }}>
+          <h2 style={{ marginBottom: '1rem', color: '#000000', zIndex: 1, }}>
             {card.title}
           </h2>
           <p
          style={{
+          width : '100%',
          margin: '0 1rem',
-         color: '#fff',
          lineHeight: 1.4,
          zIndex: 1,
+         fontSize : '17px'
          }}
           >
           Purgo는 라틴어로 <span style={{ color: 'blue', fontWeight: 'bold' }}>정제하다</span>라는 의미를 가지고 있습니다.
@@ -38,9 +39,9 @@ const DetailFirstSection: React.FC = () => {
           <p
             style={{
               margin: '0',
-              color: '#fff',
               lineHeight: 1.4,
               zIndex: 1,
+              fontSize : '17px'
             }}
           >
             {card.description2}
