@@ -798,7 +798,6 @@ const circleSegments = computeSegments(circleData);
             <Card>
               <Content>
                 <Title>성능지표 기반 분석</Title>
-                <Text>성능지표 비교</Text>
               </Content>
               <GraphContainer>
                 <ResponsiveContainer width="100%" height="100%">

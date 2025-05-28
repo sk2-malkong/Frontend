@@ -176,6 +176,12 @@ export const MainContent = styled.div`
   border-radius: 4px;
   }
 
+  img {
+    max-width: 80%;
+    height: auto;
+    display: block;
+    margin: 1rem auto; // 필요시 중앙 정렬
+  }
 `;
 
 export const FAQWrapper = styled.div`
