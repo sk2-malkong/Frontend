@@ -81,7 +81,7 @@ api.interceptors.response.use(
         const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
 
         // 401 에러이고, 이미 재시도하지 않은 요청인 경우
-        if (error.response?.status === 401 && !originalRequest._retry) {
+        if (error.response?.status === 403 && !originalRequest._retry) {
             // 이미 토큰 갱신 중인 경우
             if (isRefreshing) {
                 // 대기열에 추가하고 토큰 갱신 완료를 기다림

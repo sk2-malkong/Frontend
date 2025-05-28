@@ -137,7 +137,7 @@ const S = {
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%) scale(0);
-        transition: transform 0.7s ease-out;
+        transition: transform 1s ease-out;
         z-index: 0;
 
         &.overlay-1 {
@@ -166,8 +166,8 @@ const S = {
     `,
 
     /**
-     * 두 번째 오버랩 영역 컴포넌트 (자물쇠 효과)
-     * 호버시 자물쇠 애니메이션과 오버레이 효과가 나타납니다.
+     * 두 번째 오버랩 영역 컴포넌트 (제품 소개 - 파일 아이콘)
+     * 호버시 파일 아이콘 애니메이션과 오버레이 효과가 나타납니다.
      */
     Overlap3: styled.div`
         background-color: ${overlapColors.secondary.base};
@@ -180,51 +180,7 @@ const S = {
         cursor: pointer; /* 커서 스타일 변경 */
         transition: background-color 0.3s ease;
 
-        &:hover .shackle {
-            transform: rotateY(150deg) translateX(3px);
-            transform-origin: right;
-        }
-
-        &:hover .overlay-2 {
-            transform: translate(-50%, -50%) scale(10);
-        }
-
-        /* 호버 시 텍스트 색상 변경 */
-
-        &:hover .hover-title {
-            color: #111111;
-        }
-
-        /* 호버 시 자물쇠 색상 변경을 위한 클래스 */
-
-        &.hover-active .shackle {
-            border-top: 3px solid #4E71FF !important;
-            border-left: 3px solid #4E71FF !important;
-            border-right: 3px solid #4E71FF !important;
-        }
-
-        &.hover-active path {
-            fill: #4E71FF !important;
-        }
-    `,
-
-    /**
-     * 세 번째 오버랩 영역 컴포넌트 (파일 효과)
-     * 호버시 파일 아이콘 애니메이션과 오버레이 효과가 나타납니다.
-     */
-    Overlap2: styled.div`
-        background-color: ${overlapColors.tertiary.base};
-        flex: 1;
-        position: relative;
-        overflow: hidden; /* 오버레이가 넘치지 않도록 설정 */
-        display: flex;
-        flex-direction: column;
-        padding: ${pxToRem(23)} ${pxToRem(24)};
-        cursor: pointer; /* 커서 스타일 변경 */
-        transition: background-color 0.3s ease;
-
-        /* 오버레이 호버 시 파일 아이콘 색상도 변경됩니다 - 클래스 연결 */
-
+        /* 파일 아이콘 호버 효과 */
         &:hover .work-file-5,
         &:hover .work-file-5::after,
         &:hover .work-file-5::before {
@@ -260,17 +216,65 @@ const S = {
             background-color: #4E71FF; /* amber-400 색상 */
         }
 
-        &:hover .overlay-3 {
-            transform: translate(-50%, -50%) scale(10);
+        &:hover .overlay-2 {
+            transform: translate(-50%, -50%) scale(20);
         }
 
         /* 호버 시 텍스트 색상 변경 */
-
         &:hover .hover-title {
             color: #111111;
         }
     `,
-// -------------------------------
+
+    /**
+     * 세 번째 오버랩 영역 컴포넌트 (API 키 사용법 - 자물쇠 아이콘)
+     * 호버시 자물쇠 애니메이션과 오버레이 효과가 나타납니다.
+     */
+    Overlap2: styled.div`
+        background-color: ${overlapColors.tertiary.base};
+        flex: 1;
+        position: relative;
+        overflow: hidden; /* 오버레이가 넘치지 않도록 설정 */
+        display: flex;
+        flex-direction: column;
+        padding: ${pxToRem(23)} ${pxToRem(24)};
+        cursor: pointer; /* 커서 스타일 변경 */
+        transition: background-color 0.3s ease;
+
+        /* 자물쇠 아이콘 호버 효과 */
+        &:hover .shackle {
+            transform: rotateY(150deg) translateX(3px);
+            transform-origin: right;
+            border-top: 3px solid #4E71FF !important;
+            border-left: 3px solid #4E71FF !important;
+            border-right: 3px solid #4E71FF !important;
+        }
+
+        &:hover path {
+            fill: #4E71FF !important;
+        }
+
+        &:hover .overlay-3 {
+            transform: translate(-50%, -50%) scale(20);
+        }
+
+        /* 호버 시 텍스트 색상 변경 */
+        &:hover .hover-title {
+            color: #111111;
+        }
+
+        /* hover-active 클래스 효과도 포함 */
+        &.hover-active .shackle {
+            border-top: 3px solid #4E71FF !important;
+            border-left: 3px solid #4E71FF !important;
+            border-right: 3px solid #4E71FF !important;
+        }
+
+        &.hover-active path {
+            fill: #4E71FF !important;
+        }
+    `,
+
     /**
      * 그룹 3 컨테이너
      * 배경 요소를 위한 포지셔닝 컴포넌트입니다.
