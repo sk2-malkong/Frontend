@@ -116,10 +116,11 @@ const CodeBlock = styled.div<{ $borderColor: 'red' | 'green' }>`
       ? 'rgba(239, 68, 68, 0.2)'
       : 'rgba(34, 197, 94, 0.2)'};
 
-  width: 80%;           /* ← 부모(Content) 대비 80% 너비 고정 */
-  max-width: 30rem;     /* ← 절대 최대폭 설정 */
-  margin: 0 auto;       /* ← 좌우 중앙 배치 */
-  text-align: center;   /* ← 블록 내부 텍스트 중앙 정렬 */
+  /* ▶ 여기를 고정폭으로 바꿔 보세요 */
+  width: 30rem;        /* 예: 항상 30rem(480px) */
+  max-width: 100%;     /* 너무 작아지는 건 방지 */
+  margin: 0 auto;      /* 좌우 마진 자동으로 중앙 배치 */
+  text-align: left;    /* 코드 내용은 왼쪽 정렬 */
 `;
 
 const CodeLine = styled.div`
@@ -283,7 +284,7 @@ const AIMessagePurifier: React.FC = () => {
     setTimeout(() => {
       setDetectionResult({
         hasInappropriateContent: true,
-        confidence: 95
+        confidence: 96
       });
       setIsAnalyzing(false);
       
@@ -352,7 +353,7 @@ const AIMessagePurifier: React.FC = () => {
                   <StatusBadge $variant="detected">
                     <AlertTriangle className="w-5 h-5 mr-2" />
                     <span>
-                      부적절한 표현 감지 ({detectionResult.confidence}%)
+                      부적절한 표현 감지
                     </span>
                   </StatusBadge>
                   <BouncingArrow />
