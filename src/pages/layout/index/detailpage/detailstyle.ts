@@ -159,6 +159,11 @@ export const Drop = styled.div<DropProps>`
     margin: 0;
   }
 
+  p{
+    font-weight: bold;
+    color: rgb(148 147 147);
+  }
+
   &:active img,
   &:active svg {
     transform: scale(1.2);
@@ -240,6 +245,11 @@ export const Right = styled.div`
 
   .count{
     margin-bottom: 20px;
+  }
+  .count-placeholder{
+    height: 33.6px;
+    width: 100%;
+ 
   }
 `;
 

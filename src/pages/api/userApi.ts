@@ -58,9 +58,13 @@ const updateProfile = async (profileData: UpdateProfileData): Promise<UserProfil
 
 /**
  * 회원 탈퇴 요청
+ * - DELETE 요청
+ * - 비밀번호를 body에 포함
  */
-const withdrawUser = async (): Promise<void> => {
-  await api.post('/user/withdrawal');
+const withdrawUser = async (data: { password: string }): Promise<void> => {
+  await api.delete('/user/delete', {
+    data: data, // { password: '...' }
+  });
 };
 
 const userApi = {

@@ -310,6 +310,7 @@ const ModalCancelButton = styled.button`
     border: none;
     border-radius: 0.5rem;
     cursor: pointer;
+    color: #000000;
 `;
 
 const ModalConfirmButton = styled.button`
@@ -319,6 +320,23 @@ const ModalConfirmButton = styled.button`
     border: none;
     border-radius: 0.5rem;
     cursor: pointer;
+`;
+
+const PasswordInput = styled.input`
+    width: 100%;
+    margin-top: 1rem;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 0.5rem;
+    outline: none;
+    box-sizing: border-box;
+    font-family: "Pretendard-Regular", Helvetica;
+    color: #000000;
+
+    &::placeholder {
+        color: #bbbbbb;
+    }
 `;
 
 // 스타일드 컴포넌트들을 객체로 내보내기
@@ -348,6 +366,7 @@ const S = {
     ModalButtonContainer,
     ModalCancelButton,
     ModalConfirmButton,
+    PasswordInput,
 };
 
 export default S;

@@ -66,14 +66,13 @@ const Layout: React.FC = () => {
           </S.Main>
         </S.Background>
 
-        {!isIntroPage && (
-            <S.BubbleLogo
-                src="/images/purgo-logo.png"
-                alt="Bubble Logo"
-                onClick={() => navigate('/')}
-            />
-        )}
-      </div>
+{!isIntroPage && (
+             <S.PurgoLink
+              href="http://purgo.kro.kr/detail#second">
+              PURGO
+            </S.PurgoLink>
+)}
+</div>
   );
 };
 
