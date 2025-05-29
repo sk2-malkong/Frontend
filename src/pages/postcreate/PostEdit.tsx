@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import PostFormContainer from "./PostFormContainer";
 import auth from "../api/auth";
-import axios from "axios";
+import api from '../api/axios'
 import { updatePost } from "../api/postedit";
 import { isUserRestricted } from "../../utils/penalty"; // ✅ 경로 수정
 
@@ -40,8 +40,8 @@ const PostEdit: React.FC = () => {
         const config = { headers: { Authorization: `Bearer ${token}` } };
 
         // 게시글 데이터 요청
-        const response = await axios.get(
-          `http://43.203.14.194/api/post/${id}?increaseView=false`,
+        const response = await api.get(
+          `http://43.203.14.194/api/post/${id}?increaseView=false`, //게시글 데이터 요청 주소
           config
         );
         const data = response.data;

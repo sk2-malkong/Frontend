@@ -1,6 +1,4 @@
-import axios, { AxiosRequestConfig } from 'axios';
-
-const API_BASE = 'http://43.203.14.194';
+import api from './axios'; // axios.ts에서 설정한 API 클라이언트 import
 
 interface PostDetailResponse {
   postId: number;
@@ -19,7 +17,7 @@ interface PostDetailResponse {
  * - GET /api/post/{postId}
  */
 export const fetchPostDetail = async (postId: number): Promise<PostDetailResponse> => {
-  const response = await axios.get(`${API_BASE}/api/post/${postId}`);
+  const response = await api.get(`/post/${postId}`);
   return response.data;
 };
 
@@ -28,12 +26,5 @@ export const fetchPostDetail = async (postId: number): Promise<PostDetailRespons
  * - DELETE /api/post/delete/{postId}
  */
 export const deletePost = async (postId: number): Promise<void> => {
-  const token = localStorage.getItem('accessToken');
-  const config: AxiosRequestConfig = {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  };
-
-  await axios.delete(`${API_BASE}/api/post/delete/${postId}`, config);
+  await api.delete(`/post/delete/${postId}`);
 };

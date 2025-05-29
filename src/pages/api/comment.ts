@@ -1,6 +1,4 @@
-import axios, { AxiosRequestConfig } from 'axios';
-
-const API_BASE = 'http://43.203.14.194';
+import api from './axios'; // axios.ts에서 설정한 API 클라이언트 import
 
 interface CommentResponse {
   commentId: number;
@@ -18,14 +16,7 @@ interface CommentResponse {
  * - POST /api/comment/{postId}
  */
 export const createComment = async (postId: number, content: string): Promise<CommentResponse> => {
-  const token = localStorage.getItem('accessToken');
-  const config: AxiosRequestConfig = {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  };
-
-  const response = await axios.post(`${API_BASE}/api/comment/${postId}`, { content }, config);
+  const response = await api.post(`/comment/${postId}`, { content });
   return response.data;
 };
 
@@ -34,14 +25,7 @@ export const createComment = async (postId: number, content: string): Promise<Co
  * - PUT /api/comment/{commentId}
  */
 export const updateComment = async (commentId: number, content: string): Promise<CommentResponse> => {
-  const token = localStorage.getItem('accessToken');
-  const config: AxiosRequestConfig = {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  };
-
-  const response = await axios.put(`${API_BASE}/api/comment/${commentId}`, { content }, config);
+  const response = await api.put(`/comment/${commentId}`, { content });
   return response.data;
 };
 
@@ -50,7 +34,7 @@ export const updateComment = async (commentId: number, content: string): Promise
  * - GET /api/comment/{postId}
  */
 export const fetchComments = async (postId: number): Promise<CommentResponse[]> => {
-  const response = await axios.get(`${API_BASE}/api/comment/${postId}`);
+  const response = await api.get(`/comment/${postId}`);
   return response.data;
 };
 
@@ -59,12 +43,5 @@ export const fetchComments = async (postId: number): Promise<CommentResponse[]> 
  * - DELETE /api/comment/{commentId}
  */
 export const deleteComment = async (commentId: number): Promise<void> => {
-  const token = localStorage.getItem('accessToken');
-  const config: AxiosRequestConfig = {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  };
-
-  await axios.delete(`${API_BASE}/api/comment/${commentId}`, config);
+  await api.delete(`/comment/${commentId}`);
 };
