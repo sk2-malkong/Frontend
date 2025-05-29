@@ -182,6 +182,14 @@ export const MainContent = styled.div`
     display: block;
     margin: 1rem auto; // 필요시 중앙 정렬
   }
+
+  img[src*="purgo-api-endpoint.png"] {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 1rem auto;
+  }
+
 `;
 
 export const FAQWrapper = styled.div`
