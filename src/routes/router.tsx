@@ -23,6 +23,7 @@ import RequestPage from "../pages/layout/index/docspages/views/Request";
 import SecurityPage from "../pages/layout/index/docspages/views/Security";
 import DetailPage from 'src/pages/layout/index/detailpage/DetailPage';
 import MyPostListContainer from '../pages/mypostlist/MyPostListContainer';
+import AIMessagePurifier from 'src/pages/layout/index/apiIntroMain/AIMessagePurifier';
 
 const routes: RouteObject[] = [
   {
@@ -30,6 +31,10 @@ const routes: RouteObject[] = [
     element: <PdMain />,  // 루트 경로에 PdMain 컴포넌트 직접 배치
     index: true,
   },
+        {
+        path : "/hello",
+        element : <AIMessagePurifier/>
+      },
   {
     path: "/post",  // 기존 루트 경로를 /layout으로 변경
     element: <Layout/>,

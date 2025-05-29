@@ -4,9 +4,9 @@ import S from "./style";
 import banerTitleImg from './Group 3696.svg';
 import LockIcon from "../ActionIcons/LockIcon/LockIcon";
 import FileIcon from "../ActionIcons/FileIcon/FileIcon";
-import PrinterIcon from "../ActionIcons/PrinterIcon/PrinterIcon";
 import ApiKeyPopup from "../_component/ApiKeyPopup";
 import Header from "../_component/Header/Header";
+import AIMessagePurifier from './AIMessagePurifier';
 
 /**
  * PdMain 컴포넌트 - 메인 페이지의 레이아웃과 기능을 구현한 컴포넌트
@@ -51,7 +51,7 @@ const MainBanner = () => (
                                     src={banerTitleImg}
                                     alt="비속어 필터링 서비스"
                                     className="small"
-                                />
+                                    />
                             </S.ImageWrapper>
                             <S.TextWrapper>
                                 비속어 필터링 서비스 개발자센터에 오신 것을 환영합니다.
@@ -61,7 +61,8 @@ const MainBanner = () => (
                             </S.P>
                         </S.ContentContainer>
                     </S.Group2>
-                    <PrinterIcon />
+                    <S.Group2><S.JsonEffect><AIMessagePurifier/></S.JsonEffect></S.Group2>
+                
                 </S.InnerDiv2>
             </div>
         </div>
@@ -99,10 +100,10 @@ const ProductIntroSection = () => {
             <S.Group3 />
             <S.TitleContainer>
                 <S.TextWrapper2 className="hover-title">
-                    제품 소개
+                    서비스 소개
                 </S.TextWrapper2>
                 <S.TextWrapper3 style={{ opacity: isHovered ? 1 : 0 }}>
-                    제품 특징을 알려줄게요.
+                    서비스 특징을 알려줄게요.
                 </S.TextWrapper3>
             </S.TitleContainer>
             <FileIcon />
