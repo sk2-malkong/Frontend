@@ -17,7 +17,7 @@ export const setAdminStatus = createAction(SET_ADMIN_STATUS, (isAdmin) => isAdmi
 const UserInitalValue = {
     currentUser: {
         role: "user", // 기본값 user
-        picture: "http://localhost:8000/uploads/profiles/user.png" // 기본 프로필 이미지
+        picture: "http://43.203.14.194/uploads/profiles/user.png" // 기본 프로필 이미지
     },
     isLogin: false,
     previousUrl: "",

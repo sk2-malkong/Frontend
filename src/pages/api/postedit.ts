@@ -1,6 +1,4 @@
-import axios, { AxiosRequestConfig } from 'axios';
-
-const API_BASE = 'http://43.203.14.194';
+import api from './axios'; // axios.ts에서 설정한 API 클라이언트 import
 
 interface UpdatePostParams {
   title: string;
@@ -12,12 +10,5 @@ interface UpdatePostParams {
  * - PUT /api/post/update/{postId}
  */
 export const updatePost = async (postId: number, updatedPost: UpdatePostParams): Promise<void> => {
-  const token = localStorage.getItem('accessToken');
-  const config: AxiosRequestConfig = {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  };
-
-  await axios.put(`${API_BASE}/api/post/update/${postId}`, updatedPost, config);
+  await api.put(`/post/update/${postId}`, updatedPost);
 };
