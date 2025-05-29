@@ -33,19 +33,30 @@ const pulse = keyframes`
 const Container = styled.div`
   height: 100vh;             /* 화면 높이 */
   display: flex;
-  transform: scale(0.6);       
+  transform: scaleX(0.8) scaleY(0.6);       
   align-items: flex-start;   /* 위쪽 정렬 */
   justify-content: flex-end;   /* 가로 중앙 정렬 */
   padding: 1.5rem 1.5rem 0;   /* 아래쪽 패딩만 없애거나, 위쪽 여백 조절 */
   width: 100%;
-  transform-origin: top center;
+  transform-origin: top right;
   margin-top: 2rem;
 `;
 
 const MainCard = styled.div`
-  width: 80vw;
-  max-width: 60rem;
-  margin-left: auto;
+  /* 1) 원래 카드의 가로:세로 비율을 지정 (1272 / 317 ≒ 4 / 1) */
+  aspect-ratio: 4 / 1;
+
+  /* 2) 높이를 뷰포트 대비 %로 잡아서, 화면이 작아지면 높이도 줄어들게 */
+  max-height: 90vh;     
+  height: auto;         
+
+  /* 3) 너무 커지지 않도록 가로 최대값 제한 (옵션) */
+  max-width: 100rem;
+  width: auto;          /* 높이에 맞춰 자동으로 가로 폭 계산 */
+
+  /* 4) 정가운데 띄우기 */
+  margin: 0 auto;
+  
 `;
 
 const CardWrapper = styled.div`
@@ -209,7 +220,7 @@ const BouncingArrow = styled(ArrowDown)`
 `;
 
 const PurifiedContainer = styled.div<MessageContainerProps>`
-  margin-top: 1rem;       /* 화살표 공간만큼 여백 확보 */
+  margin-top: auto;       /* 화살표 공간만큼 여백 확보 */
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
