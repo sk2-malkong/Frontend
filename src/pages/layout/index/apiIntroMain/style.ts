@@ -76,12 +76,13 @@ const S = {
         margin: 0 auto;
         display: flex;
         justify-content: space-between;
-        align-items: center;
         z-index: 1; /* 오버레이 위에 표시 */
 
         @media (max-width: 1200px) {
             width: 90%; /* 작은 화면에서 비율 유지 */
         }
+
+
     `,
 
     /**
@@ -106,6 +107,19 @@ const S = {
         @media (max-width: 768px) {
             width: 90%;
         }
+    `,
+    JsonEffect:styled.div`
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end; /* 왼쪽 정렬 */
+        text-align: right;
+        width: 100%;
+        z-index: 1;
+        margin-top: -10.8rem;
+         width: fit-content;        /* 콘텐츠 폭 만큼만 */
+         margin-left: auto; 
+    
+    
     `,
 
     /**
