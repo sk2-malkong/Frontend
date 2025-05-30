@@ -56,8 +56,9 @@ Content-Type: application/json
 
 | 필드명(1dep) | 필드명(2dep) | 설명 | 비고 |
 | --- | --- | --- | --- |
+| **final_decision** |  | 최종 비속어 탐지여부를 보여줍니다. | 필터링 여부는 1(있음) 또는 0(없음) |
 | **result** | original_text | 비속어로 탐지된 단어 문장(단어)입니다. |  |
 |  | rewritten_text | 비속어를 대체한 단어 문장(단어)입니다. |  |
-| **final_decision** |  | 최종 비속어 탐지여부를 보여줍니다. | 필터링 여부는 1(있음) 또는 0(없음) |
+
 
 
