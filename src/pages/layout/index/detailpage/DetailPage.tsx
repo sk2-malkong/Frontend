@@ -34,8 +34,9 @@ const DetailPage: React.FC = () => {
                   <ReactFullpage.Wrapper>
                       {/* 1st section */}
                       <div className="section">
-                          <DetailFirstSection />
+                          <IntroContainer active={activeSection === 3} />
                       </div>
+                      
 
                       {/* 2nd section */}
                       <div className="section">
@@ -47,7 +48,7 @@ const DetailPage: React.FC = () => {
                           <DetailThreadSection active={activeSection === 2} />
                       </div>
                       <div className="section">
-                          <IntroContainer active={activeSection === 3} />
+                          <DetailFirstSection />
                       </div>
                   </ReactFullpage.Wrapper>
               )}

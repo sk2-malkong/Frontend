@@ -112,7 +112,7 @@ const ProfileFixContainer: React.FC = () => {
 
             if (profileImageUrl && profileImageUrl !== 'null' && profileImageUrl !== 'undefined') {
                 if (profileImageUrl.startsWith('/')) {
-                    const baseURL = 'http://43.203.14.194/api';
+                    const baseURL = 'http://localhost:8080/api';
                     profileImageUrl = `${baseURL}${profileImageUrl}`;
                 }
                 const cacheBreaker = `?t=${new Date().getTime()}`;
