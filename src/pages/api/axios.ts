@@ -3,7 +3,7 @@ import axios, { AxiosError, InternalAxiosRequestConfig, AxiosResponse } from 'ax
 // ============================================================================
 // 상수 및 설정
 // ============================================================================
-const API_BASE_URL = 'http://localhost:8080/api';
+const API_BASE_URL = 'http://43.203.14.194/api';
 const STORAGE_KEYS = {
     ACCESS_TOKEN: 'accessToken',
     REFRESH_TOKEN: 'refreshToken',

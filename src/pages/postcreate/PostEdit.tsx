@@ -41,7 +41,7 @@ const PostEdit: React.FC = () => {
 
         // 게시글 데이터 요청
         const response = await api.get(
-          `http://localhost:8080/api/post/${id}?increaseView=false`, //게시글 데이터 요청 주소
+          `http://43.203.14.194/api/post/${id}?increaseView=false`, //게시글 데이터 요청 주소
           config
         );
         const data = response.data;
