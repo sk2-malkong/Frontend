@@ -158,6 +158,7 @@ const ButtonText = styled.div`
     width: fit-content;
 `;
 
+// 클릭 기능 제거된 프로필 이미지 영역
 const ProfileImageArea = styled.div`
     height: 7.5rem;
     width: 7.5rem;
@@ -170,38 +171,11 @@ const ProfileImageArea = styled.div`
     align-items: center;
     border-radius: 50%;
     overflow: hidden;
-    cursor: pointer;
-    transition: all 0.3s ease;
-
-    &:hover {
-        opacity: 0.8;
-        box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.2);
-    }
 
     img {
         width: 100%;
         height: 100%;
         object-fit: cover;
-    }
-`;
-
-const CameraIconWrapper = styled.div`
-    background-color: #ffffff;
-    border: 0.03125rem solid;
-    border-color: #dddddd;
-    border-radius: 0.8125rem;
-    height: 1.625rem;
-    right: -0.8125rem;
-    position: absolute;
-    bottom: -0.8125rem;
-    width: 1.625rem;
-
-    .camera-icon {
-        height: 1.4375rem;
-        left: 0.0625rem;
-        position: absolute;
-        top: 0.0625rem;
-        width: 1.4375rem;
     }
 `;
 
@@ -239,18 +213,6 @@ const LoadingContainer = styled.div`
     align-items: center;
     height: 100%;
     width: 100%;
-`;
-
-interface ImageUploadStatusProps {
-    isError: boolean;
-}
-
-const ImageUploadStatus = styled.div<ImageUploadStatusProps>`
-    font-size: 0.8rem;
-    width: 100%;
-    text-align: center;
-    margin-top: 0.5rem;
-    color: ${props => props.isError ? '#ff4444' : '#1A1A1A'};
 `;
 
 const ErrorMessage = styled.div`
@@ -353,11 +315,9 @@ const S = {
     SubmitButton,
     ButtonText,
     ProfileImageArea,
-    CameraIconWrapper,
     WithdrawalArea,
     WithdrawalText,
     LoadingContainer,
-    ImageUploadStatus,
     ErrorMessage,
     ModalOverlay,
     ModalContainer,
