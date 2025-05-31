@@ -680,7 +680,7 @@ const data: DataSegment[] = [
   { label: '정확도',  value: 96.4, color: '#00f9cb' },
   { label: '정밀도', value: 97.9, color: '#08e260' },
   { label: '재현율',    value: 94.9, color: '#00c37b' },
-  { label: 'F1-score',  value: 92.8, color: '#00894d' }
+  { label: 'F1-score',  value: 96.4, color: '#00894d' }
 ];
 const colors = ['#00f9cb', '#08e260', '#00c37b', '#00894d', '#ffb400', '#ff6b6b'];
 

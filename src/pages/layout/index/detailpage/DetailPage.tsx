@@ -32,28 +32,28 @@ const DetailPage: React.FC = () => {
               }}
               render={({ state, fullpageApi }) => (
                   <ReactFullpage.Wrapper>
+                      {/* 1st section */}
                       <div className="section">
-                          <IntroContainer active={activeSection === 3}/>
+                          <IntroContainer active={activeSection === 3} />
                       </div>
+                      
 
                       {/* 2nd section */}
                       <div className="section">
-                          <DetailSecondSection active={activeSection === 1}/>
+                          <DetailSecondSection active={activeSection === 1} />
                       </div>
 
                       {/* 3rd section */}
                       <div className="section">
-                          <DetailThreadSection active={activeSection === 2}/>
+                          <DetailThreadSection active={activeSection === 2} />
                       </div>
-
-                      {/* 1st section */}
                       <div className="section">
-                          <DetailFirstSection/>
+                          <DetailFirstSection />
                       </div>
                   </ReactFullpage.Wrapper>
               )}
           />
-          <ApiKeyPopup isOpen={isPopupOpen} onClose={closePopup}/>
+          <ApiKeyPopup isOpen={isPopupOpen} onClose={closePopup} />
       </>
 
   );

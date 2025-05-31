@@ -49,21 +49,16 @@ Content-Type: application/json
 
 ```json
 {
-  fasttext: { detected_words: [], is_bad: 0 },
   final_decision: 0,
-  kobert: { confidence: 0.9933, is_bad: 0 },
   result: { original_text: '배고파요', rewritten_text: '배고파요' }
 }
 ```
 
 | 필드명(1dep) | 필드명(2dep) | 설명 | 비고 |
 | --- | --- | --- | --- |
-| **fasttext** | detected_words | fasttext모델이 감지한 비속어를 보여줍니다. |  |
-|  | is_bad | fasttext의 비속어 탐지 결과입니다. | 필터링 여부는1(있음) 또는 0(없음) |
-| **kobert** | confidence | kobert모델이 측정한 비속어 정확성입니다. |  |
-|  | is_bad | kobert의 비속어 탐지 결과입니다. | 필터링 여부는1(있음) 또는 0(없음) |
+| **final_decision** |  | 최종 비속어 탐지여부를 보여줍니다. | 필터링 여부는 1(있음) 또는 0(없음) |
 | **result** | original_text | 비속어로 탐지된 단어 문장(단어)입니다. |  |
 |  | rewritten_text | 비속어를 대체한 단어 문장(단어)입니다. |  |
-| **final_decision** |  | 최종 비속어 탐지여부를 보여줍니다. | 필터링 여부는 1(있음) 또는 0(없음) |
+
 
 
