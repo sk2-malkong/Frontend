@@ -14,6 +14,10 @@ const Layout: React.FC = () => {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('email');
+
+    // 커스텀 이벤트 발생
+    window.dispatchEvent(new Event('auth-changed'));
+
     alert('로그아웃 되었습니다.');
     navigate('/post/main');
   };
@@ -66,13 +70,13 @@ const Layout: React.FC = () => {
           </S.Main>
         </S.Background>
 
-{!isIntroPage && (
-             <S.PurgoLink
-              href="http://purgo.kro.kr/detail#second">
+        {!isIntroPage && (
+            <S.PurgoLink
+                href="http://purgo.kro.kr/detail#second">
               PURGO
             </S.PurgoLink>
-)}
-</div>
+        )}
+      </div>
   );
 };
 
