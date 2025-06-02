@@ -34,7 +34,7 @@ const DetailPage: React.FC = () => {
                   <ReactFullpage.Wrapper>
                       {/* 1st section */}
                       <div className="section">
-                          <IntroContainer active={activeSection === 3} />
+                          <IntroContainer active={activeSection === 0} />
                       </div>
                       
 

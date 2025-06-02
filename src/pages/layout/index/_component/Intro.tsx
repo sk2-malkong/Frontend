@@ -25,25 +25,42 @@ interface IntroProps {
 const Intro: React.FC<IntroProps> = ({ active }) => {
   const [ripples, setRipples] = useState<{ id: string; top: string; left: string }[]>([]);
 
-  useEffect(() => {
-    if (!active) return; // 비활성화되면 애니메이션 멈춤
+useEffect(() => {
+  let interval: NodeJS.Timeout | null = null;
+  const timeoutIds: NodeJS.Timeout[] = [];
 
-    const spawnRipples = () => {
-      ripplePositions.forEach((pos, index) => {
-        setTimeout(() => {
-          const id = `${Date.now()}-${index}`;
-          setRipples((prev) => [...prev, { ...pos, id }]);
-          setTimeout(() => {
-            setRipples((prev) => prev.filter((r) => r.id !== id));
-          }, 4000);
-        }, index * 1000);
-      });
-    };
+  const spawnRipples = () => {
+    ripplePositions.forEach((pos, index) => {
+      const timeoutId = setTimeout(() => {
+        const id = `${Date.now()}-${index}`;
+        setRipples((prev) => [...prev, { ...pos, id }]);
 
+        const removeId = setTimeout(() => {
+          setRipples((prev) => prev.filter((r) => r.id !== id));
+        }, 4000);
+
+        timeoutIds.push(removeId);
+      }, index * 2000);
+
+      timeoutIds.push(timeoutId);
+    });
+  };
+
+  // active일 때만 시작
+  if (active) {
     spawnRipples();
-    const interval = setInterval(spawnRipples, 9000);
-    return () => clearInterval(interval);
-  }, [active]);
+    interval = setInterval(spawnRipples, 9000);
+  }
+
+  // 💥 cleanup은 무조건 실행되게 한다
+  return () => {
+    if (interval) clearInterval(interval);
+    timeoutIds.forEach(clearTimeout);
+    setRipples([]); // 혹시 남은 물방울 제거
+  };
+}, [active]);
+
+
 
   return (
     <S.Container>

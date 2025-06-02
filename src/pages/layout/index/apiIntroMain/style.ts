@@ -69,7 +69,7 @@ const S = {
      * 높이와 너비를 조절하고 내부 요소를 배치합니다.
      */
     InnerDiv2: styled.div`
-        height: 80%;
+        height: 100%;
         position: relative;
         width: 90%;
         max-width: ${pxToRem(1010)};
@@ -103,6 +103,7 @@ const S = {
         width: 60%;
         position: relative;
         z-index: 1; /* 오버레이 위에 표시 */
+        margin: auto;
 
         @media (max-width: 768px) {
             width: 90%;
@@ -115,7 +116,6 @@ const S = {
         text-align: right;
         width: 100%;
         z-index: 1;
-        margin-top: -10.8rem;
          width: fit-content;        /* 콘텐츠 폭 만큼만 */
          margin-left: auto; 
     
@@ -589,7 +589,6 @@ const S = {
         .info-top {
             text-align: center;
             position: absolute;
-            top: calc(0.17 * var(--card-height));
             left: 0;
             right: 0;
             color: rgb(255, 255, 255);
@@ -604,7 +603,8 @@ const S = {
         text-align: left;
         width: 100%;
         z-index: 1;
-        margin-top: ${pxToRem(-70)};
+        height: 50%;
+        justify-content: center;
 
         /* 클래스 이름을 사용한 선택자로 변경 */
         .image-wrapper {
