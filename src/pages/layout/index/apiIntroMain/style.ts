@@ -109,15 +109,27 @@ const S = {
         }
     `,
     JsonEffect:styled.div`
+        position: absolute;
+        top: -162%;
+        right: -100%;
         display: flex;
         flex-direction: column;
-        align-items: flex-end; /* 왼쪽 정렬 */
+        align-items: flex-end;
         text-align: right;
-        width: 100%;
+        width: fit-content;
         z-index: 1;
-        margin-top: -10.8rem;
-         width: fit-content;        /* 콘텐츠 폭 만큼만 */
-         margin-left: auto; 
+        
+        
+        
+        //display: flex;
+        //flex-direction: column;
+        //align-items: flex-end; /* 왼쪽 정렬 */
+        //text-align: right;
+        //width: 100%;
+        //z-index: 1;
+        //margin-top: -10.8rem;
+        // width: fit-content;        /* 콘텐츠 폭 만큼만 */
+        // margin-left: auto; 
     
     
     `,
@@ -589,7 +601,7 @@ const S = {
         .info-top {
             text-align: center;
             position: absolute;
-            top: calc(0.17 * var(--card-height));
+            margin-top: 10%;
             left: 0;
             right: 0;
             color: rgb(255, 255, 255);
