@@ -103,7 +103,6 @@ const S = {
         width: 60%;
         position: relative;
         z-index: 1; /* 오버레이 위에 표시 */
-        margin: auto;
 
         @media (max-width: 768px) {
             width: 90%;
@@ -116,10 +115,10 @@ const S = {
         text-align: right;
         width: 100%;
         z-index: 1;
-         width: fit-content;        /* 콘텐츠 폭 만큼만 */
-         margin-left: auto; 
-    
-    
+        width: fit-content;        /* 콘텐츠 폭 만큼만 */
+        margin-left: auto;
+
+
     `,
 
     /**
@@ -594,6 +593,7 @@ const S = {
             color: rgb(255, 255, 255);
             font-weight: 600;
             z-index: 1;
+            height: 100%;
         }
     `,
     ContentContainer: styled.div`
@@ -603,7 +603,7 @@ const S = {
         text-align: left;
         width: 100%;
         z-index: 1;
-        height: 50%;
+        height: 100%;
         justify-content: center;
 
         /* 클래스 이름을 사용한 선택자로 변경 */
