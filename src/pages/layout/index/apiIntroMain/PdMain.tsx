@@ -51,7 +51,7 @@ const MainBanner = () => (
                                     src={banerTitleImg}
                                     alt="비속어 필터링 서비스"
                                     className="small"
-                                />
+                                    />
                             </S.ImageWrapper>
                             <S.TextWrapper>
                                 비속어 필터링 서비스 개발자센터에 오신 것을 환영합니다.
@@ -60,19 +60,8 @@ const MainBanner = () => (
                                 새로운 기회와 가치를 함께 만들어봐요.
                             </S.P>
                         </S.ContentContainer>
-
-                        <S.JsonEffect>
-                            <AIMessagePurifier/>
-                        </S.JsonEffect>
-
                     </S.Group2>
-
-                    {/*<S.Group2>*/}
-                    {/*    <S.JsonEffect>*/}
-                    {/*        <AIMessagePurifier/>*/}
-                    {/*    </S.JsonEffect>*/}
-                    {/*</S.Group2>*/}
-
+                        <S.Group2><AIMessagePurifier/></S.Group2>
                 </S.InnerDiv2>
             </div>
         </div>

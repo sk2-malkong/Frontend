@@ -31,14 +31,13 @@ const pulse = keyframes`
 
 // Styled Components
 const Container = styled.div`
-  height: 100vh;
   display: flex;
   align-items: flex-start;
   justify-content: flex-end;
-  padding: 1.5rem 1.5rem 0;
+  padding-top: 0.5rem;
   width: 100%;
   transform-origin: top right;
-  margin-top: 2rem;
+  height: 100%;
 `;
 
 const MainCard = styled.div`
@@ -63,22 +62,23 @@ const Content = styled.div`
   padding: 1rem;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  height: 380px;
+  gap: 0.75rem;
+  height: 300px;
   width: 100%;
+  min-width: 400px;
 `;
 
 const MessageSection = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.25rem;
 `;
 
 const MessageLabel = styled.div<{ $color: 'red' | 'green' }>`
   display: flex;
   align-items: center;
   font-weight: 600;
-  font-size: 16px;
+  font-size: 20px;
   color: ${props => props.$color === 'red' ? 'rgb(248, 113, 113)' : 'rgb(74, 222, 128)'};
 `;
 
@@ -86,7 +86,7 @@ const Title = styled.div<{ $color: 'red' | 'green' }>`
   display: flex;
   align-items: center;
   font-weight: 600;
-  font-size: 20px;
+  font-size: 16px;
   color: ${props => props.$color === 'red' ? 'rgb(248, 113, 113)' : 'rgb(74, 222, 128)'};
 `;
 
@@ -99,24 +99,24 @@ const CustomTitle2 = styled(Title)`
 `;
 
 const StatusDot = styled.div<{ $color: 'red' | 'green' }>`
-  width: 0.5rem;
-  height: 0.5rem;
+  width: 0.375rem;
+  height: 0.375rem;
   background-color: ${props => props.$color === 'red' ? 'rgb(239, 68, 68)' : 'rgb(34, 197, 94)'};
   border-radius: 50%;
-  margin-right: 0.5rem;
+  margin-right: 0.375rem;
 `;
 
 const CodeBlock = styled.div<{ $borderColor: 'red' | 'green' }>`
   background: rgba(15, 23, 42, 0.7);
-  border-radius: 0.75rem;
-  padding: 1rem;
+  border-radius: 0.4rem;
+  padding: 0.5rem;
   font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-  font-size: 16px;
+  font-size: 12px;
   border: 1px solid ${props =>
       props.$borderColor === 'red'
           ? 'rgba(239, 68, 68, 0.2)'
           : 'rgba(34, 197, 94, 0.2)'};
-  width: 25rem;
+  width: 18rem;
   max-width: 100%;
   margin: 0 auto;
   text-align: left;
@@ -124,7 +124,7 @@ const CodeBlock = styled.div<{ $borderColor: 'red' | 'green' }>`
 
 const CodeLine = styled.div`
   color: rgb(148, 163, 184);
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.1rem;
 
   &:last-child {
     margin-bottom: 0;
@@ -139,7 +139,7 @@ const CodeContent = styled.div`
 
 const CodeKey = styled.span`
   color: rgb(248, 113, 113);
-  font-size: 16px;
+  font-size: 12px;
 `;
 
 const CodeColon = styled.span`
@@ -160,19 +160,19 @@ const Cursor = styled.span`
 const StatusContainer = styled.div`
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  padding: 1rem 0;
-  min-height: 4rem;
+  justify-content: center;
+  padding: 0.5rem 0;
+  min-height: 2.5rem;
 `;
 
 const StatusBadge = styled.div<{ $variant: 'analyzing' | 'detected' }>`
   display: flex;
   align-items: center;
-  padding: 0.25rem 0.75rem;
+  padding: 0.2rem 0.6rem;
   border-radius: 9999px;
   border: 1px solid;
   font-weight: 500;
-  font-size: 14px;
+  font-size: 12px;
 
   ${props => props.$variant === 'analyzing' ? css`
     color: rgb(251, 191, 36);
@@ -193,10 +193,10 @@ const SpinningIcon = styled(Sparkles)`
 `;
 
 const PurifiedContainer = styled.div<MessageContainerProps>`
-  margin-top: -1.5rem;
+  margin-top: auto;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.25rem;
   transition: all 0.5s ease;
   opacity: ${props => props.$isVisible ? 1 : 0.3};
 `;
@@ -335,7 +335,7 @@ const AIMessagePurifier: React.FC = () => {
               <PurifiedContainer $isVisible={!!purifiedMessage}>
                 <MessageLabel $color="green">
                   <StatusDot $color="green" />
-                  <CustomTitle2 $color="green">정제된 메시지</CustomTitle2>
+                  <CustomTitle2 $color="green">순화된 메시지</CustomTitle2>
                 </MessageLabel>
                 <CodeBlock $borderColor="green">
                   <CodeLine>{"{"}</CodeLine>
