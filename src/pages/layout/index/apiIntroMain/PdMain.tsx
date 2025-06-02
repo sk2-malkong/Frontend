@@ -61,8 +61,7 @@ const MainBanner = () => (
                             </S.P>
                         </S.ContentContainer>
                     </S.Group2>
-                    <S.Group2><S.JsonEffect><AIMessagePurifier/></S.JsonEffect></S.Group2>
-                
+                        <S.Group2><AIMessagePurifier/></S.Group2>
                 </S.InnerDiv2>
             </div>
         </div>
