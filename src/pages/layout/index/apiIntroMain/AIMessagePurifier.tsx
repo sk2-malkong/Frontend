@@ -32,9 +32,9 @@ const pulse = keyframes`
 // Styled Components
 const Container = styled.div`
   display: flex;
+  flex-direction: column;
   align-items: flex-start;
-  justify-content: flex-end;
-  padding-top: 0.5rem;
+  justify-content: center;
   width: 100%;
   transform-origin: top right;
   height: 100%;
@@ -45,7 +45,7 @@ const MainCard = styled.div`
   max-height: 90vh;
   height: auto;
   max-width: 100rem;
-  width: auto;
+  width: 100%;
   margin: 0 auto;
 `;
 
@@ -162,7 +162,7 @@ const StatusContainer = styled.div`
   align-items: center;
   justify-content: center;
   padding: 0.5rem 0;
-  min-height: 2.5rem;
+  min-height: 3rem;
 `;
 
 const StatusBadge = styled.div<{ $variant: 'analyzing' | 'detected' }>`
